@@ -187,8 +187,8 @@ const RunwayRenderer = () => {
 	const maximums = calculateMinMaxOfCoordinates(airport)
 	const realDiagonal = Math.sqrt(Math.pow(maximums.maxX, 2) + Math.pow(maximums.maxY, 2)) * 0.7
 
-	const centerY = (realDiagonal - (maximums.maxY / 2))
-	const centerX = (realDiagonal - (maximums.maxX / 2))
+	const centerY = realDiagonal - maximums.maxY / 2
+	const centerX = realDiagonal - maximums.maxX / 2
 
 	return (
 		<div class="border rounded-full">
@@ -204,21 +204,25 @@ const RunwayRenderer = () => {
 								y1={r.direction1.y}
 								x2={r.direction2.x}
 								y2={r.direction2.y}
-								stroke={i() % 2 === 0 ? 'red' : 'green'}
+								stroke={i() % 2 === 0 ? 'lightgray' : 'green'}
 								stroke-width="0.8"
 							/>
+							<circle class="fill-gray-600" cx={r.direction1.x} cy={r.direction1.y} r="1.2" />
 							<text
-								class="text-[1.5px]"
+								class="text-[0.8px] fill-white"
 								x={r.direction1.x}
 								y={r.direction1.y}
-								classList={{ 'bg-red-600': i() % 2 === 0, 'bg-green-600': i() % 2 !== 0 }}>
+								dominant-baseline="middle"
+								text-anchor="middle">
 								{r.direction1.runway}
 							</text>
+							<circle class="fill-gray-600" cx={r.direction2.x} cy={r.direction2.y} r="1.2" />
 							<text
-								class="text-[1.5px]"
+								class="text-[0.8px] fill-white"
 								x={r.direction2.x}
 								y={r.direction2.y}
-								classList={{ 'bg-red-600': i() % 2 === 0, 'bg-green-600': i() % 2 !== 0 }}>
+								dominant-baseline="middle"
+								text-anchor="middle">
 								{r.direction2.runway}
 							</text>
 						</>
