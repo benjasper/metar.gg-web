@@ -28,94 +28,175 @@ const runwaysRaw = [
 	},
 ]
 
+const airports: Airport[] = [
+	{
+		runways: [
+			{
+				direction1: {
+					runway: '09L',
+					x: 52.468364,
+					y: 9.648286,
+				},
+				direction2: {
+					runway: '27R',
+					x: 52.466825,
+					y: 9.704136,
+				},
+			},
+			{
+				direction1: {
+					runway: '09R',
+					x: 52.454986,
+					y: 9.676769,
+				},
+				direction2: {
+					runway: '27L',
+					x: 52.454031,
+					y: 9.71115,
+				},
+			},
+			{
+				direction1: {
+					runway: '09C',
+					x: 52.464831,
+					y: 9.683767,
+				},
+				direction2: {
+					runway: '27C',
+					x: 52.464522,
+					y: 9.695144,
+				},
+			},
+		],
+	},
+]
+
 const cartesianCoordinates = (lat, lon) => {
 	const x = merc.fromLatLngToPoint({ lat: lat, lng: lon }).x
 	const y = merc.fromLatLngToPoint({ lat: lat, lng: lon }).y
 
-	return [x, y]
+	return {x, y}
 }
 
-const runwaysCartesian = runwaysRaw.map(({ runway1, runway2, lat1, lon1, lat2, lon2 }) => {
-	const [x1, y1] = cartesianCoordinates(lat1, lon1)
-	const [x2, y2] = cartesianCoordinates(lat2, lon2)
-	return { runway1, runway2, x1, y1, x2, y2 }
-})
+const transformRunwayCoordinates = (runway: Runway) => {
+	runway.direction1.x = cartesianCoordinates(runway.direction1.x, runway.direction1.y).x
+	runway.direction1.y = cartesianCoordinates(runway.direction1.x, runway.direction1.y).y
+	runway.direction2.x = cartesianCoordinates(runway.direction2.x, runway.direction2.y).x
+	runway.direction2.y = cartesianCoordinates(runway.direction2.x, runway.direction2.y).y
+}
+
+type TransformerFunction = (runway: Runway) => void
+
+const convertAirport = (airport: Airport, transformFunction: TransformerFunction) =>
+	airports.map(() => {
+		for (const runway of airport.runways) {
+			transformFunction(runway)
+		}
+	})
 
 interface Runway {
-	runway1: string
-	runway2: string
-	x1: number
-	y1: number
-	x2: number
-	y2: number
+	direction1: RunwayDirection
+	direction2: RunwayDirection
+}
+
+interface RunwayDirection {
+	runway: string
+	x: number
+	y: number
 }
 
 interface Airport {
 	runways: Runway[]
 }
 
-const calculateLineEquation = (runway: Runway) => {
-	const [x1, y1] = [runway.x1, runway.y1]
-	const [x2, y2] = [runway.x2, runway.y2]
-	const m = (y2 - y1) / (x2 - x1)
-	const b = y1 - m * x1
-	return { m, b }
-}
-
 const RunwayLayout = () => {
 	// Lower is larger
 	const scale = 0.05
 
-	const maxX = Math.max(...runwaysCartesian.map(({ x1, y1, x2, y2 }) => (x1 > x2 ? x1 : x2)))
-	const minX = Math.min(...runwaysCartesian.map(({ x1, y1, x2, y2 }) => (x1 < x2 ? x1 : x2)))
+	airports.map(airport => {
+		convertAirport(airport, transformRunwayCoordinates)
+	})
 
-	const maxY = Math.max(...runwaysCartesian.map(({ x1, y1, x2, y2 }) => (y1 > y2 ? y1 : y2)))
-	const minY = Math.min(...runwaysCartesian.map(({ x1, y1, x2, y2 }) => (y1 < y2 ? y1 : y2)))
+	const maxX = Math.max(
+		...airports.map(airport =>
+			Math.max(
+				...airport.runways.map(runway =>
+					runway.direction1.x > runway.direction2.x ? runway.direction1.x : runway.direction2.x
+				)
+			)
+		)
+	)
+	const minX = Math.min(
+		...airports.map(airport =>
+			Math.min(
+				...airport.runways.map(runway =>
+					runway.direction1.x < runway.direction2.x ? runway.direction1.x : runway.direction2.x
+				)
+			)
+		)
+	)
+
+	const maxY = Math.max(
+		...airports.map(airport =>
+			Math.max(
+				...airport.runways.map(runway =>
+					runway.direction1.y > runway.direction2.y ? runway.direction1.y : runway.direction2.y
+				)
+			)
+		)
+	)
+	const minY = Math.min(
+		...airports.map(airport =>
+			Math.min(
+				...airport.runways.map(runway =>
+					runway.direction1.y < runway.direction2.y ? runway.direction1.y : runway.direction2.y
+				)
+			)
+		)
+	)
 
 	const diagonal = Math.sqrt((maxX - minX) * (maxX - minX) + (maxY - minY) * (maxY - minY)) * scale
 
-	const normalizedRunways: Runway[] = runwaysCartesian.map(({ runway1, runway2, x1, y1, x2, y2 }) => {
-		return {
-			runway1,
-			runway2,
-			x1: (x1 - minX) / diagonal,
-			y1: (y1 - minY) / diagonal,
-			x2: (x2 - minX) / diagonal,
-			y2: (y2 - minY) / diagonal,
-		}
+	airports.map(airport => {
+		convertAirport(airport, (runway: Runway) => {
+			runway.direction1.x = (runway.direction1.x - minX) / diagonal
+			runway.direction1.y = (runway.direction1.y - minY) / diagonal
+			runway.direction2.x = (runway.direction2.x - minX) / diagonal
+			runway.direction2.y = (runway.direction2.y - minY) / diagonal
+		})
 	})
 
 	return (
 		<div class="border rounded-full">
 			<svg class="cartesian w-full h-full" viewBox="-10 -20 40 40" xmlns="http://www.w3.org/2000/svg">
-				<For each={normalizedRunways}>
+				<For each={airports[0].runways}>
 					{(r, i) => (
 						<>
 							<line
-								x1={r.x1}
-								y1={r.y1}
-								x2={r.x2}
-								y2={r.y2}
+								x1={r.direction1.x}
+								y1={r.direction1.y}
+								x2={r.direction2.x}
+								y2={r.direction2.y}
 								stroke={i() % 2 === 0 ? 'red' : 'green'}
 								stroke-width="0.8"
 							/>
 							<text
 								class="text-[1.5px]"
-								dx={-5}
+								dx={-4}
 								dy={0.5}
-								x={r.x1}
-								y={r.y1}
+								x={r.direction1.x}
+								y={r.direction1.y}
 								classList={{ 'bg-red-600': i() % 2 === 0, 'bg-green-600': i() % 2 !== 0 }}>
-								{r.runway1}
+								{r.direction1.runway}
 							</text>
 							<text
 								class="text-[1.5px]"
 								dx={1}
 								dy={0.5}
-								x={r.x2}
-								y={r.y2}
+								x={r.direction2.x}
+								y={r.direction2.y}
 								classList={{ 'bg-red-600': i() % 2 === 0, 'bg-green-600': i() % 2 !== 0 }}>
-								{r.runway2}
+								{r.direction2.runway}
 							</text>
 						</>
 					)}
