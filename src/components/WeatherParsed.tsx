@@ -1,11 +1,12 @@
-import RunwayLayout from "./RunwayLayout"
+import RunwayRenderer from "./RunwayRenderer"
+import RunwayLayout from "./RunwayRenderer"
 
 const WeatherParsed = () => {
 	return (
 		<div class="flex flex-row gap-2">
 			<div class="flex flex-col gap-1">
 				<h3>Wind</h3>
-				<RunwayLayout></RunwayLayout>
+				<RunwayRenderer></RunwayRenderer>
 			</div>
 		</div>
 	)
