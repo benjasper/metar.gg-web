@@ -25,7 +25,7 @@ const runwaysRaw = [
 		lon1: 9.683767,
 		lat2: 52.464522,
 		lon2: 9.695144,
-	}
+	},
 ]
 
 const cartesianCoordinates = (lat, lon) => {
@@ -50,6 +50,10 @@ interface Runway {
 	y2: number
 }
 
+interface Airport {
+	runways: Runway[]
+}
+
 const calculateLineEquation = (runway: Runway) => {
 	const [x1, y1] = [runway.x1, runway.y1]
 	const [x2, y2] = [runway.x2, runway.y2]
@@ -58,10 +62,9 @@ const calculateLineEquation = (runway: Runway) => {
 	return { m, b }
 }
 
-
 const RunwayLayout = () => {
 	// Lower is larger
-	const scale = 0.1
+	const scale = 0.05
 
 	const maxX = Math.max(...runwaysCartesian.map(({ x1, y1, x2, y2 }) => (x1 > x2 ? x1 : x2)))
 	const minX = Math.min(...runwaysCartesian.map(({ x1, y1, x2, y2 }) => (x1 < x2 ? x1 : x2)))
@@ -84,7 +87,7 @@ const RunwayLayout = () => {
 
 	return (
 		<div class="border rounded-full">
-			<svg class="cartesian w-full h-full scale-125" viewBox="-5 -10 20 20" xmlns="http://www.w3.org/2000/svg">
+			<svg class="cartesian w-full h-full" viewBox="-10 -20 40 40" xmlns="http://www.w3.org/2000/svg">
 				<For each={normalizedRunways}>
 					{(r, i) => (
 						<>
@@ -94,10 +97,26 @@ const RunwayLayout = () => {
 								x2={r.x2}
 								y2={r.y2}
 								stroke={i() % 2 === 0 ? 'red' : 'green'}
-								stroke-width="0.3"
+								stroke-width="0.8"
 							/>
-							<text class='text-[1px]' dx={-2.5} dy={0.5} x={r.x1} y={r.y1} classList={{'bg-red-600': i() % 2 === 0, 'bg-green-600': i() % 2 !== 0}}>{r.runway1}</text>
-							<text class='text-[1px]' dy={0.5} x={r.x2} y={r.y2} classList={{'bg-red-600': i() % 2 === 0, 'bg-green-600': i() % 2 !== 0}}>{r.runway2}</text>
+							<text
+								class="text-[1.5px]"
+								dx={-5}
+								dy={0.5}
+								x={r.x1}
+								y={r.y1}
+								classList={{ 'bg-red-600': i() % 2 === 0, 'bg-green-600': i() % 2 !== 0 }}>
+								{r.runway1}
+							</text>
+							<text
+								class="text-[1.5px]"
+								dx={1}
+								dy={0.5}
+								x={r.x2}
+								y={r.y2}
+								classList={{ 'bg-red-600': i() % 2 === 0, 'bg-green-600': i() % 2 !== 0 }}>
+								{r.runway2}
+							</text>
 						</>
 					)}
 				</For>
