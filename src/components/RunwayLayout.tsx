@@ -75,24 +75,27 @@ const cartesianCoordinates = (lat, lon) => {
 	const x = merc.fromLatLngToPoint({ lat: lat, lng: lon }).x
 	const y = merc.fromLatLngToPoint({ lat: lat, lng: lon }).y
 
-	return {x, y}
+	return { x, y }
 }
 
-const transformRunwayCoordinates = (runway: Runway) => {
+const transformRunwayCoordinates = (runway: Runway): Runway => {
 	runway.direction1.x = cartesianCoordinates(runway.direction1.x, runway.direction1.y).x
 	runway.direction1.y = cartesianCoordinates(runway.direction1.x, runway.direction1.y).y
 	runway.direction2.x = cartesianCoordinates(runway.direction2.x, runway.direction2.y).x
 	runway.direction2.y = cartesianCoordinates(runway.direction2.x, runway.direction2.y).y
+
+	return runway
 }
 
-type TransformerFunction = (runway: Runway) => void
+type TransformerFunction = (runway: Runway) => Runway
 
-const convertAirport = (airport: Airport, transformFunction: TransformerFunction) =>
-	airports.map(() => {
-		for (const runway of airport.runways) {
-			transformFunction(runway)
-		}
+const convertAirport = (airport: Airport, transformFunction: TransformerFunction): Airport => {
+	airport.runways = airport.runways.map(runway => {
+		return transformFunction(runway)
 	})
+
+	return airport
+}
 
 interface Runway {
 	direction1: RunwayDirection
@@ -113,63 +116,46 @@ const RunwayLayout = () => {
 	// Lower is larger
 	const scale = 0.05
 
-	airports.map(airport => {
-		convertAirport(airport, transformRunwayCoordinates)
-	})
+	let airport = convertAirport(airports[0], transformRunwayCoordinates)
+	console.log(airport)
 
 	const maxX = Math.max(
-		...airports.map(airport =>
-			Math.max(
-				...airport.runways.map(runway =>
-					runway.direction1.x > runway.direction2.x ? runway.direction1.x : runway.direction2.x
-				)
-			)
+		...airport.runways.map(runway =>
+			Math.max(runway.direction1.x, runway.direction2.x)
 		)
 	)
 	const minX = Math.min(
-		...airports.map(airport =>
-			Math.min(
-				...airport.runways.map(runway =>
-					runway.direction1.x < runway.direction2.x ? runway.direction1.x : runway.direction2.x
-				)
-			)
+		...airport.runways.map(runway =>
+			Math.min(runway.direction1.x, runway.direction2.x)
 		)
 	)
 
 	const maxY = Math.max(
-		...airports.map(airport =>
-			Math.max(
-				...airport.runways.map(runway =>
-					runway.direction1.y > runway.direction2.y ? runway.direction1.y : runway.direction2.y
-				)
-			)
+		...airport.runways.map(runway =>
+			Math.max(runway.direction1.y, runway.direction2.y)
 		)
 	)
 	const minY = Math.min(
-		...airports.map(airport =>
-			Math.min(
-				...airport.runways.map(runway =>
-					runway.direction1.y < runway.direction2.y ? runway.direction1.y : runway.direction2.y
-				)
-			)
+		...airport.runways.map(runway =>
+			Math.min(runway.direction1.y, runway.direction2.y)
 		)
 	)
 
 	const diagonal = Math.sqrt((maxX - minX) * (maxX - minX) + (maxY - minY) * (maxY - minY)) * scale
 
-	airports.map(airport => {
-		convertAirport(airport, (runway: Runway) => {
-			runway.direction1.x = (runway.direction1.x - minX) / diagonal
-			runway.direction1.y = (runway.direction1.y - minY) / diagonal
-			runway.direction2.x = (runway.direction2.x - minX) / diagonal
-			runway.direction2.y = (runway.direction2.y - minY) / diagonal
-		})
+	airport = convertAirport(airport, (runway: Runway): Runway => {
+		runway.direction1.x = (runway.direction1.x - minX) / diagonal
+		runway.direction1.y = (runway.direction1.y - minY) / diagonal
+		runway.direction2.x = (runway.direction2.x - minX) / diagonal
+		runway.direction2.y = (runway.direction2.y - minY) / diagonal
+
+		return runway
 	})
 
 	return (
 		<div class="border rounded-full">
 			<svg class="cartesian w-full h-full" viewBox="-10 -20 40 40" xmlns="http://www.w3.org/2000/svg">
-				<For each={airports[0].runways}>
+				<For each={airport.runways}>
 					{(r, i) => (
 						<>
 							<line
