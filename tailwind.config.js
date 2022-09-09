@@ -6,7 +6,17 @@ module.exports = {
   ],
   darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      container: {
+        center: true,
+        padding: {
+          default: '1rem',
+        },
+        screens: {
+          xs: '340px',
+        },
+      }
+    },
   },
   plugins: [],
 };

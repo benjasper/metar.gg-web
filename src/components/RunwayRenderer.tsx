@@ -191,7 +191,7 @@ const RunwayRenderer = () => {
 	const centerX = realDiagonal - maximums.maxX / 2
 
 	return (
-		<div class="border rounded-full">
+		<div class="w-1/2 md:w-full border rounded-full mx-auto md:mx-0">
 			<svg
 				class="cartesian w-full h-full"
 				viewBox={`${-centerX} ${-centerY}  ${realDiagonal * 2} ${realDiagonal * 2}`}

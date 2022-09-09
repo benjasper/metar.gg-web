@@ -31,7 +31,7 @@ const App: Component = () => {
 	}
 
 	return (
-		<div class="container mx-auto w-screen h-screen">
+		<div class="container mx-auto w-full h-screen">
 			<div class="flex flex-col gap-8 h-1/2 transition-all" classList={{ 'h-1/3': result() }}>
 				<h2 class="text-center mt-auto">What's the weather like in...</h2>
 				<input
