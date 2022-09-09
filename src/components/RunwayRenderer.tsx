@@ -1,32 +1,6 @@
 import { For } from 'solid-js'
 import * as merc from 'mercator-projection'
-
-const runwaysRaw = [
-	{
-		runway1: '09L',
-		runway2: '27R',
-		lat1: 52.468364,
-		lon1: 9.648286,
-		lat2: 52.466825,
-		lon2: 9.704136,
-	},
-	{
-		runway1: '09R',
-		runway2: '27L',
-		lat1: 52.454986,
-		lon1: 9.676769,
-		lat2: 52.454031,
-		lon2: 9.71115,
-	},
-	{
-		runway1: '09C',
-		runway2: '27C',
-		lat1: 52.464831,
-		lon1: 9.683767,
-		lat2: 52.464522,
-		lon2: 9.695144,
-	},
-]
+import { AirportSearchFragment } from '../generated/graphql'
 
 const airports: Airport[] = [
 	{
@@ -118,18 +92,6 @@ const cartesianCoordinates = (lat, lon) => {
 	return { x, y }
 }
 
-const transformRunwayCoordinates = (runway: Runway): Runway => {
-	const direction1 = cartesianCoordinates(runway.direction1.x, runway.direction1.y)
-	const direction2 = cartesianCoordinates(runway.direction2.x, runway.direction2.y)
-
-	runway.direction1.x = direction1.x
-	runway.direction1.y = direction1.y
-	runway.direction2.x = direction2.x
-	runway.direction2.y = direction2.y
-
-	return runway
-}
-
 type TransformerFunction = (runway: Runway) => Runway
 
 const convertAirport = (airport: Airport, transformFunction: TransformerFunction): Airport => {
@@ -140,12 +102,14 @@ const convertAirport = (airport: Airport, transformFunction: TransformerFunction
 	return airport
 }
 
-const calculateMinMaxOfCoordinates = (airport: Airport): { minX: number; minY: number; maxX: number; maxY: number } => {
-	const maxX = Math.max(...airport.runways.map(runway => Math.max(runway.direction1.x, runway.direction2.x)))
-	const minX = Math.min(...airport.runways.map(runway => Math.min(runway.direction1.x, runway.direction2.x)))
+const calculateMinMaxOfCoordinates = (
+	runways: Runway[]
+): { minX: number; minY: number; maxX: number; maxY: number } => {
+	const maxX = Math.max(...runways.map(runway => Math.max(runway.direction1.x, runway.direction2.x)))
+	const minX = Math.min(...runways.map(runway => Math.min(runway.direction1.x, runway.direction2.x)))
 
-	const maxY = Math.max(...airport.runways.map(runway => Math.max(runway.direction1.y, runway.direction2.y)))
-	const minY = Math.min(...airport.runways.map(runway => Math.min(runway.direction1.y, runway.direction2.y)))
+	const maxY = Math.max(...runways.map(runway => Math.max(runway.direction1.y, runway.direction2.y)))
+	const minY = Math.min(...runways.map(runway => Math.min(runway.direction1.y, runway.direction2.y)))
 
 	return { minX, minY, maxX, maxY }
 }
@@ -165,27 +129,51 @@ interface Airport {
 	runways: Runway[]
 }
 
-const RunwayRenderer = () => {
+const RunwayRenderer = (props: { airport: AirportSearchFragment }) => {
+	const runways: Runway[] = []
 	// Lower is larger
-	const scale = 0.05
+	const scale = 0.04
 
-	let airport = convertAirport(airports[1], transformRunwayCoordinates)
+	props.airport.runways.forEach(runway => {
+		if (
+			runway.lowRunwayLatitude === undefined ||
+			runway.lowRunwayLongitude === undefined ||
+			runway.highRunwayLatitude === undefined ||
+			runway.highRunwayLongitude === undefined
+		) {
+			return
+		}
 
-	const { minX, minY, maxX, maxY } = calculateMinMaxOfCoordinates(airport)
+		const direction1 = cartesianCoordinates(runway.lowRunwayLatitude, runway.lowRunwayLongitude)
+		const direction2 = cartesianCoordinates(runway.highRunwayLatitude, runway.highRunwayLongitude)
+
+		runways.push({
+			direction1: {
+				runway: runway.lowRunwayIdentifier,
+				x: direction1.x,
+				y: direction1.y,
+			},
+			direction2: {
+				runway: runway.highRunwayIdentifier,
+				x: direction2.x,
+				y: direction2.y,
+			},
+		})
+	})
+
+	const { minX, minY, maxX, maxY } = calculateMinMaxOfCoordinates(runways)
 
 	const scaling = Math.sqrt((maxX - minX) * (maxX - minX) + (maxY - minY) * (maxY - minY)) * scale
 
-	airport = convertAirport(airport, (runway: Runway): Runway => {
+	for (const runway of runways) {
 		runway.direction1.x = (runway.direction1.x - minX) / scaling
 		runway.direction1.y = (runway.direction1.y - minY) / scaling
 		runway.direction2.x = (runway.direction2.x - minX) / scaling
 		runway.direction2.y = (runway.direction2.y - minY) / scaling
+	}
 
-		return runway
-	})
-
-	const maximums = calculateMinMaxOfCoordinates(airport)
-	const realDiagonal = Math.sqrt(Math.pow(maximums.maxX, 2) + Math.pow(maximums.maxY, 2)) * 0.7
+	const maximums = calculateMinMaxOfCoordinates(runways)
+	const realDiagonal = Math.sqrt(Math.pow(maximums.maxX, 2) + Math.pow(maximums.maxY, 2)) * 0.6
 
 	const centerY = realDiagonal - maximums.maxY / 2
 	const centerX = realDiagonal - maximums.maxX / 2
@@ -196,7 +184,7 @@ const RunwayRenderer = () => {
 				class="cartesian w-full h-full"
 				viewBox={`${-centerX} ${-centerY}  ${realDiagonal * 2} ${realDiagonal * 2}`}
 				xmlns="http://www.w3.org/2000/svg">
-				<For each={airport.runways}>
+				<For each={runways}>
 					{(r, i) => (
 						<>
 							<line
@@ -207,7 +195,13 @@ const RunwayRenderer = () => {
 								stroke={i() % 2 === 0 ? 'lightgray' : 'green'}
 								stroke-width="0.8"
 							/>
-							<circle class="fill-gray-600" cx={r.direction1.x} cy={r.direction1.y} r="1.2" />
+						</>
+					)}
+				</For>
+				<For each={runways}>
+					{(r, i) => (
+						<>
+							<circle class="fill-gray-600" cx={r.direction1.x} cy={r.direction1.y} r="1" />
 							<text
 								class="text-[0.8px] fill-white"
 								x={r.direction1.x}
@@ -216,7 +210,7 @@ const RunwayRenderer = () => {
 								text-anchor="middle">
 								{r.direction1.runway}
 							</text>
-							<circle class="fill-gray-600" cx={r.direction2.x} cy={r.direction2.y} r="1.2" />
+							<circle class="fill-gray-600" cx={r.direction2.x} cy={r.direction2.y} r="1" />
 							<text
 								class="text-[0.8px] fill-white"
 								x={r.direction2.x}
