@@ -24,13 +24,14 @@ export type Airport = {
   frequencies?: Maybe<Array<Frequency>>;
   /** The code that an aviation GPS database (such as Jeppesen's or Garmin's) would normally use for the airport. This will always be the ICAO code if one exists. Note that, unlike the ident column, this is not guaranteed to be globally unique. */
   gpsCode?: Maybe<Scalars['String']>;
-  /** Whether the airport has weather reporting and a metar by the airport is available. */
-  hasWeather: Scalars['Boolean'];
   /** The three-letter IATA code for the airport. */
   iataCode?: Maybe<Scalars['String']>;
+  /** The four-letter ICAO code of the airport. */
+  icaoCode?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   /** This will be the ICAO code if available. Otherwise, it will be a local airport code (if no conflict), or if nothing else is available, an internally-generated code starting with the ISO2 country code, followed by a dash and a four-digit number. */
   identifier: Scalars['String'];
+  importID: Scalars['Int'];
   /** Extra keywords/phrases to assist with search. May include former names for the airport, alternate codes, names in other languages, nearby tourist destinations, etc. */
   keywords: Array<Scalars['String']>;
   lastUpdated: Scalars['Time'];
@@ -40,10 +41,6 @@ export type Airport = {
   localCode?: Maybe<Scalars['String']>;
   /** Longitude of the airport in decimal degrees (positive is east). */
   longitude: Scalars['Float'];
-  /** Returns last METARs reported by this airport. */
-  metars: MetarConnection;
-  /** Returns the closest METAR to the airport, within the given radius (in km). */
-  metarsVicinity: Array<MetarWithDistance>;
   /** The primary municipality that the airport serves (when available). Note that this is not necessarily the municipality where the airport is physically located. */
   municipality?: Maybe<Scalars['String']>;
   /** The official airport name, including "Airport", "Airstrip", etc. */
@@ -53,6 +50,9 @@ export type Airport = {
   runways: Array<Runway>;
   /** Whether the airport has scheduled airline service. */
   scheduledService: Scalars['Boolean'];
+  station?: Maybe<WeatherStation>;
+  /** Returns the closest weather stations to the airport, within the given radius (in km). */
+  stationsVicinity: Array<StationWithDistance>;
   /** Type of airport. */
   type: AirportType;
   /** The URL of the airport's website. */
@@ -62,29 +62,19 @@ export type Airport = {
 };
 
 
-export type AirportMetarsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type AirportMetarsVicinityArgs = {
-  first?: InputMaybe<Scalars['Int']>;
-  radius?: InputMaybe<Scalars['Float']>;
-};
-
-
 export type AirportRunwaysArgs = {
   closed?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type AirportStationsVicinityArgs = {
+  first?: InputMaybe<Scalars['Int']>;
+  radius?: InputMaybe<Scalars['Float']>;
 };
 
 export type AirportConnection = {
   __typename?: 'AirportConnection';
   edges: Array<AirportEdge>;
-  /** A structured list of the edges without a cursor. Use this to quickly explore the API. */
-  nodes: Array<Airport>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -116,6 +106,55 @@ export enum AirportType {
   SmallAirport = 'small_airport'
 }
 
+export type Forecast = {
+  __typename?: 'Forecast';
+  /** The altimeter in inches of mercury. */
+  altimeter?: Maybe<Scalars['Float']>;
+  /** The change indicator. */
+  changeIndicator?: Maybe<ForecastChangeIndicator>;
+  /** The probability of the change. */
+  changeProbability?: Maybe<Scalars['Int']>;
+  /** The time of the change. */
+  changeTime?: Maybe<Scalars['Time']>;
+  /** The start time of the forecast period. */
+  fromTime: Scalars['Time'];
+  icingConditions?: Maybe<Array<IcingCondition>>;
+  id: Scalars['ID'];
+  /** The not decoded string. */
+  notDecoded?: Maybe<Scalars['String']>;
+  skyConditions?: Maybe<Array<SkyCondition>>;
+  temperatureData?: Maybe<Array<TemperatureData>>;
+  /** The end time of the forecast period. */
+  toTime: Scalars['Time'];
+  turbulenceConditions?: Maybe<Array<TurbulenceCondition>>;
+  /** The visibility in statute miles. */
+  visibilityHorizontal?: Maybe<Scalars['Float']>;
+  /** The vertical visibility in feet. */
+  visibilityVertical?: Maybe<Scalars['Int']>;
+  /** The weather string. */
+  weather?: Maybe<Scalars['String']>;
+  /** The wind direction in degrees. */
+  windDirection?: Maybe<Scalars['Int']>;
+  /** The wind gust in knots. */
+  windGust?: Maybe<Scalars['Int']>;
+  /** The wind shear direction in degrees. */
+  windShearDirection?: Maybe<Scalars['Int']>;
+  /** The height of the wind shear in feet above ground level. */
+  windShearHeight?: Maybe<Scalars['Int']>;
+  /** The wind shear speed in knots. */
+  windShearSpeed?: Maybe<Scalars['Int']>;
+  /** The wind speed in knots. */
+  windSpeed?: Maybe<Scalars['Int']>;
+};
+
+/** ForecastChangeIndicator is enum for the field change_indicator */
+export enum ForecastChangeIndicator {
+  Becmg = 'BECMG',
+  Fm = 'FM',
+  Prob = 'PROB',
+  Tempo = 'TEMPO'
+}
+
 export type Frequency = {
   __typename?: 'Frequency';
   airport?: Maybe<Airport>;
@@ -124,25 +163,31 @@ export type Frequency = {
   /** Radio frequency in megahertz. Note that the same frequency may appear multiple times for an airport, serving different functions */
   frequency: Scalars['Float'];
   id: Scalars['ID'];
+  importID: Scalars['Int'];
   lastUpdated: Scalars['Time'];
   /** A code for the frequency type. Some common values are "TWR" (tower), "ATF" or "CTAF" (common traffic frequency), "GND" (ground control), "RMP" (ramp control), "ATIS" (automated weather), "RCO" (remote radio outlet), "ARR" (arrivals), "DEP" (departures), "UNICOM" (monitored ground station), and "RDO" (a flight-service station). */
   type: Scalars['String'];
 };
 
+export type IcingCondition = {
+  __typename?: 'IcingCondition';
+  id: Scalars['ID'];
+  /** The intensity of the icing. */
+  intensity: Scalars['String'];
+  /** The maximum altitude in feet that the icing is present. */
+  maxAltitude?: Maybe<Scalars['Int']>;
+  /** The minimum altitude in feet that the icing is present. */
+  minAltitude?: Maybe<Scalars['Int']>;
+};
+
 export type Metar = {
   __typename?: 'Metar';
-  airport?: Maybe<Airport>;
   /** The altimeter setting in inches of mercury. */
   altimeter: Scalars['Float'];
   /** The dewpoint in Celsius. */
   dewpoint: Scalars['Float'];
-  /** The elevation in meters of the station. */
-  elevation?: Maybe<Scalars['Float']>;
   flightCategory?: Maybe<MetarFlightCategory>;
-  /** The latitude in decimal degrees of the station. */
-  latitude?: Maybe<Scalars['Float']>;
-  /** The longitude in decimal degrees of the station. */
-  longitude?: Maybe<Scalars['Float']>;
+  id: Scalars['ID'];
   /** The maximum air temperature in Celsius from the past 6 hours. */
   maxTemp6?: Maybe<Scalars['Float']>;
   /** The maximum air temperature in Celsius from the past 24 hours. */
@@ -188,8 +233,7 @@ export type Metar = {
   skyConditions?: Maybe<Array<SkyCondition>>;
   /** The snow depth in inches. */
   snowDepth?: Maybe<Scalars['Float']>;
-  /** The ICAO identifier of the station that provided the METAR or identifier of the weather station. */
-  stationID: Scalars['String'];
+  station: WeatherStation;
   /** The temperature in Celsius. */
   temperature: Scalars['Float'];
   /** The vertical visibility in feet. */
@@ -207,8 +251,6 @@ export type Metar = {
 export type MetarConnection = {
   __typename?: 'MetarConnection';
   edges: Array<MetarEdge>;
-  /** A structured list of the edges without a cursor. Use this to quickly explore the API. */
-  nodes: Array<Metar>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -233,12 +275,6 @@ export enum MetarMetarType {
   Speci = 'SPECI'
 }
 
-export type MetarWithDistance = {
-  __typename?: 'MetarWithDistance';
-  distance?: Maybe<Scalars['Float']>;
-  metar?: Maybe<Metar>;
-};
-
 /** Possible directions in which to order a list of items when provided an `orderBy` argument. */
 export enum OrderDirection {
   /** Specifies an ascending order for a given `orderBy` argument. */
@@ -262,6 +298,7 @@ export type PageInfo = {
 export type Query = {
   __typename?: 'Query';
   getAirports: AirportConnection;
+  getStations: WeatherStationConnection;
 };
 
 
@@ -270,6 +307,17 @@ export type QueryGetAirportsArgs = {
   before?: InputMaybe<Scalars['Cursor']>;
   first?: InputMaybe<Scalars['Int']>;
   hasWeather?: InputMaybe<Scalars['Boolean']>;
+  iata?: InputMaybe<Scalars['String']>;
+  icao?: InputMaybe<Scalars['String']>;
+  identifier?: InputMaybe<Scalars['String']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryGetStationsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
   identifier?: InputMaybe<Scalars['String']>;
   last?: InputMaybe<Scalars['Int']>;
 };
@@ -292,6 +340,7 @@ export type Runway = {
   /** Longitude of the high numbered runway end, in decimal degrees (positive is east). */
   highRunwayLongitude?: Maybe<Scalars['Float']>;
   id: Scalars['ID'];
+  importID: Scalars['Int'];
   lastUpdated: Scalars['Time'];
   /** Length of the runway in feet. */
   length: Scalars['Int'];
@@ -319,9 +368,18 @@ export type SkyCondition = {
   __typename?: 'SkyCondition';
   /** Cloud base in feet. */
   cloudBase?: Maybe<Scalars['Int']>;
-  metar: Metar;
+  /** Cloud type. Only present in TAFs. */
+  cloudType?: Maybe<SkyConditionCloudType>;
+  id: Scalars['ID'];
   skyCover: SkyConditionSkyCover;
 };
+
+/** SkyConditionCloudType is enum for the field cloud_type */
+export enum SkyConditionCloudType {
+  Cb = 'CB',
+  Cu = 'CU',
+  Tcu = 'TCU'
+}
 
 /** SkyConditionSkyCover is enum for the field sky_cover */
 export enum SkyConditionSkyCover {
@@ -329,20 +387,145 @@ export enum SkyConditionSkyCover {
   Cavok = 'CAVOK',
   Clr = 'CLR',
   Few = 'FEW',
+  Nsc = 'NSC',
   Ovc = 'OVC',
+  Ovcx = 'OVCX',
   Ovx = 'OVX',
   Sct = 'SCT',
   Skc = 'SKC'
 }
 
-export type AirportSearchFragment = { __typename?: 'Airport', identifier: string, name: string, runways: Array<{ __typename?: 'Runway', closed: boolean, surface?: string | null, lowRunwayHeading?: number | null, lowRunwayIdentifier: string, lowRunwayLatitude?: number | null, lowRunwayLongitude?: number | null, highRunwayHeading?: number | null, highRunwayIdentifier: string, highRunwayLatitude?: number | null, highRunwayLongitude?: number | null }> };
+export type StationWithDistance = {
+  __typename?: 'StationWithDistance';
+  /** The distance in meters from the given location to the airport */
+  distance: Scalars['Float'];
+  /** The METAR for the station */
+  station: WeatherStation;
+};
+
+export type Taf = {
+  __typename?: 'Taf';
+  /** TAF bulletin time. */
+  bulletinTime: Scalars['Time'];
+  forecast?: Maybe<Array<Forecast>>;
+  id: Scalars['ID'];
+  /** The time the TAF was issued. */
+  issueTime: Scalars['Time'];
+  /** The raw TAF text. */
+  rawText: Scalars['String'];
+  /** Remarks. */
+  remarks: Scalars['String'];
+  skyConditions?: Maybe<Array<SkyCondition>>;
+  station: WeatherStation;
+  /** The start time of the TAF validity period. */
+  validFromTime: Scalars['Time'];
+  /** The end time of the TAF validity period. */
+  validToTime: Scalars['Time'];
+};
+
+export type TafConnection = {
+  __typename?: 'TafConnection';
+  edges: Array<TafEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type TafEdge = {
+  __typename?: 'TafEdge';
+  cursor: Scalars['Cursor'];
+  node: Taf;
+};
+
+/** Ordering options for Taf connections */
+export type TafOrder = {
+  /** The ordering direction. */
+  direction?: OrderDirection;
+  /** The field by which to order Tafs. */
+  field: TafOrderField;
+};
+
+/** Properties by which Taf connections can be ordered. */
+export enum TafOrderField {
+  ValidFromTime = 'valid_from_time'
+}
+
+export type TemperatureData = {
+  __typename?: 'TemperatureData';
+  id: Scalars['ID'];
+  /** The maximum temperature in degrees Celsius. */
+  maxTemperature?: Maybe<Scalars['Float']>;
+  /** The minimum temperature in degrees Celsius. */
+  minTemperature?: Maybe<Scalars['Float']>;
+  /** The surface temperature in degrees Celsius. */
+  temperature: Scalars['Float'];
+  /** The time the temperature data is valid. */
+  validTime: Scalars['Time'];
+};
+
+export type TurbulenceCondition = {
+  __typename?: 'TurbulenceCondition';
+  id: Scalars['ID'];
+  /** The intensity of the turbulence. */
+  intensity: Scalars['String'];
+  /** The maximum altitude in feet that the turbulence is present. */
+  maxAltitude: Scalars['Int'];
+  /** The minimum altitude in feet that the turbulence is present. */
+  minAltitude: Scalars['Int'];
+};
+
+export type WeatherStation = {
+  __typename?: 'WeatherStation';
+  airport?: Maybe<Airport>;
+  /** The elevation in meters of the station. */
+  elevation?: Maybe<Scalars['Float']>;
+  id: Scalars['ID'];
+  /** The latitude in decimal degrees of the station. */
+  latitude?: Maybe<Scalars['Float']>;
+  /** The longitude in decimal degrees of the station. */
+  longitude?: Maybe<Scalars['Float']>;
+  metars: MetarConnection;
+  /** The ICAO identifier of the station that provided the weather data or identifier of the weather station. */
+  stationID: Scalars['String'];
+  tafs: TafConnection;
+};
+
+
+export type WeatherStationMetarsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type WeatherStationTafsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+export type WeatherStationConnection = {
+  __typename?: 'WeatherStationConnection';
+  edges: Array<WeatherStationEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type WeatherStationEdge = {
+  __typename?: 'WeatherStationEdge';
+  cursor: Scalars['Cursor'];
+  node: WeatherStation;
+};
+
+export type AirportSearchFragment = { __typename?: 'Airport', icaoCode?: string | null, iataCode?: string | null, name: string, runways: Array<{ __typename?: 'Runway', closed: boolean, surface?: string | null, lowRunwayHeading?: number | null, lowRunwayIdentifier: string, lowRunwayLatitude?: number | null, lowRunwayLongitude?: number | null, highRunwayHeading?: number | null, highRunwayIdentifier: string, highRunwayLatitude?: number | null, highRunwayLongitude?: number | null }> };
 
 export type GetAirportsQueryVariables = Exact<{
-  identifier: Scalars['String'];
+  icao: Scalars['String'];
 }>;
 
 
-export type GetAirportsQuery = { __typename?: 'Query', getAirports: { __typename?: 'AirportConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, edges: Array<{ __typename?: 'AirportEdge', cursor: any, node: { __typename?: 'Airport', identifier: string, name: string, runways: Array<{ __typename?: 'Runway', closed: boolean, surface?: string | null, lowRunwayHeading?: number | null, lowRunwayIdentifier: string, lowRunwayLatitude?: number | null, lowRunwayLongitude?: number | null, highRunwayHeading?: number | null, highRunwayIdentifier: string, highRunwayLatitude?: number | null, highRunwayLongitude?: number | null }> } }> } };
+export type GetAirportsQuery = { __typename?: 'Query', getAirports: { __typename?: 'AirportConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, edges: Array<{ __typename?: 'AirportEdge', cursor: any, node: { __typename?: 'Airport', icaoCode?: string | null, iataCode?: string | null, name: string, runways: Array<{ __typename?: 'Runway', closed: boolean, surface?: string | null, lowRunwayHeading?: number | null, lowRunwayIdentifier: string, lowRunwayLatitude?: number | null, lowRunwayLongitude?: number | null, highRunwayHeading?: number | null, highRunwayIdentifier: string, highRunwayLatitude?: number | null, highRunwayLongitude?: number | null }> } }> } };
 
 
       export interface PossibleTypesResultData {

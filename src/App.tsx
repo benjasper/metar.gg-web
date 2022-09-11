@@ -4,7 +4,7 @@ import SearchComponent from './components/SearchComponent'
 import { GraphQLProvider } from './context/GraphQLClient'
 
 const App: Component = () => {
-	const client = createGraphQLClient("http://localhost:80/graphql")
+	const client = createGraphQLClient("https://api.metar.gg/graphql")
 
 	return (
 		<GraphQLProvider client={client}>
