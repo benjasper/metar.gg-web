@@ -1,5 +1,5 @@
 overwrite: true
-schema: "http://localhost:80/graphql"
+schema: "https://api.metar.gg/graphql"
 documents: "src/**/*.tsx"
 generates:
   src/generated/graphql.ts:

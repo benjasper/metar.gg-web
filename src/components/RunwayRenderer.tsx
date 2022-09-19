@@ -191,7 +191,7 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment }) => {
 	})
 
 	return (
-		<div class="w-1/2 md:w-full border rounded-full mx-auto md:mx-0">
+		<div class="w-1/2 md:w-full rounded-full mx-auto md:mx-0">
 			<svg
 				class="cartesian w-full h-full"
 				viewBox={`${-centerX()} ${-centerY()}  ${realDiagonal() * 2} ${realDiagonal() * 2}`}
@@ -204,7 +204,7 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment }) => {
 								y1={r.direction1.y}
 								x2={r.direction2.x}
 								y2={r.direction2.y}
-								stroke={i() % 2 === 0 ? 'lightgray' : 'green'}
+								stroke={'lightgray'}
 								stroke-width="0.8"
 							/>
 						</>

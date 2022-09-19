@@ -12,33 +12,13 @@
         "description": null,
         "fields": [
           {
-            "name": "continent",
-            "description": "Where the airport is (primarily) located.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "ENUM",
-                "name": "AirportContinent",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "country",
             "description": null,
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "Country",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -113,7 +93,7 @@
           },
           {
             "name": "id",
-            "description": null,
+            "description": "The unique identifier of the record.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -145,7 +125,7 @@
           },
           {
             "name": "importID",
-            "description": null,
+            "description": "The unique identifier of the import.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -185,7 +165,7 @@
           },
           {
             "name": "lastUpdated",
-            "description": null,
+            "description": "The last time the record was updated/created.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -276,13 +256,9 @@
             "description": null,
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "Region",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -454,7 +430,7 @@
         "fields": [
           {
             "name": "edges",
-            "description": null,
+            "description": "List of airport edges.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -478,7 +454,7 @@
           },
           {
             "name": "pageInfo",
-            "description": null,
+            "description": "Page info of this connection.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -494,7 +470,7 @@
           },
           {
             "name": "totalCount",
-            "description": null,
+            "description": "Total number of airports.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -515,66 +491,13 @@
         "possibleTypes": null
       },
       {
-        "kind": "ENUM",
-        "name": "AirportContinent",
-        "description": "AirportContinent is enum for the field continent",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": [
-          {
-            "name": "AF",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "AN",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "AS",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "EU",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "NA",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "OC",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "SA",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "possibleTypes": null
-      },
-      {
         "kind": "OBJECT",
         "name": "AirportEdge",
         "description": null,
         "fields": [
           {
             "name": "cursor",
-            "description": null,
+            "description": "The cursor of this airport.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -590,7 +513,7 @@
           },
           {
             "name": "node",
-            "description": null,
+            "description": "The airport object.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -668,9 +591,209 @@
         "possibleTypes": null
       },
       {
+        "kind": "OBJECT",
+        "name": "Country",
+        "description": null,
+        "fields": [
+          {
+            "name": "code",
+            "description": "The ISO 3166-1 alpha-2 code of the country. A handful of unofficial, non-ISO codes are also in use, such as \"XK\" for Kosovo.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "continent",
+            "description": "Where the airport is (primarily) located.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "CountryContinent",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": "The unique identifier of the record.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "importID",
+            "description": "The unique identifier of the import.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "keywords",
+            "description": "Keywords that can be used to search for the country.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "lastUpdated",
+            "description": "The last time the record was updated/created.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Time",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "name",
+            "description": "The name of the country.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "wikipediaLink",
+            "description": "The wikipedia link of the country.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "CountryContinent",
+        "description": "CountryContinent is enum for the field continent",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "AF",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AN",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AS",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "EU",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "NA",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "OC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "SA",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
         "kind": "SCALAR",
         "name": "Cursor",
-        "description": null,
+        "description": "The cursor string to use for pagination.",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -778,7 +901,7 @@
           },
           {
             "name": "id",
-            "description": null,
+            "description": "The unique identifier of the record.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1080,7 +1203,7 @@
           },
           {
             "name": "id",
-            "description": null,
+            "description": "The unique identifier of the record.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1096,7 +1219,7 @@
           },
           {
             "name": "importID",
-            "description": null,
+            "description": "The unique identifier of the import.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1112,7 +1235,7 @@
           },
           {
             "name": "lastUpdated",
-            "description": null,
+            "description": "The last time the record was updated/created.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1165,7 +1288,7 @@
         "fields": [
           {
             "name": "id",
-            "description": null,
+            "description": "The unique identifier of the record.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1286,7 +1409,7 @@
           },
           {
             "name": "id",
-            "description": null,
+            "description": "The unique identifier of the record.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1382,7 +1505,7 @@
           },
           {
             "name": "precipitation",
-            "description": "The precipitation in inches from since the last observation. 0.0005 in = trace precipitation",
+            "description": "The precipitation in inches from since the last observation. 0.0005 in = trace precipitation.",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -1394,7 +1517,7 @@
           },
           {
             "name": "precipitation3",
-            "description": "The precipitation in inches from the past 3 hours. 0.0005 in = trace precipitation",
+            "description": "The precipitation in inches from the past 3 hours. 0.0005 in = trace precipitation.",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -1406,7 +1529,7 @@
           },
           {
             "name": "precipitation6",
-            "description": "The precipitation in inches from the past 6 hours. 0.0005 in = trace precipitation",
+            "description": "The precipitation in inches from the past 6 hours. 0.0005 in = trace precipitation.",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -1418,7 +1541,7 @@
           },
           {
             "name": "precipitation24",
-            "description": "The precipitation in inches from the past 24 hours. 0.0005 in = trace precipitation",
+            "description": "The precipitation in inches from the past 24 hours. 0.0005 in = trace precipitation.",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -1578,7 +1701,7 @@
           },
           {
             "name": "seaLevelPressure",
-            "description": "The sea level pressure in hectopascal.s",
+            "description": "The sea level pressure in hectopascals.",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -1741,7 +1864,7 @@
         "fields": [
           {
             "name": "edges",
-            "description": null,
+            "description": "List of metar edges.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1765,7 +1888,7 @@
           },
           {
             "name": "pageInfo",
-            "description": null,
+            "description": "Page info of this connection.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1781,7 +1904,7 @@
           },
           {
             "name": "totalCount",
-            "description": null,
+            "description": "Total number of airports.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1808,7 +1931,7 @@
         "fields": [
           {
             "name": "cursor",
-            "description": null,
+            "description": "The cursor of this metar.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1824,7 +1947,7 @@
           },
           {
             "name": "node",
-            "description": null,
+            "description": "The metar object.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1932,7 +2055,7 @@
         "fields": [
           {
             "name": "endCursor",
-            "description": "The cursor to the last element of the current page",
+            "description": "The cursor to the last element of the current page.",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -1944,7 +2067,7 @@
           },
           {
             "name": "hasNextPage",
-            "description": "Whether there is at least one more page",
+            "description": "Whether there is at least one more page.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1960,7 +2083,7 @@
           },
           {
             "name": "hasPreviousPage",
-            "description": "Whether there is a previous page",
+            "description": "Whether there is a previous page.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1976,7 +2099,7 @@
           },
           {
             "name": "startCursor",
-            "description": "The cursor to the first element of the current page",
+            "description": "The cursor to the first element of the current page.",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -1998,8 +2121,69 @@
         "description": null,
         "fields": [
           {
+            "name": "getAirport",
+            "description": "Get a single airport by it's id, identifier, icao code or iata code.",
+            "args": [
+              {
+                "name": "iata",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "icao",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "id",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "identifier",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Airport",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "getAirports",
-            "description": null,
+            "description": "Search for airports by a variety of criteria.",
             "args": [
               {
                 "name": "after",
@@ -2039,7 +2223,7 @@
               },
               {
                 "name": "hasWeather",
-                "description": null,
+                "description": "Filter whether the airport provides METARs.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Boolean",
@@ -2051,7 +2235,7 @@
               },
               {
                 "name": "iata",
-                "description": null,
+                "description": "Search the airport by its IATA code.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -2063,6 +2247,83 @@
               },
               {
                 "name": "icao",
+                "description": "Search the airport by its ICAO code.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "identifier",
+                "description": "Search the airport by its ICAO code if available. Otherwise, it will be a local airport code (if no conflict), or if nothing else is available, an internally-generated code starting with the ISO2 country code, followed by a dash and a four-digit number.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "last",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "search",
+                "description": "Search the airport by its name, ICAO, IATA, GPS code, municipality, local code and keywords.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "type",
+                "description": "Filter by airport type.",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "AirportType",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "AirportConnection",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "getStation",
+            "description": "Get a single weather station by it's id or identifier.",
+            "args": [
+              {
+                "name": "id",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
@@ -2084,35 +2345,19 @@
                 "defaultValue": null,
                 "isDeprecated": false,
                 "deprecationReason": null
-              },
-              {
-                "name": "last",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
               }
             ],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "AirportConnection",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "WeatherStation",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "getStations",
-            "description": null,
+            "description": "Search for weather stations by it's identifier.",
             "args": [
               {
                 "name": "after",
@@ -2152,7 +2397,7 @@
               },
               {
                 "name": "identifier",
-                "description": null,
+                "description": "Search the weather station by it's identifier, this is usually the ICAO code of the airport it is located at.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -2181,6 +2426,153 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "WeatherStationConnection",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Region",
+        "description": null,
+        "fields": [
+          {
+            "name": "code",
+            "description": "local_code prefixed with the country code to make a globally-unique identifier.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": "The unique identifier of the record.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "importID",
+            "description": "The unique identifier of the import.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "keywords",
+            "description": "Keywords that can be used to search for the region.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "lastUpdated",
+            "description": "The last time the record was updated/created.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Time",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "localCode",
+            "description": "The local code for the administrative subdivision. Whenever possible, these are official ISO 3166:2, at the highest level available, but in some cases OurAirports has to use unofficial codes. There is also a pseudo code \"U-A\" for each country, which means that the airport has not yet been assigned to a region (or perhaps can't be, as in the case of a deep-sea oil platform).",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "name",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "wikipediaLink",
+            "description": "The wikipedia link of the region.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -2304,7 +2696,7 @@
           },
           {
             "name": "id",
-            "description": null,
+            "description": "The unique identifier of the record.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -2320,7 +2712,7 @@
           },
           {
             "name": "importID",
-            "description": null,
+            "description": "The unique identifier of the import.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -2336,7 +2728,7 @@
           },
           {
             "name": "lastUpdated",
-            "description": null,
+            "description": "The last time the record was updated/created.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -2523,7 +2915,7 @@
           },
           {
             "name": "id",
-            "description": null,
+            "description": "The unique identifier of the record.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -2666,7 +3058,7 @@
         "fields": [
           {
             "name": "distance",
-            "description": "The distance in meters from the given location to the airport",
+            "description": "The distance in meters from the given location to the airport.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -2682,7 +3074,7 @@
           },
           {
             "name": "station",
-            "description": "The METAR for the station",
+            "description": "The METAR for the station.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -2755,7 +3147,7 @@
           },
           {
             "name": "id",
-            "description": null,
+            "description": "The unique identifier of the record.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -2898,7 +3290,7 @@
         "fields": [
           {
             "name": "edges",
-            "description": null,
+            "description": "List of taf edges.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -2922,7 +3314,7 @@
           },
           {
             "name": "pageInfo",
-            "description": null,
+            "description": "Page info of this connection.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -2938,7 +3330,7 @@
           },
           {
             "name": "totalCount",
-            "description": null,
+            "description": "Total number of tafs.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -2965,7 +3357,7 @@
         "fields": [
           {
             "name": "cursor",
-            "description": null,
+            "description": "The cursor of this taf.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -2981,7 +3373,7 @@
           },
           {
             "name": "node",
-            "description": null,
+            "description": "The taf object.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3068,7 +3460,7 @@
         "fields": [
           {
             "name": "id",
-            "description": null,
+            "description": "The unique identifier of the record.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3147,7 +3539,7 @@
       {
         "kind": "SCALAR",
         "name": "Time",
-        "description": null,
+        "description": "Time string, in RFC3339 format.",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -3161,7 +3553,7 @@
         "fields": [
           {
             "name": "id",
-            "description": null,
+            "description": "The unique identifier of the record.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3260,7 +3652,7 @@
           },
           {
             "name": "id",
-            "description": null,
+            "description": "The unique identifier of the record.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3300,7 +3692,7 @@
           },
           {
             "name": "metars",
-            "description": null,
+            "description": "Returns the latest METARs for this station sorted by their observation time.",
             "args": [
               {
                 "name": "after",
@@ -3381,7 +3773,7 @@
           },
           {
             "name": "tafs",
-            "description": null,
+            "description": "Returns the latest TAFs for this station sorted by their issued time.",
             "args": [
               {
                 "name": "after",
@@ -3457,7 +3849,7 @@
         "fields": [
           {
             "name": "edges",
-            "description": null,
+            "description": "List of weather station edges.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3481,7 +3873,7 @@
           },
           {
             "name": "pageInfo",
-            "description": null,
+            "description": "Page info of this connection.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3497,7 +3889,7 @@
           },
           {
             "name": "totalCount",
-            "description": null,
+            "description": "Total number of weather stations.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3524,7 +3916,7 @@
         "fields": [
           {
             "name": "cursor",
-            "description": null,
+            "description": "The cursor of this weather station.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3540,7 +3932,7 @@
           },
           {
             "name": "node",
-            "description": null,
+            "description": "The weather station object.",
             "args": [],
             "type": {
               "kind": "NON_NULL",

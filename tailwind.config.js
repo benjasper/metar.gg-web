@@ -12,9 +12,6 @@ module.exports = {
         padding: {
           default: '1rem',
         },
-        screens: {
-          xs: '340px',
-        },
       }
     },
   },
