@@ -1,10 +1,10 @@
 import { For, Show } from 'solid-js'
-import { Airport, AirportSearchFragment } from '../generated/graphql'
-import ParsedWeatherItem from './parsed-weather/ParsedWeatherItem'
-import RunwayRenderer from './RunwayRenderer'
-import RunwayLayout from './RunwayRenderer'
+import { Airport, AirportSearchFragment } from '../../generated/graphql'
+import ParsedWeatherItem from './ParsedWeatherItem'
+import RunwayRenderer from '../RunwayRenderer'
+import RunwayLayout from '../RunwayRenderer'
 
-const WeatherParsed = (props: { airport: AirportSearchFragment }) => {
+const ParsedWeatherElements = (props: { airport: AirportSearchFragment }) => {
 	return (
 		<div class="grid grid-flow-row md:grid-flow-col auto-cols-fr gap-8 justify-center">
 			<ParsedWeatherItem class="max-w-xs">
@@ -48,4 +48,4 @@ const WeatherParsed = (props: { airport: AirportSearchFragment }) => {
 	)
 }
 
-export default WeatherParsed
+export default ParsedWeatherElements

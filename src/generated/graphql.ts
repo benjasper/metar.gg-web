@@ -616,6 +616,13 @@ export type WeatherStationEdge = {
   node: WeatherStation;
 };
 
+export type AirportSearchQueryVariables = Exact<{
+  search: Scalars['String'];
+}>;
+
+
+export type AirportSearchQuery = { __typename?: 'Query', getAirports: { __typename?: 'AirportConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, edges: Array<{ __typename?: 'AirportEdge', cursor: any, node: { __typename?: 'Airport', identifier: string, icaoCode?: string | null, iataCode?: string | null, name: string } }> } };
+
 export type MetarFragment = { __typename?: 'Metar', observationTime: any, rawText: string, temperature: number, dewpoint: number, altimeter: number, visibility: number, windDirection: number, windSpeed: number, windGust: number, skyConditions?: Array<{ __typename?: 'SkyCondition', skyCover: SkyConditionSkyCover, cloudBase?: number | null }> | null };
 
 export type AirportSearchFragment = { __typename?: 'Airport', icaoCode?: string | null, iataCode?: string | null, name: string, runways: Array<{ __typename?: 'Runway', closed: boolean, surface?: string | null, lowRunwayHeading?: number | null, lowRunwayIdentifier: string, lowRunwayLatitude?: number | null, lowRunwayLongitude?: number | null, highRunwayHeading?: number | null, highRunwayIdentifier: string, highRunwayLatitude?: number | null, highRunwayLongitude?: number | null }>, station?: { __typename?: 'WeatherStation', metars: { __typename?: 'MetarConnection', edges: Array<{ __typename?: 'MetarEdge', node: { __typename?: 'Metar', observationTime: any, rawText: string, temperature: number, dewpoint: number, altimeter: number, visibility: number, windDirection: number, windSpeed: number, windGust: number, skyConditions?: Array<{ __typename?: 'SkyCondition', skyCover: SkyConditionSkyCover, cloudBase?: number | null }> | null } }> } } | null };
