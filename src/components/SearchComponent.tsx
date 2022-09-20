@@ -5,8 +5,6 @@ import { useGraphQL } from '../context/GraphQLClient'
 import { Airport, AirportSearchFragment, GetAirportsQuery, GetAirportsQueryVariables } from '../generated/graphql'
 import WeatherParsed from './WeatherParsed'
 
-const placeholders = ['KSFO', 'EDDF', 'LEBL', 'EGLL', 'LFPG']
-
 const QUERY = gql`
 	fragment Metar on Metar {
 		observationTime
@@ -70,7 +68,7 @@ const QUERY = gql`
 `
 
 const SearchComponent = () => {
-	const [placeholder, setPlaceholder] = createSignal(placeholders[0])
+	const [placeholder, setPlaceholder] = createSignal('')
 
 	const [queryVars, setQueryVars] = createSignal<GetAirportsQueryVariables | false>(false)
 
@@ -85,8 +83,6 @@ const SearchComponent = () => {
 		if (airportResults() && airportResults().getAirports.edges.length > 0) {
 			return
 		}
-
-		setPlaceholder(placeholders[Math.floor(Math.random() * placeholders.length)])
 	}, 3000)
 
 	onCleanup(() => {
@@ -145,7 +141,7 @@ const SearchComponent = () => {
 						<div class='flex flex-col gap-4'>
 							<p class="text-xl text-center">{airport().station.metars.edges[0].node.rawText}</p>
 							<span class="text-center">
-								Last updated at {metarObservationTime().toLocaleTimeString()}
+								Last updated at {metarObservationTime().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
 							</span>
 						</div>
 					</Show>
