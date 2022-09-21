@@ -21,7 +21,7 @@ export const AIRPORT_SEARCH = gql`
 	}
 `
 
-export const AIRPORT_DETAIL = gql`
+export const AIRPORT_SINGLE = gql`
 	fragment Metar on Metar {
 		observationTime
 		rawText
@@ -66,19 +66,9 @@ export const AIRPORT_DETAIL = gql`
 		}
 	}
 
-	query GetAirports($search: String!) {
-		getAirports(search: $search, hasWeather: true) {
-			pageInfo {
-				hasNextPage
-				endCursor
-			}
-			totalCount
-			edges {
-				cursor
-				node {
-					...AirportSearch
-				}
-			}
+	query GetSingleAirport($identifier: String!) {
+		getAirport(identifier: $identifier) {
+			...AirportSearch
 		}
 	}
 `

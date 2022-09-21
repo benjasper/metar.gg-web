@@ -1,5 +1,5 @@
 import { useKeyDownList } from '@solid-primitives/keyboard'
-import { Component, createEffect, createSignal, For, onCleanup, Show, untrack } from 'solid-js'
+import { Component, createEffect, createSignal, For, mergeProps, onCleanup, Show, untrack } from 'solid-js'
 import { useGraphQL } from '../context/GraphQLClient'
 import { AirportSearchQuery, AirportSearchQueryVariables } from '../generated/graphql'
 import { AIRPORT_SEARCH } from '../queries/AirportQueries'
@@ -8,18 +8,22 @@ const placeholders = ['KSFO', 'EDDF', 'LEBL', 'EGLL', 'LFPG']
 
 interface SearchBarProps {
 	class?: string
+	onSearch: (airportIdentifier: string) => void
 }
 
-const SearchBar: Component<SearchBarProps> = (props: SearchBarProps = { class: '' }) => {
+const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
+	const props = mergeProps({ class: '' }, properties)
+
 	const [placeholder, setPlaceholder] = createSignal(placeholders[0])
 	const [isFocused, setIsFocused] = createSignal(false)
 	const [queryVars, setQueryVars] = createSignal<AirportSearchQueryVariables | false>(false)
+	const [currentInput, setCurrentInput] = createSignal<string>('')
 
 	let root!: HTMLInputElement
 	let input!: HTMLInputElement
 
 	const [selectedAirportId, setSelectedAirportId] = createSignal<number | undefined>(undefined)
-	const [keys] = useKeyDownList()
+	const [keys, { event }] = useKeyDownList()
 
 	const newQuery = useGraphQL()
 
@@ -39,13 +43,11 @@ const SearchBar: Component<SearchBarProps> = (props: SearchBarProps = { class: '
 	function handleInput(event: Event) {
 		const target = event.target as HTMLInputElement
 
+		setCurrentInput(target.value)
+
 		if (target.value.length === 0) {
 			setQueryVars(false)
 			refetch.mutate(undefined)
-			return
-		}
-
-		if (target.value.length < 2) {
 			return
 		}
 
@@ -53,8 +55,10 @@ const SearchBar: Component<SearchBarProps> = (props: SearchBarProps = { class: '
 		setSelectedAirportId(0)
 	}
 
-	const onClick = (airportIdentifier: string) => {
-		console.log(airportIdentifier)
+	const onSubmit = (airportIdentifier: string) => {
+		props.onSearch(airportIdentifier)
+		input.blur()
+		setIsFocused(false)
 	}
 
 	const onFocusLeave = (e: Event) => {
@@ -67,6 +71,7 @@ const SearchBar: Component<SearchBarProps> = (props: SearchBarProps = { class: '
 
 	createEffect(() => {
 		const id = untrack(selectedAirportId)
+		const untrackedEvent = untrack(event)
 
 		if (keys().length === 0) {
 			return
@@ -84,6 +89,7 @@ const SearchBar: Component<SearchBarProps> = (props: SearchBarProps = { class: '
 		}
 
 		if (keys().includes('ARROWDOWN')) {
+			untrackedEvent.preventDefault()
 			setSelectedAirportId(prev =>
 				prev === undefined || prev < airportResults().getAirports.edges.length - 1 ? (prev ?? -1) + 1 : prev
 			)
@@ -91,6 +97,7 @@ const SearchBar: Component<SearchBarProps> = (props: SearchBarProps = { class: '
 		}
 
 		if (keys().includes('ARROWUP')) {
+			untrackedEvent.preventDefault()
 			setSelectedAirportId(prev => (prev === undefined || prev > 0 ? (prev ?? 1) - 1 : prev))
 			return
 		}
@@ -100,7 +107,7 @@ const SearchBar: Component<SearchBarProps> = (props: SearchBarProps = { class: '
 				return
 			}
 
-			onClick(airportResults().getAirports.edges[id].node.identifier)
+			onSubmit(airportResults().getAirports.edges[id].node.identifier)
 		}
 	})
 
@@ -110,41 +117,55 @@ const SearchBar: Component<SearchBarProps> = (props: SearchBarProps = { class: '
 
 	return (
 		<div ref={root} class={`relative w-full max-w-md mx-auto ${props.class}`}>
-			<input
-				ref={input}
-				type="text"
-				autofocus={true}
-				spellcheck={false}
-				tabIndex={1}
-				autocomplete="off"
-				placeholder={placeholder()}
-				onInput={e => handleInput(e)}
-				onFocus={e => setIsFocused(true)}
-				onFocusOut={e => onFocusLeave(e)}
-				class={`w-full text-left bg-gray-100 text-gray-700 text-xl px-6 py-2 rounded-lg transition-all outline-none`}
-			/>
-			<Show when={isFocused() && airportResults.latest && airportResults().getAirports.totalCount > 0}>
+			<div class="flex flex-col">
+				<input
+					ref={input}
+					type="search"
+					autofocus={true}
+					spellcheck={false}
+					tabIndex={1}
+					role="combobox"
+					autocomplete="off"
+					placeholder={placeholder()}
+					onInput={e => handleInput(e)}
+					onFocus={e => setIsFocused(true)}
+					onFocusOut={e => onFocusLeave(e)}
+					class={`w-full text-left bg-gray-100 text-gray-700 text-xl px-6 py-2 rounded-lg transition-all outline-none`}
+				/>
+			</div>
+			<Show when={isFocused() && currentInput() !== '' && airportResults.latest}>
 				<div
-					class="absolute w-full max-h-56 overflow-y-auto left-0 z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+					class="absolute w-full overflow-y-auto left-0 z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
 					role="menu"
 					aria-orientation="vertical"
 					aria-labelledby="menu-button"
 					tabindex="-1">
 					<div class="py-1" role="none">
-						<For each={airportResults().getAirports.edges}>
-							{(airportNode, i) => (
-								<a
-									href="#"
-									class="w-full text-gray-700 block px-6 py-2 text-sm"
-									classList={{ 'bg-gray-100': i() === selectedAirportId() }}
-									onMouseEnter={e => setSelectedAirportId(i())}
-									onClick={e => onClick(airportNode.node.identifier)}
-									role="menuitem"
-									tabindex={i()}>
-									{airportNode.node.icaoCode} / {airportNode.node.iataCode} - {airportNode.node.name}
-								</a>
-							)}
-						</For>
+						<Show when={airportResults.latest && airportResults().getAirports.totalCount > 0}>
+							<For each={airportResults().getAirports.edges}>
+								{(airportNode, i) => (
+									<a
+										href="#"
+										class="w-full text-gray-700 block px-6 py-2 text-sm"
+										classList={{ 'bg-gray-100': i() === selectedAirportId() }}
+										onMouseEnter={e => setSelectedAirportId(i())}
+										onClick={e => onSubmit(airportNode.node.identifier)}
+										role="menuitem"
+										tabindex={i()}>
+										{airportNode.node.icaoCode} / {airportNode.node.iataCode} •{' '}
+										{airportNode.node.name}
+									</a>
+								)}
+							</For>
+						</Show>
+						<Show when={airportResults() && airportResults().getAirports.totalCount === 0}>
+							<a
+								href="#"
+								class="w-full text-gray-700 block px-6 py-2 text-sm pointer-events-none"
+								role="menuitem">
+								Nothing found.
+							</a>
+						</Show>
 					</div>
 				</div>
 			</Show>
