@@ -55,6 +55,10 @@ export const AIRPORT_SINGLE = gql`
 			highRunwayLatitude
 			highRunwayLongitude
 		}
+		municipality
+		country {
+			name
+		}
 		station {
 			metars(first: 1) {
 				edges {

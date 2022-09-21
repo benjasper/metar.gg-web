@@ -17,7 +17,7 @@ const SearchComponent = () => {
 
 	const newQuery = useGraphQL()
 
-	const [airportRequest] = newQuery<GetSingleAirportQuery, GetSingleAirportQueryVariables>(AIRPORT_SINGLE, () =>
+	const [airportRequest, {mutate, refetch}] = newQuery<GetSingleAirportQuery, GetSingleAirportQueryVariables>(AIRPORT_SINGLE, () =>
 		airportIdentifier()
 	)
 	const airport = (): AirportSearchFragment => {
@@ -31,7 +31,11 @@ const SearchComponent = () => {
 	const metarObservationTime = () => new Date(airport()?.station.metars?.edges[0]?.node.observationTime) ?? undefined
 
 	const doSearch = (airportIdentifier: string) => {
-		console.log(airportIdentifier)
+		if (airportIdentifier.length === 0) {
+			setAirportIdentifier(false)
+			mutate(undefined)
+			return
+		}
 		setAirportIdentifier({ identifier: airportIdentifier })
 	}
 
@@ -51,17 +55,17 @@ const SearchComponent = () => {
 					leave="transform duration-200 transition ease-in-out"
 					leaveFrom="opacity-100 rotate-0 scale-100 "
 					leaveTo="opacity-0 scale-95">
-					<Show when={airport() !== undefined}>
 						<div class="flex flex-col mx-auto text-center">
 							<h2>
 								{airport().icaoCode} / {airport().iataCode}
 							</h2>
-							<span class="mx-">{airport().name}</span>
+							<span class='text-lg mt-1'>{airport().name}</span>
+							<span class='text-sm'>{airport().municipality}, {airport().country.name}</span>
 						</div>
 						<ParsedWeatherElements airport={airport()}></ParsedWeatherElements>
 
 						<div class="flex flex-col gap-4">
-							<Show when={airport().station.metars.edges[0]}>
+							<Show when={airport() && airport().station.metars.edges[0]}>
 								<p class="text-xl text-center">{airport().station.metars.edges[0].node.rawText}</p>
 								<span class="text-center">
 									Last updated at{' '}
@@ -72,7 +76,6 @@ const SearchComponent = () => {
 								</span>
 							</Show>
 						</div>
-					</Show>
 				</Transition>
 			</div>
 		</>
