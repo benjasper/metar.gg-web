@@ -1,5 +1,5 @@
 import { For, Show } from 'solid-js'
-import { Airport, AirportSearchFragment, MetarFragment } from '../../generated/graphql'
+import { AirportSearchFragment } from '../../queries/generated/graphql'
 import ParsedWeatherItem from './ParsedWeatherItem'
 import RunwayRenderer from '../RunwayRenderer'
 import RunwayLayout from '../RunwayRenderer'
@@ -17,7 +17,7 @@ const ParsedWeatherElements = (props: { airport: AirportSearchFragment }) => {
 		<div class="grid grid-flow-row md:grid-flow-col auto-cols-fr gap-8 justify-center">
 			<Show when={latestMetar()} fallback={<span class="text-lg mx-auto">No recent weather available.</span>}>
 				<ParsedWeatherItem class="max-w-xs">
-					<h3 class="mx-auto">Wind</h3>
+					<span class="mx-auto">Wind</span>
 					<RunwayRenderer airport={props.airport}></RunwayRenderer>
 					<Show when={latestMetar()}>
 						<p class="text-center">
@@ -26,26 +26,27 @@ const ParsedWeatherElements = (props: { airport: AirportSearchFragment }) => {
 					</Show>
 				</ParsedWeatherItem>
 				<ParsedWeatherItem>
-					<h3 class="mx-auto">Temperature</h3>
+					<span class="mx-auto">Temperature</span>
 					<p class="text-center text-xl">{latestMetar().temperature}°C</p>
 				</ParsedWeatherItem>
 				<ParsedWeatherItem>
-					<h3 class="mx-auto">Visibility</h3>
+					<span class="mx-auto">Visibility</span>
 					<p class="text-center text-xl">{latestMetar().visibility} miles</p>
 				</ParsedWeatherItem>
 				<ParsedWeatherItem>
-					<h3 class="mx-auto">Altimeter</h3>
+					<span class="mx-auto">Altimeter</span>
 					<p class="text-center text-xl">{latestMetar().altimeter.toFixed(2)} inHg</p>
 				</ParsedWeatherItem>
 				<ParsedWeatherItem>
-					<h3 class="mx-auto">Sky conditions</h3>
+					<span class="mx-auto">Sky conditions</span>
 					<div class="flex flex-col gap-2 text-center text-xl">
 						<For each={latestMetar().skyConditions.reverse()}>
 							{(condition, i) => (
-								<div class="flex flex-col mx-auto text-center">
+								<div class="flex flex-row gap-1 mx-auto text-center">
 									<span>{condition.skyCover}</span>
+									<span>at</span>
 									<Show when={condition.cloudBase}>
-										<span class="text-sm">{condition.cloudBase}</span>
+										<span class="my-auto">{condition.cloudBase}</span>
 									</Show>
 								</div>
 							)}

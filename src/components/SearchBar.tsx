@@ -2,7 +2,7 @@ import { useKeyDownList } from '@solid-primitives/keyboard'
 import { Transition } from 'solid-headless'
 import { Component, createEffect, createSignal, For, mergeProps, onCleanup, Show, untrack } from 'solid-js'
 import { useGraphQL } from '../context/GraphQLClient'
-import { AirportSearchQuery, AirportSearchQueryVariables } from '../generated/graphql'
+import { AirportSearchQuery, AirportSearchQueryVariables } from '../queries/generated/graphql'
 import { AIRPORT_SEARCH } from '../queries/AirportQueries'
 
 interface SearchBarProps {
@@ -95,7 +95,6 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 
 		if (keys().includes('ENTER')) {
 			if (id === undefined || airportResults() === undefined || airportResults().getAirports.totalCount === 0) {
-				onSubmit('')
 				return
 			}
 

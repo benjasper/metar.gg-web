@@ -2,7 +2,7 @@ overwrite: true
 schema: "https://api.metar.gg/graphql"
 documents: "src/**/*.tsx"
 generates:
-  src/generated/graphql.ts:
+  src/queries/generated/graphql.ts:
     plugins:
       - "typescript"
       - "typescript-operations"
