@@ -1,6 +1,7 @@
+import { debounce } from '@solid-primitives/scheduled'
 import { useParams } from '@solidjs/router'
 import { Transition } from 'solid-headless'
-import { Component, createEffect, createSignal, Show } from 'solid-js'
+import { Component, createEffect, createSignal, Show, untrack } from 'solid-js'
 import ParsedWeatherElements from '../components/parsed-weather/ParsedWeatherElements'
 import { useGraphQL } from '../context/GraphQLClient'
 import { AIRPORT_SINGLE } from '../queries/AirportQueries'
@@ -20,6 +21,8 @@ const AirportSearchDetail: Component = () => {
 		() => airportIdentifier()
 	)
 
+	const throttledLoading = debounce((id: string) => setAirportIdentifier({ identifier: id }), 100)
+
 	const airport = (): AirportSearchFragment => {
 		if (airportRequest() && airportRequest().getAirport) {
 			return airportRequest().getAirport
@@ -36,7 +39,7 @@ const AirportSearchDetail: Component = () => {
 			mutate(undefined)
 			return
 		}
-		setAirportIdentifier({ identifier: airportIdentifier })
+		throttledLoading(airportIdentifier)
 	}
 
 	createEffect(() => {
@@ -46,39 +49,34 @@ const AirportSearchDetail: Component = () => {
 	})
 
 	return (
-		<Transition
-			class="my-auto flex flex-col gap-32"
-			show={airportRequest.loading === false && airport() !== undefined}
-			enter="transform transition duration-[200ms]"
-			enterFrom="opacity-0 scale-80"
-			enterTo="opacity-100 scale-100"
-			leave="transform duration-200 transition ease-in-out"
-			leaveFrom="opacity-100 rotate-0 scale-100 "
-			leaveTo="opacity-0 scale-95">
-			<div class="flex flex-col mx-auto text-center">
-				<h2>
-					{airport().icaoCode} / {airport().iataCode}
-				</h2>
-				<span class="text-lg mt-1">{airport().name}</span>
-				<span class="text-sm">
-					{airport().municipality}, {airport().country.name}
-				</span>
-			</div>
-			<ParsedWeatherElements airport={airport()}></ParsedWeatherElements>
-
-			<div class="flex flex-col gap-4">
-				<Show when={airport() && airport().station.metars.edges[0]}>
-					<p class="text-xl text-center">{airport().station.metars.edges[0].node.rawText}</p>
-					<span class="text-center">
-						Last updated at{' '}
-						{metarObservationTime().toLocaleTimeString([], {
-							hour: 'numeric',
-							minute: '2-digit',
-						})}
+		<Show when={airportRequest.loading === false && airport() !== undefined}>
+			<div class="my-auto flex flex-col">
+				<div class="flex flex-col mx-auto text-center py-24">
+					<h2>
+						{airport().icaoCode} / {airport().iataCode}
+					</h2>
+					<span class="text-lg mt-1">{airport().name}</span>
+					<span class="text-sm">
+						{airport().municipality}, {airport().country.name}
 					</span>
-				</Show>
+				</div>
+
+				<ParsedWeatherElements airport={airport()}></ParsedWeatherElements>
+
+				<div class="flex flex-col gap-4 mt-24">
+					<Show when={airport() && airport().station.metars.edges[0]}>
+						<p class="text-xl text-center">{airport().station.metars.edges[0].node.rawText}</p>
+						<span class="text-center">
+							Last updated at{' '}
+							{metarObservationTime().toLocaleTimeString([], {
+								hour: 'numeric',
+								minute: '2-digit',
+							})}
+						</span>
+					</Show>
+				</div>
 			</div>
-		</Transition>
+		</Show>
 	)
 }
 

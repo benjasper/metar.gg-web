@@ -14,17 +14,13 @@ import AirportSearchDetail from './AirportSearchDetail'
 
 const AirportSearch = () => {
 	const navigate = useNavigate()
-	const params = useParams()
-	const [airportIdentifier, setAirportIdentifier] = createSignal<string>('')
 
 	const doSearch = (airportIdentifier: string) => {
 		if (airportIdentifier.length === 0) {
 			// TODO return to search page
-			setAirportIdentifier('')
 			return
 		}
 
-		setAirportIdentifier(airportIdentifier)
 		navigate(`/${airportIdentifier}`)
 	}
 

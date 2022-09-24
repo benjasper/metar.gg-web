@@ -1,105 +1,12 @@
-import { createEffect, createSignal, For } from 'solid-js'
+import { createEffect, createSignal, For, Show, untrack } from 'solid-js'
 import * as merc from 'mercator-projection'
-import { AirportSearchFragment } from '../generated/graphql'
-
-const airports: Airport[] = [
-	{
-		runways: [
-			{
-				direction1: {
-					runway: '09L',
-					x: 52.468364,
-					y: 9.648286,
-				},
-				direction2: {
-					runway: '27R',
-					x: 52.466825,
-					y: 9.704136,
-				},
-			},
-			{
-				direction1: {
-					runway: '09R',
-					x: 52.454986,
-					y: 9.676769,
-				},
-				direction2: {
-					runway: '27L',
-					x: 52.454031,
-					y: 9.71115,
-				},
-			},
-			{
-				direction1: {
-					runway: '09C',
-					x: 52.464831,
-					y: 9.683767,
-				},
-				direction2: {
-					runway: '27C',
-					x: 52.464522,
-					y: 9.695144,
-				},
-			},
-		],
-	},
-	{
-		runways: [
-			{
-				direction1: {
-					runway: '07L',
-					x: 50.032617,
-					y: 8.534631,
-				},
-				direction2: {
-					runway: '25R',
-					x: 50.045128,
-					y: 8.586981,
-				},
-			},
-			{
-				direction1: {
-					runway: '07R',
-					x: 50.027542,
-					y: 8.534175,
-				},
-				direction2: {
-					runway: '25L',
-					x: 50.040053,
-					y: 8.586531,
-				},
-			},
-			{
-				direction1: {
-					runway: '18',
-					x: 50.034439,
-					y: 8.525928,
-				},
-				direction2: {
-					runway: '36',
-					x: 49.998417,
-					y: 8.526083,
-				},
-			},
-		],
-	},
-]
+import { AirportSearchFragment } from '../queries/generated/graphql'
 
 const cartesianCoordinates = (lat, lon) => {
 	const x = merc.fromLatLngToPoint({ lat: lat, lng: lon }).x
 	const y = merc.fromLatLngToPoint({ lat: lat, lng: lon }).y
 
 	return { x, y }
-}
-
-type TransformerFunction = (runway: Runway) => Runway
-
-const convertAirport = (airport: Airport, transformFunction: TransformerFunction): Airport => {
-	airport.runways = airport.runways.map(runway => {
-		return transformFunction(runway)
-	})
-
-	return airport
 }
 
 const calculateMinMaxOfCoordinates = (
@@ -142,8 +49,13 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment }) => {
 
 	createEffect(() => {
 		const preparingRunways = []
-
+		
 		props.airport.runways.forEach(runway => {
+			// Check if all runways have coordinates
+			if (!(runway.lowRunwayLatitude && runway.lowRunwayLongitude && runway.highRunwayLatitude && runway.highRunwayLongitude)) {
+				return
+			}
+
 			if (
 				runway.lowRunwayLatitude === undefined ||
 				runway.lowRunwayLongitude === undefined ||
@@ -191,51 +103,53 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment }) => {
 	})
 
 	return (
-		<div class="w-1/2 md:w-full rounded-full mx-auto md:mx-0">
-			<svg
-				class="cartesian w-full h-full"
-				viewBox={`${-centerX()} ${-centerY()}  ${realDiagonal() * 2} ${realDiagonal() * 2}`}
-				xmlns="http://www.w3.org/2000/svg">
-				<For each={runways()}>
-					{(r, i) => (
-						<>
-							<line
-								x1={r.direction1.x}
-								y1={r.direction1.y}
-								x2={r.direction2.x}
-								y2={r.direction2.y}
-								stroke={'lightgray'}
-								stroke-width="0.8"
-							/>
-						</>
-					)}
-				</For>
-				<For each={runways()}>
-					{(r, i) => (
-						<>
-							<circle class="fill-gray-600" cx={r.direction1.x} cy={r.direction1.y} r="1" />
-							<text
-								class="text-[0.8px] fill-white"
-								x={r.direction1.x}
-								y={r.direction1.y}
-								dominant-baseline="middle"
-								text-anchor="middle">
-								{r.direction1.runway}
-							</text>
-							<circle class="fill-gray-600" cx={r.direction2.x} cy={r.direction2.y} r="1" />
-							<text
-								class="text-[0.8px] fill-white"
-								x={r.direction2.x}
-								y={r.direction2.y}
-								dominant-baseline="middle"
-								text-anchor="middle">
-								{r.direction2.runway}
-							</text>
-						</>
-					)}
-				</For>
-			</svg>
-		</div>
+		<Show when={runways().length > 0}>
+			<div class="w-full rounded-full mx-auto md:mx-0">
+				<svg
+					class="cartesian w-full h-full"
+					viewBox={`${-centerX()} ${-centerY()}  ${realDiagonal() * 2} ${realDiagonal() * 2}`}
+					xmlns="http://www.w3.org/2000/svg">
+					<For each={runways()}>
+						{(r, i) => (
+							<>
+								<line
+									x1={r.direction1.x}
+									y1={r.direction1.y}
+									x2={r.direction2.x}
+									y2={r.direction2.y}
+									stroke={'lightgray'}
+									stroke-width="0.8"
+								/>
+							</>
+						)}
+					</For>
+					<For each={runways()}>
+						{(r, i) => (
+							<>
+								<circle class="fill-gray-600" cx={r.direction1.x} cy={r.direction1.y} r="1" />
+								<text
+									class="text-[0.8px] fill-white"
+									x={r.direction1.x}
+									y={r.direction1.y}
+									dominant-baseline="middle"
+									text-anchor="middle">
+									{r.direction1.runway}
+								</text>
+								<circle class="fill-gray-600" cx={r.direction2.x} cy={r.direction2.y} r="1" />
+								<text
+									class="text-[0.8px] fill-white"
+									x={r.direction2.x}
+									y={r.direction2.y}
+									dominant-baseline="middle"
+									text-anchor="middle">
+									{r.direction2.runway}
+								</text>
+							</>
+						)}
+					</For>
+				</svg>
+			</div>
+		</Show>
 	)
 }
 

@@ -4,6 +4,7 @@ import { Component, createEffect, createSignal, For, mergeProps, onCleanup, Show
 import { useGraphQL } from '../context/GraphQLClient'
 import { AirportSearchQuery, AirportSearchQueryVariables } from '../queries/generated/graphql'
 import { AIRPORT_SEARCH } from '../queries/AirportQueries'
+import { debounce } from '@solid-primitives/scheduled'
 
 interface SearchBarProps {
 	class?: string
@@ -30,6 +31,8 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 		queryVars
 	)
 
+	const throttledSearch = debounce((queryVars: AirportSearchQueryVariables | false) => setQueryVars(queryVars), 200)
+
 	function handleInput(event: Event) {
 		const target = event.target as HTMLInputElement
 
@@ -41,7 +44,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 			return
 		}
 
-		setQueryVars({ search: target.value.toUpperCase() })
+		throttledSearch({ search: target.value.toUpperCase() })
 		setSelectedAirportId(0)
 	}
 

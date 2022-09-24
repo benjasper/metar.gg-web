@@ -4,7 +4,7 @@ import ParsedWeatherItem from './ParsedWeatherItem'
 import RunwayRenderer from '../RunwayRenderer'
 import RunwayLayout from '../RunwayRenderer'
 
-const ParsedWeatherElements = (props: { airport: AirportSearchFragment }) => {
+const ParsedWeatherElements = (props: { airport: AirportSearchFragment, class?: string }) => {
 	const latestMetar = () => {
 		if (props.airport.station.metars.edges.length === 0) {
 			return undefined
@@ -14,45 +14,53 @@ const ParsedWeatherElements = (props: { airport: AirportSearchFragment }) => {
 	}
 
 	return (
-		<div class="grid grid-flow-row md:grid-flow-col auto-cols-fr gap-8 justify-center">
+		<div class={`flex flex-col md:flex-row gap-8 justify-center ${props.class ?? ''}`}>
 			<Show when={latestMetar()} fallback={<span class="text-lg mx-auto">No recent weather available.</span>}>
-				<ParsedWeatherItem class="max-w-xs">
-					<span class="mx-auto">Wind</span>
-					<RunwayRenderer airport={props.airport}></RunwayRenderer>
-					<Show when={latestMetar()}>
-						<p class="text-center">
-							{latestMetar().windDirection}° at {latestMetar().windSpeed}kt
-						</p>
-					</Show>
-				</ParsedWeatherItem>
-				<ParsedWeatherItem>
-					<span class="mx-auto">Temperature</span>
-					<p class="text-center text-xl">{latestMetar().temperature}°C</p>
-				</ParsedWeatherItem>
-				<ParsedWeatherItem>
-					<span class="mx-auto">Visibility</span>
-					<p class="text-center text-xl">{latestMetar().visibility} miles</p>
-				</ParsedWeatherItem>
-				<ParsedWeatherItem>
-					<span class="mx-auto">Altimeter</span>
-					<p class="text-center text-xl">{latestMetar().altimeter.toFixed(2)} inHg</p>
-				</ParsedWeatherItem>
-				<ParsedWeatherItem>
-					<span class="mx-auto">Sky conditions</span>
-					<div class="flex flex-col gap-2 text-center text-xl">
-						<For each={latestMetar().skyConditions.reverse()}>
-							{(condition, i) => (
-								<div class="flex flex-row gap-1 mx-auto text-center">
-									<span>{condition.skyCover}</span>
-									<span>at</span>
-									<Show when={condition.cloudBase}>
-										<span class="my-auto">{condition.cloudBase}</span>
-									</Show>
-								</div>
-							)}
-						</For>
-					</div>
-				</ParsedWeatherItem>
+				<div class="flex flex-col flex-shrink-0">
+					<ParsedWeatherItem class="flex-shrink-0">
+						<span class="mx-auto">Wind</span>
+						<RunwayRenderer airport={props.airport}></RunwayRenderer>
+						<Show when={latestMetar()}>
+							<p class="text-center">
+								{latestMetar().windDirection}° at {latestMetar().windSpeed}kt
+							</p>
+						</Show>
+					</ParsedWeatherItem>
+				</div>
+				<div class="flex flex-row flex-wrap justify-center md:justify-start gap-8">
+					<ParsedWeatherItem>
+						<span class="mx-auto">Temperature</span>
+						<p class="text-center text-xl">{latestMetar().temperature}°C</p>
+					</ParsedWeatherItem>
+					<ParsedWeatherItem>
+						<span class="mx-auto">Dewpoint</span>
+						<p class="text-center text-xl">{latestMetar().dewpoint}°C</p>
+					</ParsedWeatherItem>
+					<ParsedWeatherItem>
+						<span class="mx-auto">Visibility</span>
+						<p class="text-center text-xl">{latestMetar().visibility} miles</p>
+					</ParsedWeatherItem>
+					<ParsedWeatherItem>
+						<span class="mx-auto">Altimeter</span>
+						<p class="text-center text-xl">{latestMetar().altimeter.toFixed(2)} inHg</p>
+					</ParsedWeatherItem>
+					<ParsedWeatherItem>
+						<span class="mx-auto">Sky conditions</span>
+						<div class="flex flex-col gap-2 text-center text-xl">
+							<For each={latestMetar().skyConditions.reverse()}>
+								{(condition, i) => (
+									<div class="flex flex-row gap-1 mx-auto text-center">
+										<span>{condition.skyCover}</span>
+										<Show when={condition.cloudBase}>
+											<span>at</span>
+											<span class="my-auto">{condition.cloudBase}</span>
+										</Show>
+									</div>
+								)}
+							</For>
+						</div>
+					</ParsedWeatherItem>
+				</div>
 			</Show>
 		</div>
 	)

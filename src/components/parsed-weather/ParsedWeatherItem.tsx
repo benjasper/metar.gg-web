@@ -7,7 +7,7 @@ interface ParsedWeatherItemWrapperProps {
 
 const ParsedWeatherItem: Component<ParsedWeatherItemWrapperProps> = (props) => {
 	return (
-		<div class={`w-full flex flex-col mx-auto md:mx-0 gap-2 justify-center rounded-2xl p-4 bg-gray-50 ${props.class ?? ''}`}>
+		<div class={`w-auto h-auto flex flex-col md:mx-0 gap-2 justify-center rounded-2xl px-12 py-6 bg-gray-50 ${props.class ?? ''}`}>
 			{props.children}
 		</div>
 	)

@@ -26,6 +26,7 @@
   "dependencies": {
     "@solid-primitives/graphql": "^1.3.0",
     "@solid-primitives/keyboard": "^1.0.2",
+    "@solid-primitives/scheduled": "^1.0.1",
     "@solidjs/router": "^0.4.3",
     "graphql": "^16.6.0",
     "mercator-projection": "^0.0.2",
