@@ -4,7 +4,7 @@ import ParsedWeatherItem from './ParsedWeatherItem'
 import RunwayRenderer from '../RunwayRenderer'
 import RunwayLayout from '../RunwayRenderer'
 
-const ParsedWeatherElements = (props: { airport: AirportSearchFragment, class?: string }) => {
+const ParsedWeatherElements = (props: { airport: AirportSearchFragment; class?: string }) => {
 	const latestMetar = () => {
 		if (props.airport.station.metars.edges.length === 0) {
 			return undefined
@@ -29,20 +29,8 @@ const ParsedWeatherElements = (props: { airport: AirportSearchFragment, class?: 
 				</div>
 				<div class="flex flex-row flex-wrap justify-center md:justify-start gap-8">
 					<ParsedWeatherItem>
-						<span class="mx-auto">Temperature</span>
-						<p class="text-center text-xl">{latestMetar().temperature}°C</p>
-					</ParsedWeatherItem>
-					<ParsedWeatherItem>
-						<span class="mx-auto">Dewpoint</span>
-						<p class="text-center text-xl">{latestMetar().dewpoint}°C</p>
-					</ParsedWeatherItem>
-					<ParsedWeatherItem>
 						<span class="mx-auto">Visibility</span>
 						<p class="text-center text-xl">{latestMetar().visibility} miles</p>
-					</ParsedWeatherItem>
-					<ParsedWeatherItem>
-						<span class="mx-auto">Altimeter</span>
-						<p class="text-center text-xl">{latestMetar().altimeter.toFixed(2)} inHg</p>
 					</ParsedWeatherItem>
 					<ParsedWeatherItem>
 						<span class="mx-auto">Sky conditions</span>
@@ -53,13 +41,40 @@ const ParsedWeatherElements = (props: { airport: AirportSearchFragment, class?: 
 										<span>{condition.skyCover}</span>
 										<Show when={condition.cloudBase}>
 											<span>at</span>
-											<span class="my-auto">{condition.cloudBase}</span>
+											<span class="my-auto">{condition.cloudBase} ft</span>
 										</Show>
 									</div>
 								)}
 							</For>
 						</div>
 					</ParsedWeatherItem>
+					<ParsedWeatherItem>
+						<span class="mx-auto">Temperature</span>
+						<p class="text-center text-xl">{latestMetar().temperature}°C</p>
+					</ParsedWeatherItem>
+					<ParsedWeatherItem>
+						<span class="mx-auto">Dewpoint</span>
+						<p class="text-center text-xl">{latestMetar().dewpoint}°C</p>
+					</ParsedWeatherItem>
+
+					<ParsedWeatherItem>
+						<span class="mx-auto">Altimeter</span>
+						<p class="text-center text-xl">{latestMetar().altimeter.toFixed(2)} inHg</p>
+					</ParsedWeatherItem>
+
+					<Show when={latestMetar().presentWeather}>
+						<ParsedWeatherItem>
+							<span class="mx-auto">Precipitation</span>
+							<p class="text-center text-xl">{latestMetar().presentWeather}</p>
+						</ParsedWeatherItem>
+					</Show>
+
+					<Show when={latestMetar().flightCategory}>
+						<ParsedWeatherItem>
+							<span class="mx-auto">Flight Category</span>
+							<p class="text-center text-xl">{latestMetar().flightCategory}</p>
+						</ParsedWeatherItem>
+					</Show>
 				</div>
 			</Show>
 		</div>

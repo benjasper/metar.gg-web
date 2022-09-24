@@ -1,13 +1,3 @@
-import { gql } from '@solid-primitives/graphql'
-import { Transition } from 'solid-headless'
-import { createSignal, onCleanup, createEffect, createMemo, createResource, Resource, Show, Suspense } from 'solid-js'
-import { useGraphQL } from '../context/GraphQLClient'
-import {
-	Airport,
-	AirportSearchFragment,
-	GetSingleAirportQuery,
-	GetSingleAirportQueryVariables,
-} from '../queries/generated/graphql'
 import SearchBar from '../components/SearchBar'
 import { Outlet, Route, Routes, useNavigate, useParams } from '@solidjs/router'
 import AirportSearchDetail from './AirportSearchDetail'
@@ -26,11 +16,11 @@ const AirportSearch = () => {
 
 	return (
 		<>
-			<div class="flex flex-col gap-8 transition-all h-1/4">
+			<div class="flex flex-col gap-8 transition-all h-1/6 pt-8">
 				<h2 class="text-center mt-auto">What's the weather like in...</h2>
 				<SearchBar onSearch={doSearch}></SearchBar>
 			</div>
-			<div class="flex flex-col h-3/4 transition-all">
+			<div class="flex flex-col h-5/6 transition-all">
 				<Routes>
 					<Route path="/:airportIdentifier" component={AirportSearchDetail} />
 				</Routes>

@@ -32,6 +32,8 @@ export const AIRPORT_SINGLE = gql`
 		windDirection
 		windSpeed
 		windGust
+		flightCategory
+		presentWeather
 		skyConditions {
 			skyCover
 			cloudBase

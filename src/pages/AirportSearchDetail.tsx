@@ -1,7 +1,8 @@
 import { debounce } from '@solid-primitives/scheduled'
+import { Title } from '@solidjs/meta'
 import { useParams } from '@solidjs/router'
-import { Transition } from 'solid-headless'
-import { Component, createEffect, createSignal, Show, untrack } from 'solid-js'
+import { Duration } from 'uhrwerk'
+import { Component, createEffect, createSignal, onCleanup, Show, untrack } from 'solid-js'
 import ParsedWeatherElements from '../components/parsed-weather/ParsedWeatherElements'
 import { useGraphQL } from '../context/GraphQLClient'
 import { AIRPORT_SINGLE } from '../queries/AirportQueries'
@@ -32,6 +33,14 @@ const AirportSearchDetail: Component = () => {
 	}
 
 	const metarObservationTime = () => new Date(airport()?.station.metars?.edges[0]?.node.observationTime) ?? undefined
+	const [now, setNow] = createSignal<Date>(new Date())
+
+	const lastObservationDuration = (): Duration =>
+		new Duration(now().getTime() - metarObservationTime().getTime(), 'ms')
+
+	const interval = setInterval(() => {
+		setNow(new Date())
+	}, 1000)
 
 	const doSearch = (airportIdentifier: string) => {
 		if (airportIdentifier.length === 0) {
@@ -48,10 +57,17 @@ const AirportSearchDetail: Component = () => {
 		}
 	})
 
+	onCleanup(() => {
+		clearInterval(interval)
+	})
+
 	return (
 		<Show when={airportRequest.loading === false && airport() !== undefined}>
+			<Title>
+				{airport().icaoCode} / {airport().iataCode} - Weather | metar.gg
+			</Title>
 			<div class="my-auto flex flex-col">
-				<div class="flex flex-col mx-auto text-center py-24">
+				<div class="flex flex-col mx-auto text-center py-16">
 					<h2>
 						{airport().icaoCode} / {airport().iataCode}
 					</h2>
@@ -61,18 +77,24 @@ const AirportSearchDetail: Component = () => {
 					</span>
 				</div>
 
-				<ParsedWeatherElements airport={airport()}></ParsedWeatherElements>
+				<h3 class="text-xl">Current weather</h3>
+				<div class="flex flex-row gap-2 justify-start pt-2">
+					<span
+						class="text-xs px-3 py-1 rounded-full  text-white"
+						classList={{'bg-green-600': lastObservationDuration().asHours() <= 2, 'bg-red-600': lastObservationDuration().asHours() > 2}}
+						title={metarObservationTime().toLocaleTimeString([], {
+							hour: 'numeric',
+							minute: '2-digit',
+						})}>
+						Observed {lastObservationDuration().humanize()} ago
+					</span>
+				</div>
 
-				<div class="flex flex-col gap-4 mt-24">
+				<ParsedWeatherElements class="mt-4" airport={airport()}></ParsedWeatherElements>
+
+				<div class="flex flex-col gap-4 py-16">
 					<Show when={airport() && airport().station.metars.edges[0]}>
 						<p class="text-xl text-center">{airport().station.metars.edges[0].node.rawText}</p>
-						<span class="text-center">
-							Last updated at{' '}
-							{metarObservationTime().toLocaleTimeString([], {
-								hour: 'numeric',
-								minute: '2-digit',
-							})}
-						</span>
 					</Show>
 				</div>
 			</div>
