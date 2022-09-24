@@ -1,5 +1,5 @@
 import { debounce } from '@solid-primitives/scheduled'
-import { Title } from '@solidjs/meta'
+import { Meta, Title } from '@solidjs/meta'
 import { useParams } from '@solidjs/router'
 import { Duration } from 'uhrwerk'
 import { Component, createEffect, createSignal, onCleanup, Show, untrack } from 'solid-js'
@@ -66,6 +66,7 @@ const AirportSearchDetail: Component = () => {
 			<Title>
 				{airport().icaoCode} / {airport().iataCode} - Weather | metar.gg
 			</Title>
+			<Meta name='description'>Get the latest METAR and TAF information for {airport().name} ({airport().identifier}).</Meta>
 			<div class="my-auto flex flex-col">
 				<div class="flex flex-col mx-auto text-center py-16">
 					<h2>

@@ -56,10 +56,6 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 	}
 
 	const onFocusLeave = (e: Event) => {
-		if (root.contains(e.target as Node)) {
-			return
-		}
-
 		setIsFocused(false)
 	}
 

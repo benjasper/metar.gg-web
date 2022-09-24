@@ -41,6 +41,7 @@ export const AIRPORT_SINGLE = gql`
 	}
 
 	fragment AirportSearch on Airport {
+		identifier
 		icaoCode
 		iataCode
 		name
