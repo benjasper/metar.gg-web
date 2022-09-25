@@ -16,10 +16,10 @@ specifiers:
   mercator-projection: ^0.0.2
   postcss: ^8.4.16
   solid-headless: ^0.12.6
+  solid-icons: ^1.0.1
   solid-js: ^1.5.1
   tailwindcss: ^3.1.8
   typescript: ^4.8.2
-  uhrwerk: ^1.1.0
   vite: ^3.0.9
   vite-plugin-solid: ^2.3.0
 
@@ -32,8 +32,8 @@ dependencies:
   graphql: 16.6.0
   mercator-projection: 0.0.2
   solid-headless: 0.12.6_solid-js@1.5.1
+  solid-icons: 1.0.1_solid-js@1.5.1
   solid-js: 1.5.1
-  uhrwerk: 1.1.0
 
 devDependencies:
   '@graphql-codegen/cli': 2.12.0_sv3vxizgms5v7hdnlfbbl3wyw4
@@ -3765,6 +3765,15 @@ packages:
       solid-use: 0.5.0_solid-js@1.5.1
     dev: false
 
+  /solid-icons/1.0.1_solid-js@1.5.1:
+    resolution: {integrity: sha512-9rxPeJ1UDGzWGlksjuXuyK2CdL1vg89inDyOl43koL3zoMgXLzY6LVLuMeuhslHbjq7Fp2h6fSSImj9ygfvleA==}
+    engines: {node: '>= 16'}
+    peerDependencies:
+      solid-js: '*'
+    dependencies:
+      solid-js: 1.5.1
+    dev: false
+
   /solid-js/1.5.1:
     resolution: {integrity: sha512-Y6aKystIxnrB0quV5nhqNuJV+l2Fk3/PQy1mMya/bzxlGiMHAym7v1NaqEgqDIvctbkxOi5dBj0ER/ewrH060g==}
     dependencies:
@@ -3979,10 +3988,6 @@ packages:
   /ua-parser-js/0.7.31:
     resolution: {integrity: sha512-qLK/Xe9E2uzmYI3qLeOmI0tEOt+TBBQyUIAh4aAgU05FVYzeZrKUdkAZfBNVGRaHVgV0TDkdEngJSw/SyQchkQ==}
     dev: true
-
-  /uhrwerk/1.1.0:
-    resolution: {integrity: sha512-mEZu3PtzW0/W9XKMgQ0y3QIIdF6KG2YSI9Hq+0e+i5TXw1bIARcn+flxs7lj6gobL0oKpAqIsJX5MwPQHXzEtQ==}
-    dev: false
 
   /unc-path-regex/0.1.2:
     resolution: {integrity: sha512-eXL4nmJT7oCpkZsHZUOJo8hcX3GbsiDOa0Qu9F646fi8dT3XuSVopVqAcEiVzSKKH7UoDti23wNX3qGFxcW5Qg==}
