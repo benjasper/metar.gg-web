@@ -11,7 +11,7 @@ const AirportSearch = () => {
 			return
 		}
 
-		navigate(`/${airportIdentifier}`)
+		navigate(`/${airportIdentifier.toLowerCase()}`)
 	}
 
 	return (

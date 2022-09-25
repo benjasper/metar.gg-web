@@ -32,6 +32,8 @@ export type Airport = {
   identifier: Scalars['String'];
   /** The unique identifier of the import. */
   importID: Scalars['Int'];
+  /** Importance of the airport. */
+  importance: Scalars['Int'];
   /** Extra keywords/phrases to assist with search. May include former names for the airport, alternate codes, names in other languages, nearby tourist destinations, etc. */
   keywords: Array<Scalars['String']>;
   /** The last time the record was updated/created. */
@@ -91,6 +93,20 @@ export type AirportEdge = {
   node: Airport;
 };
 
+/** Ordering options for Airport connections */
+export type AirportOrder = {
+  /** The ordering direction. */
+  direction?: OrderDirection;
+  /** The field by which to order Airports. */
+  field: AirportOrderField;
+};
+
+/** Properties by which Airport connections can be ordered. */
+export enum AirportOrderField {
+  IcaoCode = 'ICAO_CODE',
+  Importance = 'IMPORTANCE'
+}
+
 /** AirportType is enum for the field type */
 export enum AirportType {
   ClosedAirport = 'closed_airport',
@@ -134,7 +150,7 @@ export enum CountryContinent {
 
 export type Forecast = {
   __typename?: 'Forecast';
-  /** The altimeter in inches of mercury. */
+  /** The altimeter in the specified unit. */
   altimeter?: Maybe<Scalars['Float']>;
   /** The change indicator. */
   changeIndicator?: Maybe<ForecastChangeIndicator>;
@@ -154,24 +170,59 @@ export type Forecast = {
   /** The end time of the forecast period. */
   toTime: Scalars['Time'];
   turbulenceConditions?: Maybe<Array<TurbulenceCondition>>;
-  /** The visibility in statute miles. */
+  /** Visibility horizontal in the specified unit. */
   visibilityHorizontal?: Maybe<Scalars['Float']>;
-  /** The vertical visibility in feet. */
-  visibilityVertical?: Maybe<Scalars['Int']>;
+  /** Visibility vertical in the specified unit. */
+  visibilityVertical?: Maybe<Scalars['Float']>;
   /** The weather string. */
   weather?: Maybe<Scalars['String']>;
   /** The wind direction in degrees. */
   windDirection?: Maybe<Scalars['Int']>;
-  /** The wind gust in knots. */
-  windGust?: Maybe<Scalars['Int']>;
+  /** Wind gust speed in the specified unit. */
+  windGust?: Maybe<Scalars['Float']>;
   /** The wind shear direction in degrees. */
   windShearDirection?: Maybe<Scalars['Int']>;
-  /** The height of the wind shear in feet above ground level. */
-  windShearHeight?: Maybe<Scalars['Int']>;
-  /** The wind shear speed in knots. */
-  windShearSpeed?: Maybe<Scalars['Int']>;
-  /** The wind speed in knots. */
-  windSpeed?: Maybe<Scalars['Int']>;
+  /** The height of the wind shear in the specified unit above ground level. */
+  windShearHeight?: Maybe<Scalars['Float']>;
+  /** Wind shear speed in the specified unit. */
+  windShearSpeed?: Maybe<Scalars['Float']>;
+  /** The wind speed in the specified unit. */
+  windSpeed?: Maybe<Scalars['Float']>;
+};
+
+
+export type ForecastAltimeterArgs = {
+  unit?: PressureUnit;
+};
+
+
+export type ForecastVisibilityHorizontalArgs = {
+  unit?: LengthUnit;
+};
+
+
+export type ForecastVisibilityVerticalArgs = {
+  unit?: LengthUnit;
+};
+
+
+export type ForecastWindGustArgs = {
+  unit?: SpeedUnit;
+};
+
+
+export type ForecastWindShearHeightArgs = {
+  unit?: LengthUnit;
+};
+
+
+export type ForecastWindShearSpeedArgs = {
+  unit?: SpeedUnit;
+};
+
+
+export type ForecastWindSpeedArgs = {
+  unit?: SpeedUnit;
 };
 
 /** ForecastChangeIndicator is enum for the field change_indicator */
@@ -205,17 +256,35 @@ export type IcingCondition = {
   id: Scalars['ID'];
   /** The intensity of the icing. */
   intensity: Scalars['String'];
-  /** The maximum altitude in feet that the icing is present. */
-  maxAltitude?: Maybe<Scalars['Int']>;
-  /** The minimum altitude in feet that the icing is present. */
-  minAltitude?: Maybe<Scalars['Int']>;
+  /** Max altitude in the specified unit. */
+  maxAltitude?: Maybe<Scalars['Float']>;
+  /** Min altitude in the specified unit. */
+  minAltitude?: Maybe<Scalars['Float']>;
 };
+
+
+export type IcingConditionMaxAltitudeArgs = {
+  unit?: LengthUnit;
+};
+
+
+export type IcingConditionMinAltitudeArgs = {
+  unit?: LengthUnit;
+};
+
+export enum LengthUnit {
+  Foot = 'FOOT',
+  Kilometer = 'KILOMETER',
+  Meter = 'METER',
+  NauticalMile = 'NAUTICAL_MILE',
+  StatuteMile = 'STATUTE_MILE'
+}
 
 export type Metar = {
   __typename?: 'Metar';
-  /** The altimeter setting in inches of mercury. */
+  /** The altimeter in the specified unit. */
   altimeter: Scalars['Float'];
-  /** The dewpoint in Celsius. */
+  /** The dew point in the specified unit. */
   dewpoint: Scalars['Float'];
   flightCategory?: Maybe<MetarFlightCategory>;
   /** The unique identifier of the record. */
@@ -242,7 +311,7 @@ export type Metar = {
   precipitation24?: Maybe<Scalars['Float']>;
   /** The present weather string. */
   presentWeather?: Maybe<Scalars['String']>;
-  /** The pressur_6e tendency in hectopascals. */
+  /** Pressure tendency in the specified unit. */
   pressureTendency?: Maybe<Scalars['Float']>;
   /** Whether it's an automated station, of one of the following types A01|A01A|A02|A02A|AOA|AWOS. */
   qualityControlAutoStation: Scalars['Boolean'];
@@ -260,24 +329,74 @@ export type Metar = {
   qualityControlPresentWeatherSensorOff: Scalars['Boolean'];
   /** The raw METAR text. */
   rawText: Scalars['String'];
-  /** The sea level pressure in hectopascals. */
+  /** Sea level pressure in the specified unit. */
   seaLevelPressure?: Maybe<Scalars['Float']>;
   skyConditions?: Maybe<Array<SkyCondition>>;
-  /** The snow depth in inches. */
+  /** Snow depth in the specified unit. */
   snowDepth?: Maybe<Scalars['Float']>;
   station: WeatherStation;
-  /** The temperature in Celsius. */
+  /** The temperature in the specified unit. */
   temperature: Scalars['Float'];
-  /** The vertical visibility in feet. */
-  vertVis?: Maybe<Scalars['Float']>;
-  /** The visibility in statute miles. */
+  /** Vertical visibility in the specified unit. */
+  verticalVisibility?: Maybe<Scalars['Float']>;
+  /** The visibility in the specified unit. */
   visibility: Scalars['Float'];
   /** The wind direction in degrees, or 0 if calm. */
   windDirection: Scalars['Int'];
-  /** The wind gust in knots. */
-  windGust: Scalars['Int'];
-  /** The wind speed in knots, or 0 if calm. */
-  windSpeed: Scalars['Int'];
+  /** Wind gust speed in the specified unit. */
+  windGust: Scalars['Float'];
+  /** The wind speed in the specified unit. */
+  windSpeed: Scalars['Float'];
+};
+
+
+export type MetarAltimeterArgs = {
+  unit?: PressureUnit;
+};
+
+
+export type MetarDewpointArgs = {
+  unit?: TemperatureUnit;
+};
+
+
+export type MetarPressureTendencyArgs = {
+  unit?: PressureUnit;
+};
+
+
+export type MetarSeaLevelPressureArgs = {
+  unit?: PressureUnit;
+};
+
+
+export type MetarSnowDepthArgs = {
+  unit?: SmallLengthUnit;
+};
+
+
+export type MetarTemperatureArgs = {
+  unit?: TemperatureUnit;
+};
+
+
+export type MetarVerticalVisibilityArgs = {
+  unit?: LengthUnit;
+};
+
+
+export type MetarVisibilityArgs = {
+  unit?: LengthUnit;
+};
+
+
+export type MetarWindGustArgs = {
+  unit?: SpeedUnit;
+};
+
+
+export type MetarWindSpeedArgs = {
+  unit?: SpeedUnit;
 };
 
 export type MetarConnection = {
@@ -332,6 +451,11 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars['Cursor']>;
 };
 
+export enum PressureUnit {
+  Hectopascal = 'HECTOPASCAL',
+  InchOfMercury = 'INCH_OF_MERCURY'
+}
+
 export type Query = {
   __typename?: 'Query';
   /** Get a single airport by it's id, identifier, icao code or iata code. */
@@ -362,6 +486,7 @@ export type QueryGetAirportsArgs = {
   icao?: InputMaybe<Scalars['String']>;
   identifier?: InputMaybe<Scalars['String']>;
   last?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<Array<AirportOrder>>;
   search?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<AirportType>;
 };
@@ -447,13 +572,18 @@ export type Runway = {
 
 export type SkyCondition = {
   __typename?: 'SkyCondition';
-  /** Cloud base in feet. */
-  cloudBase?: Maybe<Scalars['Int']>;
+  /** The cloud base in the specified unit. */
+  cloudBase?: Maybe<Scalars['Float']>;
   /** Cloud type. Only present in TAFs. */
   cloudType?: Maybe<SkyConditionCloudType>;
   /** The unique identifier of the record. */
   id: Scalars['ID'];
   skyCover: SkyConditionSkyCover;
+};
+
+
+export type SkyConditionCloudBaseArgs = {
+  unit?: LengthUnit;
 };
 
 /** SkyConditionCloudType is enum for the field cloud_type */
@@ -475,6 +605,16 @@ export enum SkyConditionSkyCover {
   Ovx = 'OVX',
   Sct = 'SCT',
   Skc = 'SKC'
+}
+
+export enum SmallLengthUnit {
+  Centimeter = 'CENTIMETER',
+  Inch = 'INCH'
+}
+
+export enum SpeedUnit {
+  KilometerPerHour = 'KILOMETER_PER_HOUR',
+  Knot = 'KNOT'
 }
 
 export type StationWithDistance = {
@@ -541,15 +681,35 @@ export type TemperatureData = {
   __typename?: 'TemperatureData';
   /** The unique identifier of the record. */
   id: Scalars['ID'];
-  /** The maximum temperature in degrees Celsius. */
+  /** Max temperature in the specified unit. */
   maxTemperature?: Maybe<Scalars['Float']>;
-  /** The minimum temperature in degrees Celsius. */
+  /** Min temperature in the specified unit. */
   minTemperature?: Maybe<Scalars['Float']>;
-  /** The surface temperature in degrees Celsius. */
+  /** The temperature in the specified unit. */
   temperature: Scalars['Float'];
   /** The time the temperature data is valid. */
   validTime: Scalars['Time'];
 };
+
+
+export type TemperatureDataMaxTemperatureArgs = {
+  unit?: TemperatureUnit;
+};
+
+
+export type TemperatureDataMinTemperatureArgs = {
+  unit?: TemperatureUnit;
+};
+
+
+export type TemperatureDataTemperatureArgs = {
+  unit?: TemperatureUnit;
+};
+
+export enum TemperatureUnit {
+  Celsius = 'CELSIUS',
+  Fahrenheit = 'FAHRENHEIT'
+}
 
 export type TurbulenceCondition = {
   __typename?: 'TurbulenceCondition';
@@ -557,10 +717,20 @@ export type TurbulenceCondition = {
   id: Scalars['ID'];
   /** The intensity of the turbulence. */
   intensity: Scalars['String'];
-  /** The maximum altitude in feet that the turbulence is present. */
-  maxAltitude: Scalars['Int'];
-  /** The minimum altitude in feet that the turbulence is present. */
-  minAltitude: Scalars['Int'];
+  /** Max altitude in the specified unit. */
+  maxAltitude?: Maybe<Scalars['Float']>;
+  /** Min altitude in the specified unit. */
+  minAltitude?: Maybe<Scalars['Float']>;
+};
+
+
+export type TurbulenceConditionMaxAltitudeArgs = {
+  unit?: LengthUnit;
+};
+
+
+export type TurbulenceConditionMinAltitudeArgs = {
+  unit?: LengthUnit;
 };
 
 export type WeatherStation = {

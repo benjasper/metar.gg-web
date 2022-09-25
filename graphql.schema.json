@@ -140,6 +140,22 @@
             "deprecationReason": null
           },
           {
+            "name": "importance",
+            "description": "Importance of the airport.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "keywords",
             "description": "Extra keywords/phrases to assist with search. May include former names for the airport, alternate codes, names in other languages, nearby tourist destinations, etc.",
             "args": [],
@@ -534,6 +550,72 @@
         "possibleTypes": null
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "AirportOrder",
+        "description": "Ordering options for Airport connections",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "direction",
+            "description": "The ordering direction.",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "OrderDirection",
+                "ofType": null
+              }
+            },
+            "defaultValue": "ASC",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "field",
+            "description": "The field by which to order Airports.",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "AirportOrderField",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "AirportOrderField",
+        "description": "Properties by which Airport connections can be ordered.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "ICAO_CODE",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "IMPORTANCE",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
         "kind": "ENUM",
         "name": "AirportType",
         "description": "AirportType is enum for the field type",
@@ -817,8 +899,25 @@
         "fields": [
           {
             "name": "altimeter",
-            "description": "The altimeter in inches of mercury.",
-            "args": [],
+            "description": "The altimeter in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "PressureUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "HECTOPASCAL",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
               "name": "Float",
@@ -1005,8 +1104,25 @@
           },
           {
             "name": "visibilityHorizontal",
-            "description": "The visibility in statute miles.",
-            "args": [],
+            "description": "Visibility horizontal in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "LengthUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "FOOT",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
               "name": "Float",
@@ -1017,11 +1133,28 @@
           },
           {
             "name": "visibilityVertical",
-            "description": "The vertical visibility in feet.",
-            "args": [],
+            "description": "Visibility vertical in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "LengthUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "KILOMETER",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
+              "name": "Float",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1053,11 +1186,28 @@
           },
           {
             "name": "windGust",
-            "description": "The wind gust in knots.",
-            "args": [],
+            "description": "Wind gust speed in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "SpeedUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "KNOT",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
+              "name": "Float",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1077,11 +1227,28 @@
           },
           {
             "name": "windShearHeight",
-            "description": "The height of the wind shear in feet above ground level.",
-            "args": [],
+            "description": "The height of the wind shear in the specified unit above ground level.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "LengthUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "FOOT",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
+              "name": "Float",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1089,11 +1256,28 @@
           },
           {
             "name": "windShearSpeed",
-            "description": "The wind shear speed in knots.",
-            "args": [],
+            "description": "Wind shear speed in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "SpeedUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "KNOT",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
+              "name": "Float",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1101,11 +1285,28 @@
           },
           {
             "name": "windSpeed",
-            "description": "The wind speed in knots.",
-            "args": [],
+            "description": "The wind speed in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "SpeedUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "KNOT",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
+              "name": "Float",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1320,11 +1521,28 @@
           },
           {
             "name": "maxAltitude",
-            "description": "The maximum altitude in feet that the icing is present.",
-            "args": [],
+            "description": "Max altitude in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "LengthUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "FOOT",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
+              "name": "Float",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1332,11 +1550,28 @@
           },
           {
             "name": "minAltitude",
-            "description": "The minimum altitude in feet that the icing is present.",
-            "args": [],
+            "description": "Min altitude in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "LengthUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "FOOT",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
+              "name": "Float",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1359,14 +1594,72 @@
         "possibleTypes": null
       },
       {
+        "kind": "ENUM",
+        "name": "LengthUnit",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "FOOT",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "KILOMETER",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "METER",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "NAUTICAL_MILE",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "STATUTE_MILE",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
         "kind": "OBJECT",
         "name": "Metar",
         "description": null,
         "fields": [
           {
             "name": "altimeter",
-            "description": "The altimeter setting in inches of mercury.",
-            "args": [],
+            "description": "The altimeter in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "PressureUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "HECTOPASCAL",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -1381,8 +1674,25 @@
           },
           {
             "name": "dewpoint",
-            "description": "The dewpoint in Celsius.",
-            "args": [],
+            "description": "The dew point in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "TemperatureUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "CELSIUS",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -1565,8 +1875,25 @@
           },
           {
             "name": "pressureTendency",
-            "description": "The pressur_6e tendency in hectopascals.",
-            "args": [],
+            "description": "Pressure tendency in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "PressureUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "HECTOPASCAL",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
               "name": "Float",
@@ -1701,8 +2028,25 @@
           },
           {
             "name": "seaLevelPressure",
-            "description": "The sea level pressure in hectopascals.",
-            "args": [],
+            "description": "Sea level pressure in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "PressureUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "HECTOPASCAL",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
               "name": "Float",
@@ -1733,8 +2077,25 @@
           },
           {
             "name": "snowDepth",
-            "description": "The snow depth in inches.",
-            "args": [],
+            "description": "Snow depth in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "SmallLengthUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "CENTIMETER",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
               "name": "Float",
@@ -1761,8 +2122,25 @@
           },
           {
             "name": "temperature",
-            "description": "The temperature in Celsius.",
-            "args": [],
+            "description": "The temperature in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "TemperatureUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "CELSIUS",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -1776,9 +2154,26 @@
             "deprecationReason": null
           },
           {
-            "name": "vertVis",
-            "description": "The vertical visibility in feet.",
-            "args": [],
+            "name": "verticalVisibility",
+            "description": "Vertical visibility in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "LengthUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "FOOT",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
               "name": "Float",
@@ -1789,8 +2184,25 @@
           },
           {
             "name": "visibility",
-            "description": "The visibility in statute miles.",
-            "args": [],
+            "description": "The visibility in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "LengthUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "KILOMETER",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -1821,14 +2233,31 @@
           },
           {
             "name": "windGust",
-            "description": "The wind gust in knots.",
-            "args": [],
+            "description": "Wind gust speed in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "SpeedUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "KNOT",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "Float",
                 "ofType": null
               }
             },
@@ -1837,14 +2266,31 @@
           },
           {
             "name": "windSpeed",
-            "description": "The wind speed in knots, or 0 if calm.",
-            "args": [],
+            "description": "The wind speed in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "SpeedUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "KNOT",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "Float",
                 "ofType": null
               }
             },
@@ -2116,6 +2562,29 @@
         "possibleTypes": null
       },
       {
+        "kind": "ENUM",
+        "name": "PressureUnit",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "HECTOPASCAL",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "INCH_OF_MERCURY",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
         "kind": "OBJECT",
         "name": "Query",
         "description": null,
@@ -2276,6 +2745,26 @@
                   "kind": "SCALAR",
                   "name": "Int",
                   "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "order",
+                "description": null,
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "AirportOrder",
+                      "ofType": null
+                    }
+                  }
                 },
                 "defaultValue": null,
                 "isDeprecated": false,
@@ -2891,11 +3380,28 @@
         "fields": [
           {
             "name": "cloudBase",
-            "description": "Cloud base in feet.",
-            "args": [],
+            "description": "The cloud base in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "LengthUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "FOOT",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
+              "name": "Float",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3044,6 +3550,52 @@
           },
           {
             "name": "SKC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "SmallLengthUnit",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "CENTIMETER",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "INCH",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "SpeedUnit",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "KILOMETER_PER_HOUR",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "KNOT",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -3476,8 +4028,25 @@
           },
           {
             "name": "maxTemperature",
-            "description": "The maximum temperature in degrees Celsius.",
-            "args": [],
+            "description": "Max temperature in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "TemperatureUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "CELSIUS",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
               "name": "Float",
@@ -3488,8 +4057,25 @@
           },
           {
             "name": "minTemperature",
-            "description": "The minimum temperature in degrees Celsius.",
-            "args": [],
+            "description": "Min temperature in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "TemperatureUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "CELSIUS",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
               "name": "Float",
@@ -3500,8 +4086,25 @@
           },
           {
             "name": "temperature",
-            "description": "The surface temperature in degrees Celsius.",
-            "args": [],
+            "description": "The temperature in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "TemperatureUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "CELSIUS",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -3534,6 +4137,29 @@
         "inputFields": null,
         "interfaces": [],
         "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "TemperatureUnit",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "CELSIUS",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "FAHRENHEIT",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
         "possibleTypes": null
       },
       {
@@ -3585,32 +4211,58 @@
           },
           {
             "name": "maxAltitude",
-            "description": "The maximum altitude in feet that the turbulence is present.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+            "description": "Max altitude in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "LengthUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "FOOT",
+                "isDeprecated": false,
+                "deprecationReason": null
               }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "minAltitude",
-            "description": "The minimum altitude in feet that the turbulence is present.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+            "description": "Min altitude in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "LengthUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "FOOT",
+                "isDeprecated": false,
+                "deprecationReason": null
               }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null

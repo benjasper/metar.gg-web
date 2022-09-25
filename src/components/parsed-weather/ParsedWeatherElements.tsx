@@ -1,4 +1,4 @@
-import { For, Show } from 'solid-js'
+import { For, Show, Switch } from 'solid-js'
 import { AirportSearchFragment } from '../../queries/generated/graphql'
 import ParsedWeatherItem from './ParsedWeatherItem'
 import RunwayRenderer from '../RunwayRenderer'
@@ -30,28 +30,34 @@ const ParsedWeatherElements = (props: { airport: AirportSearchFragment; class?: 
 				<div class="flex flex-row flex-wrap justify-center md:justify-start gap-8">
 					<ParsedWeatherItem>
 						<span class="mx-auto">Visibility</span>
-						<p class="text-center text-xl">{latestMetar().visibility} miles</p>
+						<p class="text-center text-xl">
+							<Show when={Math.round(latestMetar().visibility) === 10}>&gt;</Show>
+							{Math.round(latestMetar().visibility)} km
+						</p>
 					</ParsedWeatherItem>
+
 					<ParsedWeatherItem>
 						<span class="mx-auto">Sky conditions</span>
 						<div class="flex flex-col gap-2 text-center text-xl">
-							<For each={latestMetar().skyConditions.reverse()}>
+							<For each={latestMetar().skyConditions.sort((a,b) => b.cloudBase - a.cloudBase)}>
 								{(condition, i) => (
 									<div class="flex flex-row gap-1 mx-auto text-center">
 										<span>{condition.skyCover}</span>
 										<Show when={condition.cloudBase}>
 											<span>at</span>
-											<span class="my-auto">{condition.cloudBase} ft</span>
+											<span class="my-auto">{Math.round(condition.cloudBase)} ft</span>
 										</Show>
 									</div>
 								)}
 							</For>
 						</div>
 					</ParsedWeatherItem>
+
 					<ParsedWeatherItem>
 						<span class="mx-auto">Temperature</span>
 						<p class="text-center text-xl">{latestMetar().temperature}°C</p>
 					</ParsedWeatherItem>
+
 					<ParsedWeatherItem>
 						<span class="mx-auto">Dewpoint</span>
 						<p class="text-center text-xl">{latestMetar().dewpoint}°C</p>
@@ -59,7 +65,7 @@ const ParsedWeatherElements = (props: { airport: AirportSearchFragment; class?: 
 
 					<ParsedWeatherItem>
 						<span class="mx-auto">Altimeter</span>
-						<p class="text-center text-xl">{latestMetar().altimeter.toFixed(2)} inHg</p>
+						<p class="text-center text-xl">{latestMetar().altimeter.toFixed(0)} hPa</p>
 					</ParsedWeatherItem>
 
 					<Show when={latestMetar().presentWeather}>

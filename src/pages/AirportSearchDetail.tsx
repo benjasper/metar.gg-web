@@ -81,11 +81,14 @@ const AirportSearchDetail: Component = () => {
 				<h3 class="text-xl">Current weather</h3>
 				<div class="flex flex-row gap-2 justify-start pt-2">
 					<span
-						class="text-xs px-3 py-1 rounded-full  text-white"
+						class="text-xs px-3 py-1 rounded-full text-white cursor-default"
 						classList={{'bg-green-600': lastObservationDuration().asHours() <= 2, 'bg-red-600': lastObservationDuration().asHours() > 2}}
 						title={metarObservationTime().toLocaleTimeString([], {
 							hour: 'numeric',
 							minute: '2-digit',
+							day: 'numeric',
+							month: 'long',
+							year: 'numeric',
 						})}>
 						Observed {lastObservationDuration().humanize()} ago
 					</span>
