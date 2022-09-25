@@ -95,7 +95,7 @@ const AirportSearchDetail: Component = () => {
 					</span>
 				</div>
 
-				<div class="flex flex-row justify-between">
+				<div class="flex flex-col md:flex-row justify-between">
 					<div class="flex flex-col">
 						<h3 class="text-xl">Current weather</h3>
 						<div class="flex flex-row gap-2 justify-start pt-2">
@@ -116,7 +116,7 @@ const AirportSearchDetail: Component = () => {
 							</span>
 						</div>
 					</div>
-					<span class="flex mt-auto text-gray-700">
+					<span class="flex mt-4 md:mt-auto text-gray-700">
 						<HiOutlineRefresh class="my-auto mr-2" />
 						Refreshed {Duration.fromDates(now(), lastRefreshed()).humanImprecise()} ago
 					</span>
