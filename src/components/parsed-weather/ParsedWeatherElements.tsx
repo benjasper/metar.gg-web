@@ -32,7 +32,7 @@ const ParsedWeatherElements = (props: { airport: AirportSearchFragment; class?: 
 						<span class="mx-auto">Visibility</span>
 						<p class="text-center text-xl">
 							<Show when={Math.round(latestMetar().visibility) === 10}>&gt;</Show>
-							{Math.round(latestMetar().visibility)} km
+							{latestMetar().visibility.toFixed(1)} km
 						</p>
 					</ParsedWeatherItem>
 
