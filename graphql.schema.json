@@ -394,6 +394,18 @@
             "deprecationReason": null
           },
           {
+            "name": "timezone",
+            "description": "The timezone of the airport.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "type",
             "description": "Type of airport.",
             "args": [],
@@ -2692,7 +2704,7 @@
               },
               {
                 "name": "hasWeather",
-                "description": "Filter whether the airport provides METARs.",
+                "description": "Filter whether the airport provides METARs and has recent ones.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Boolean",

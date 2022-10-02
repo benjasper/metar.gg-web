@@ -2,7 +2,7 @@ import { debounce } from '@solid-primitives/scheduled'
 import { Meta, Title } from '@solidjs/meta'
 import { useParams } from '@solidjs/router'
 import { Component, createEffect, createSignal, onCleanup, Show, untrack } from 'solid-js'
-import ParsedWeatherElements from '../components/parsed-weather/ParsedWeatherElements'
+import WeatherElements from '../components/WeatherElements'
 import { useGraphQL } from '../context/GraphQLClient'
 import { AIRPORT_SINGLE } from '../queries/AirportQueries'
 import { HiOutlineRefresh } from 'solid-icons/hi'
@@ -41,7 +41,7 @@ const AirportSearchDetail: Component = () => {
 
 	const interval = setInterval(() => {
 		setNow(new Date())
-	}, 1000)
+	}, 3000)
 
 	let refetchInterval: NodeJS.Timer
 
@@ -93,6 +93,16 @@ const AirportSearchDetail: Component = () => {
 					<span class="text-sm">
 						<Show when={airport().municipality}>{airport().municipality},</Show> {airport().country.name}
 					</span>
+					<Show when={airport().timezone}>
+						<span class="text-xs px-3 py-1 mt-2 mx-auto rounded-full bg-gray-50 text-black cursor-default">
+							Local time{' '}
+							{now().toLocaleTimeString([], {
+								hour: 'numeric',
+								minute: '2-digit',
+								timeZone: airport().timezone,
+							})}
+						</span>
+					</Show>
 				</div>
 
 				<div class="flex flex-col md:flex-row justify-between">
@@ -122,7 +132,7 @@ const AirportSearchDetail: Component = () => {
 					</span>
 				</div>
 
-				<ParsedWeatherElements class="mt-4" airport={airport()}></ParsedWeatherElements>
+				<WeatherElements class="mt-4" airport={airport()}></WeatherElements>
 
 				<div class="flex flex-col gap-4 py-16">
 					<Show when={airport() && airport().station.metars.edges[0]}>

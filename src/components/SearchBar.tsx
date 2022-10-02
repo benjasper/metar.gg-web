@@ -67,11 +67,6 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 			return
 		}
 
-		if (document.activeElement !== input) {
-			input.focus()
-			return
-		}
-
 		if (keys().includes('ESCAPE')) {
 			setIsFocused(false)
 			input.blur()
@@ -98,6 +93,12 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 			}
 
 			onSubmit(airportResults().getAirports.edges[id].node.identifier)
+		}
+
+		// If it doesn't have focus we want to give it focus when we detect letters and numbers
+		if (document.activeElement !== input && ((untrackedEvent.key.length === 1 && untrackedEvent.key.match(/[a-z0-9]/i)) || keys().includes('BACKSPACE'))) {
+			input.focus()
+			return
 		}
 	})
 

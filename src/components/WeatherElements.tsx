@@ -1,10 +1,11 @@
 import { For, Show, Switch } from 'solid-js'
-import { AirportSearchFragment } from '../../queries/generated/graphql'
-import ParsedWeatherItem from './ParsedWeatherItem'
-import RunwayRenderer from '../RunwayRenderer'
-import RunwayLayout from '../RunwayRenderer'
+import { AirportSearchFragment } from '../queries/generated/graphql'
+import WeatherElementLayout from '../layouts/WeatherElementLayout'
+import RunwayRenderer from './RunwayRenderer'
+import RunwayLayout from './RunwayRenderer'
+import PrecipitationElement from './weather-elements/PrecipitationElement'
 
-const ParsedWeatherElements = (props: { airport: AirportSearchFragment; class?: string }) => {
+const WeatherElements = (props: { airport: AirportSearchFragment; class?: string }) => {
 	const latestMetar = () => {
 		if (props.airport.station.metars.edges.length === 0) {
 			return undefined
@@ -17,27 +18,24 @@ const ParsedWeatherElements = (props: { airport: AirportSearchFragment; class?: 
 		<div class={`flex flex-col md:flex-row gap-8 justify-center ${props.class ?? ''}`}>
 			<Show when={latestMetar()} fallback={<span class="text-lg mx-auto">No recent weather available.</span>}>
 				<div class="flex flex-col flex-shrink-0">
-					<ParsedWeatherItem class="flex-shrink-0">
-						<span class="mx-auto">Wind</span>
+					<WeatherElementLayout name="Wind" class="flex-shrink-0">
 						<RunwayRenderer airport={props.airport}></RunwayRenderer>
 						<Show when={latestMetar()}>
 							<p class="text-center">
 								{latestMetar().windDirection}° at {latestMetar().windSpeed}kt
 							</p>
 						</Show>
-					</ParsedWeatherItem>
+					</WeatherElementLayout>
 				</div>
 				<div class="flex flex-row flex-wrap justify-center md:justify-start gap-8">
-					<ParsedWeatherItem>
-						<span class="mx-auto">Visibility</span>
+					<WeatherElementLayout name='Visibility'>
 						<p class="text-center text-xl">
 							<Show when={Math.round(latestMetar().visibility) === 10}>&gt;</Show>
 							{latestMetar().visibility.toFixed(1)} km
 						</p>
-					</ParsedWeatherItem>
+					</WeatherElementLayout>
 
-					<ParsedWeatherItem>
-						<span class="mx-auto">Sky conditions</span>
+					<WeatherElementLayout name='Sky conditions'>
 						<div class="flex flex-col gap-2 text-center text-xl">
 							<For each={latestMetar().skyConditions.sort((a,b) => b.cloudBase - a.cloudBase)}>
 								{(condition, i) => (
@@ -51,35 +49,28 @@ const ParsedWeatherElements = (props: { airport: AirportSearchFragment; class?: 
 								)}
 							</For>
 						</div>
-					</ParsedWeatherItem>
+					</WeatherElementLayout>
 
-					<ParsedWeatherItem>
-						<span class="mx-auto">Temperature</span>
+					<WeatherElementLayout name='Temperature'>
 						<p class="text-center text-xl">{latestMetar().temperature}°C</p>
-					</ParsedWeatherItem>
+					</WeatherElementLayout>
 
-					<ParsedWeatherItem>
-						<span class="mx-auto">Dewpoint</span>
+					<WeatherElementLayout name='Dewpoint'>
 						<p class="text-center text-xl">{latestMetar().dewpoint}°C</p>
-					</ParsedWeatherItem>
+					</WeatherElementLayout>
 
-					<ParsedWeatherItem>
-						<span class="mx-auto">Altimeter</span>
+					<WeatherElementLayout name='Altimeter'>
 						<p class="text-center text-xl">{latestMetar().altimeter.toFixed(0)} hPa</p>
-					</ParsedWeatherItem>
+					</WeatherElementLayout>
 
 					<Show when={latestMetar().presentWeather}>
-						<ParsedWeatherItem>
-							<span class="mx-auto">Precipitation</span>
-							<p class="text-center text-xl">{latestMetar().presentWeather}</p>
-						</ParsedWeatherItem>
+						<PrecipitationElement latestMetar={latestMetar()}></PrecipitationElement>
 					</Show>
 
 					<Show when={latestMetar().flightCategory}>
-						<ParsedWeatherItem>
-							<span class="mx-auto">Flight Category</span>
+						<WeatherElementLayout name='Flight category'>
 							<p class="text-center text-xl">{latestMetar().flightCategory}</p>
-						</ParsedWeatherItem>
+						</WeatherElementLayout>
 					</Show>
 				</div>
 			</Show>
@@ -87,4 +78,4 @@ const ParsedWeatherElements = (props: { airport: AirportSearchFragment; class?: 
 	)
 }
 
-export default ParsedWeatherElements
+export default WeatherElements
