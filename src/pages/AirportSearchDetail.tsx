@@ -99,6 +99,9 @@ const AirportSearchDetail: Component = () => {
 		} else if (nextImportPrediction() && nextImportPredictionDuration().asMinutes() < 10) {
 			setRefreshInterval(1000 * 60 /* 1 minute */)
 			return
+		} else {
+			setRefreshInterval(1000 * 60 * 10 /* 10 minutes */)
+			return
 		}
 	})
 
