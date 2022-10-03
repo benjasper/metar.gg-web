@@ -1746,6 +1746,22 @@
             "deprecationReason": null
           },
           {
+            "name": "importTime",
+            "description": "The time the METAR was imported.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Time",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "maxTemp6",
             "description": "The maximum air temperature in Celsius from the past 6 hours.",
             "args": [],
@@ -1804,6 +1820,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "Float",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "nextImportTimePrediction",
+            "description": "The time the METAR is expected to be imported/available next.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Time",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3719,6 +3747,22 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "ID",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "importTime",
+            "description": "The time the TAF was imported.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Time",
                 "ofType": null
               }
             },

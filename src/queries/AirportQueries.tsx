@@ -24,6 +24,8 @@ export const AIRPORT_SEARCH = gql`
 export const AIRPORT_SINGLE = gql`
 	fragment Metar on Metar {
 		observationTime
+		importTime
+		nextImportTimePrediction
 		rawText
 		temperature
 		dewpoint

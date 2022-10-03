@@ -291,6 +291,8 @@ export type Metar = {
   flightCategory?: Maybe<MetarFlightCategory>;
   /** The unique identifier of the record. */
   id: Scalars['ID'];
+  /** The time the METAR was imported. */
+  importTime: Scalars['Time'];
   /** The maximum air temperature in Celsius from the past 6 hours. */
   maxTemp6?: Maybe<Scalars['Float']>;
   /** The maximum air temperature in Celsius from the past 24 hours. */
@@ -301,6 +303,8 @@ export type Metar = {
   minTemp6?: Maybe<Scalars['Float']>;
   /** The minimum air temperature in Celsius from the past 24 hours. */
   minTemp24?: Maybe<Scalars['Float']>;
+  /** The time the METAR is expected to be imported/available next. */
+  nextImportTimePrediction?: Maybe<Scalars['Time']>;
   /** The time the METAR was observed. */
   observationTime: Scalars['Time'];
   /** The precipitation in inches from since the last observation. 0.0005 in = trace precipitation. */
@@ -634,6 +638,8 @@ export type Taf = {
   forecast?: Maybe<Array<Forecast>>;
   /** The unique identifier of the record. */
   id: Scalars['ID'];
+  /** The time the TAF was imported. */
+  importTime: Scalars['Time'];
   /** The time the TAF was issued. */
   issueTime: Scalars['Time'];
   /** The raw TAF text. */
@@ -795,16 +801,16 @@ export type AirportSearchQueryVariables = Exact<{
 
 export type AirportSearchQuery = { __typename?: 'Query', getAirports: { __typename?: 'AirportConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, edges: Array<{ __typename?: 'AirportEdge', cursor: any, node: { __typename?: 'Airport', identifier: string, icaoCode?: string | null, iataCode?: string | null, name: string } }> } };
 
-export type MetarFragment = { __typename?: 'Metar', observationTime: any, rawText: string, temperature: number, dewpoint: number, altimeter: number, visibility: number, windDirection: number, windSpeed: number, windGust: number, flightCategory?: MetarFlightCategory | null, presentWeather?: string | null, skyConditions?: Array<{ __typename?: 'SkyCondition', skyCover: SkyConditionSkyCover, cloudBase?: number | null }> | null };
+export type MetarFragment = { __typename?: 'Metar', observationTime: any, importTime: any, nextImportTimePrediction?: any | null, rawText: string, temperature: number, dewpoint: number, altimeter: number, visibility: number, windDirection: number, windSpeed: number, windGust: number, flightCategory?: MetarFlightCategory | null, presentWeather?: string | null, skyConditions?: Array<{ __typename?: 'SkyCondition', skyCover: SkyConditionSkyCover, cloudBase?: number | null }> | null };
 
-export type AirportSearchFragment = { __typename?: 'Airport', identifier: string, icaoCode?: string | null, iataCode?: string | null, name: string, timezone?: string | null, municipality?: string | null, runways: Array<{ __typename?: 'Runway', closed: boolean, surface?: string | null, lowRunwayHeading?: number | null, lowRunwayIdentifier: string, lowRunwayLatitude?: number | null, lowRunwayLongitude?: number | null, highRunwayHeading?: number | null, highRunwayIdentifier: string, highRunwayLatitude?: number | null, highRunwayLongitude?: number | null }>, country?: { __typename?: 'Country', name: string } | null, station?: { __typename?: 'WeatherStation', metars: { __typename?: 'MetarConnection', edges: Array<{ __typename?: 'MetarEdge', node: { __typename?: 'Metar', observationTime: any, rawText: string, temperature: number, dewpoint: number, altimeter: number, visibility: number, windDirection: number, windSpeed: number, windGust: number, flightCategory?: MetarFlightCategory | null, presentWeather?: string | null, skyConditions?: Array<{ __typename?: 'SkyCondition', skyCover: SkyConditionSkyCover, cloudBase?: number | null }> | null } }> } } | null };
+export type AirportSearchFragment = { __typename?: 'Airport', identifier: string, icaoCode?: string | null, iataCode?: string | null, name: string, timezone?: string | null, municipality?: string | null, runways: Array<{ __typename?: 'Runway', closed: boolean, surface?: string | null, lowRunwayHeading?: number | null, lowRunwayIdentifier: string, lowRunwayLatitude?: number | null, lowRunwayLongitude?: number | null, highRunwayHeading?: number | null, highRunwayIdentifier: string, highRunwayLatitude?: number | null, highRunwayLongitude?: number | null }>, country?: { __typename?: 'Country', name: string } | null, station?: { __typename?: 'WeatherStation', metars: { __typename?: 'MetarConnection', edges: Array<{ __typename?: 'MetarEdge', node: { __typename?: 'Metar', observationTime: any, importTime: any, nextImportTimePrediction?: any | null, rawText: string, temperature: number, dewpoint: number, altimeter: number, visibility: number, windDirection: number, windSpeed: number, windGust: number, flightCategory?: MetarFlightCategory | null, presentWeather?: string | null, skyConditions?: Array<{ __typename?: 'SkyCondition', skyCover: SkyConditionSkyCover, cloudBase?: number | null }> | null } }> } } | null };
 
 export type GetSingleAirportQueryVariables = Exact<{
   identifier: Scalars['String'];
 }>;
 
 
-export type GetSingleAirportQuery = { __typename?: 'Query', getAirport?: { __typename?: 'Airport', identifier: string, icaoCode?: string | null, iataCode?: string | null, name: string, timezone?: string | null, municipality?: string | null, runways: Array<{ __typename?: 'Runway', closed: boolean, surface?: string | null, lowRunwayHeading?: number | null, lowRunwayIdentifier: string, lowRunwayLatitude?: number | null, lowRunwayLongitude?: number | null, highRunwayHeading?: number | null, highRunwayIdentifier: string, highRunwayLatitude?: number | null, highRunwayLongitude?: number | null }>, country?: { __typename?: 'Country', name: string } | null, station?: { __typename?: 'WeatherStation', metars: { __typename?: 'MetarConnection', edges: Array<{ __typename?: 'MetarEdge', node: { __typename?: 'Metar', observationTime: any, rawText: string, temperature: number, dewpoint: number, altimeter: number, visibility: number, windDirection: number, windSpeed: number, windGust: number, flightCategory?: MetarFlightCategory | null, presentWeather?: string | null, skyConditions?: Array<{ __typename?: 'SkyCondition', skyCover: SkyConditionSkyCover, cloudBase?: number | null }> | null } }> } } | null } | null };
+export type GetSingleAirportQuery = { __typename?: 'Query', getAirport?: { __typename?: 'Airport', identifier: string, icaoCode?: string | null, iataCode?: string | null, name: string, timezone?: string | null, municipality?: string | null, runways: Array<{ __typename?: 'Runway', closed: boolean, surface?: string | null, lowRunwayHeading?: number | null, lowRunwayIdentifier: string, lowRunwayLatitude?: number | null, lowRunwayLongitude?: number | null, highRunwayHeading?: number | null, highRunwayIdentifier: string, highRunwayLatitude?: number | null, highRunwayLongitude?: number | null }>, country?: { __typename?: 'Country', name: string } | null, station?: { __typename?: 'WeatherStation', metars: { __typename?: 'MetarConnection', edges: Array<{ __typename?: 'MetarEdge', node: { __typename?: 'Metar', observationTime: any, importTime: any, nextImportTimePrediction?: any | null, rawText: string, temperature: number, dewpoint: number, altimeter: number, visibility: number, windDirection: number, windSpeed: number, windGust: number, flightCategory?: MetarFlightCategory | null, presentWeather?: string | null, skyConditions?: Array<{ __typename?: 'SkyCondition', skyCover: SkyConditionSkyCover, cloudBase?: number | null }> | null } }> } } | null } | null };
 
 
       export interface PossibleTypesResultData {

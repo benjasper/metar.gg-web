@@ -17,12 +17,21 @@ const AirportSearchDetail: Component = () => {
 	const params = useParams()
 	const newQuery = useGraphQL()
 
+	let refreshInterval = 1000 * 60 * 10
+	const setRefreshInterval = (interval: number) => {
+		if (refreshInterval !== interval) {
+			refreshInterval = interval
+			clearTimeout(refetchTimeout)
+			refreshAirport()
+		}
+	}
+
 	const [lastRefreshed, setLastRefreshed] = createSignal<Date>(new Date())
 	const [airportIdentifier, setAirportIdentifier] = createSignal<GetSingleAirportQueryVariables | false>(false)
-	const [airportRequest, { mutate, refetch }] = newQuery<GetSingleAirportQuery, GetSingleAirportQueryVariables>(
-		AIRPORT_SINGLE,
-		() => airportIdentifier()
-	)
+	const [airportRequest, { mutate, refetch: refetchAirport }] = newQuery<
+		GetSingleAirportQuery,
+		GetSingleAirportQueryVariables
+	>(AIRPORT_SINGLE, () => airportIdentifier())
 
 	const throttledLoading = debounce((id: string) => setAirportIdentifier({ identifier: id }), 100)
 
@@ -34,16 +43,21 @@ const AirportSearchDetail: Component = () => {
 		return undefined
 	}
 
-	const metarObservationTime = () => new Date(airport()?.station.metars?.edges[0]?.node.observationTime) ?? undefined
 	const [now, setNow] = createSignal<Date>(new Date())
 
-	const lastObservationDuration = (): Duration => Duration.fromDates(now(), metarObservationTime())
+	const metarObservationTime = () => new Date(airport()?.station.metars?.edges[0]?.node.observationTime) ?? undefined
+	const lastObservationDuration = (): Duration => Duration.fromDates(metarObservationTime(), now())
 
-	const interval = setInterval(() => {
+	const nextImportPrediction = () =>
+		new Date(airport()?.station.metars?.edges[0]?.node.nextImportTimePrediction) ?? undefined
+	const nextImportPredictionDuration = (): Duration => Duration.fromDates(nextImportPrediction(), now())
+
+	const importTime = () => new Date(airport()?.station.metars?.edges[0]?.node.importTime) ?? undefined
+	const importTimeDuration = (): Duration => Duration.fromDates(importTime(), now())
+
+	const nowInterval = setInterval(() => {
 		setNow(new Date())
 	}, 3000)
-
-	let refetchInterval: NodeJS.Timer
 
 	const doSearch = (airportIdentifier: string) => {
 		if (airportIdentifier.length === 0) {
@@ -54,26 +68,43 @@ const AirportSearchDetail: Component = () => {
 
 		setLastRefreshed(new Date())
 		throttledLoading(airportIdentifier)
-
-		if (refetchInterval) {
-			clearInterval(refetchInterval)
-		}
-
-		refetchInterval = setInterval(() => {
-			refetch()
-			setLastRefreshed(new Date())
-		}, 1000 * 60 * 5)
 	}
 
+	let refetchTimeout: NodeJS.Timeout
+	const refreshAirport = () => {
+		refetchAirport()
+		setLastRefreshed(new Date())
+
+		refetchTimeout = setTimeout(() => {
+			console.log('refreshing')
+			refreshAirport()
+		}, refreshInterval)
+	}
+
+	// Make a search base on the route parameter
 	createEffect(() => {
 		if (params.airportIdentifier) {
 			doSearch(params.airportIdentifier)
 		}
 	})
 
+	// Change the refresh interval based on the next import prediction
+	createEffect(() => {
+		if (nextImportPrediction() && nextImportPredictionDuration().asSeconds() < 60) {
+			setRefreshInterval(1000 * 10) // 10 seconds
+			return
+		} else if (nextImportPrediction() && nextImportPredictionDuration().asMinutes() < 5) {
+			setRefreshInterval(1000 * 30 /* 30 seconds */)
+			return
+		} else if (nextImportPrediction() && nextImportPredictionDuration().asMinutes() < 10) {
+			setRefreshInterval(1000 * 60 /* 1 minute */)
+			return
+		}
+	})
+
 	onCleanup(() => {
-		clearInterval(interval)
-		clearInterval(refetchInterval)
+		clearInterval(nowInterval)
+		clearTimeout(refetchTimeout)
 	})
 
 	return (
@@ -108,7 +139,7 @@ const AirportSearchDetail: Component = () => {
 				<div class="flex flex-col md:flex-row justify-between">
 					<div class="flex flex-col">
 						<h3 class="text-xl">Current weather</h3>
-						<div class="flex flex-row gap-2 justify-start pt-2">
+						<div class="flex flex-row flex-wrap gap-2 justify-start pt-2">
 							<span
 								class="text-xs px-3 py-1 rounded-full text-white cursor-default"
 								classList={{
@@ -122,13 +153,39 @@ const AirportSearchDetail: Component = () => {
 									month: 'long',
 									year: 'numeric',
 								})}>
-								Observed {lastObservationDuration().humanImprecise()} ago
+								Observed {lastObservationDuration().humanImprecise()}
+							</span>
+							<span
+								class="text-xs px-3 py-1 rounded-full bg-gray-200 text-black cursor-default"
+								title={importTime().toLocaleTimeString([], {
+									hour: 'numeric',
+									minute: '2-digit',
+									day: 'numeric',
+									month: 'long',
+									year: 'numeric',
+								})}>
+								Published {importTimeDuration().humanImprecise()}
+							</span>
+							<span
+								class="text-xs px-3 py-1 rounded-full text-white cursor-default"
+								classList={{
+									'bg-orange-500': nextImportPredictionDuration().isPast(),
+									'bg-green-600': nextImportPredictionDuration().isFuture(),
+								}}
+								title={nextImportPrediction().toLocaleTimeString([], {
+									hour: 'numeric',
+									minute: '2-digit',
+									day: 'numeric',
+									month: 'long',
+									year: 'numeric',
+								})}>
+								Next update expected {nextImportPredictionDuration().humanImprecise()}
 							</span>
 						</div>
 					</div>
 					<span class="flex mt-4 md:mt-auto text-gray-700">
 						<HiOutlineRefresh class="my-auto mr-2" />
-						Refreshed {Duration.fromDates(now(), lastRefreshed()).humanImprecise()} ago
+						Refreshed {Duration.fromDates(lastRefreshed(), now()).humanImprecise()}
 					</span>
 				</div>
 
