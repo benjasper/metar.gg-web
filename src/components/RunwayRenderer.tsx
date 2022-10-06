@@ -36,7 +36,7 @@ interface Airport {
 	runways: Runway[]
 }
 
-const RunwayRenderer = (props: { airport: AirportSearchFragment }) => {
+const RunwayRenderer = (props: { airport: AirportSearchFragment, windDirection: number }) => {
 	const [runways, setRunways] = createSignal<Runway[]>([])
 
 	const [centerX, setCenterX] = createSignal(0)
@@ -49,10 +49,17 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment }) => {
 
 	createEffect(() => {
 		const preparingRunways = []
-		
+
 		props.airport.runways.forEach(runway => {
 			// Check if all runways have coordinates
-			if (!(runway.lowRunwayLatitude && runway.lowRunwayLongitude && runway.highRunwayLatitude && runway.highRunwayLongitude)) {
+			if (
+				!(
+					runway.lowRunwayLatitude &&
+					runway.lowRunwayLongitude &&
+					runway.highRunwayLatitude &&
+					runway.highRunwayLongitude
+				)
+			) {
 				return
 			}
 
@@ -102,6 +109,29 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment }) => {
 		setRunways(preparingRunways)
 	})
 
+	// Calculate the radius around the center of the airport, to show a wind arrow
+	const radius = () => realDiagonal()
+
+	const windDirectionInDegree = () => props.windDirection - 90
+
+	const realCenterX = () => -centerX() + realDiagonal()
+	const realCenterY = () => -centerY() + realDiagonal()
+
+	// Place the wind arrow onto the circle around the center of the airport
+	const windArrowX = () => realCenterX() + radius() * Math.cos((windDirectionInDegree() * Math.PI) / 180)
+	const windArrowY = () => realCenterY() + radius() * Math.sin((windDirectionInDegree() * Math.PI) / 180)
+
+	// Calculate the angle of the wind arrow
+	const windArrowAngle = () => {
+		const angle = windDirectionInDegree() + 90
+
+		if (angle > 180) {
+			return angle - 360
+		}
+
+		return angle
+	}
+
 	return (
 		<Show when={runways().length > 0}>
 			<div class="w-full rounded-full mx-auto md:mx-0">
@@ -109,6 +139,14 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment }) => {
 					class="cartesian w-full h-full"
 					viewBox={`${-centerX()} ${-centerY()}  ${realDiagonal() * 2} ${realDiagonal() * 2}`}
 					xmlns="http://www.w3.org/2000/svg">
+					<rect
+						class="fill-grey-800"
+						x={windArrowX() - 0.25}
+						y={windArrowY()}
+						width="0.5"
+						height={2}
+						transform={`rotate(${windArrowAngle()}, ${windArrowX()}, ${windArrowY()})`}></rect>
+
 					<For each={runways()}>
 						{(r, i) => (
 							<>
