@@ -117,8 +117,17 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment }) => {
 									y1={r.direction1.y}
 									x2={r.direction2.x}
 									y2={r.direction2.y}
-									stroke={'lightgray'}
+									class="stroke-gray-600"
 									stroke-width="0.8"
+								/>
+								<line
+									x1={r.direction1.x}
+									y1={r.direction1.y}
+									x2={r.direction2.x}
+									y2={r.direction2.y}
+									class="stroke-white"
+									stroke-width="0.15"
+									stroke-dasharray="0.9,0.6"
 								/>
 							</>
 						)}

@@ -52,11 +52,11 @@ const WeatherElements = (props: { airport: AirportSearchFragment; class?: string
 					</WeatherElementLayout>
 
 					<WeatherElementLayout name='Temperature'>
-						<p class="text-center text-xl">{latestMetar().temperature}°C</p>
+						<p class="text-center text-xl">{latestMetar().temperature} °C</p>
 					</WeatherElementLayout>
 
 					<WeatherElementLayout name='Dewpoint'>
-						<p class="text-center text-xl">{latestMetar().dewpoint}°C</p>
+						<p class="text-center text-xl">{latestMetar().dewpoint} °C</p>
 					</WeatherElementLayout>
 
 					<WeatherElementLayout name='Altimeter'>
