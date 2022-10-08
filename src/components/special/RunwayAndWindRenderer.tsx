@@ -216,7 +216,7 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 									y2={r.direction2.y}
 									class="stroke-white"
 									stroke-width="0.2"
-									stroke-dasharray="0.9,0.6"
+									stroke-dasharray="1.2,0.6"
 								/>
 							</>
 						)}

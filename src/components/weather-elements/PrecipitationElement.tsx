@@ -1,6 +1,18 @@
 import { Component, createEffect, For, Match, Show, Switch } from 'solid-js'
 import WeatherElementLayout from '../../layouts/WeatherElementLayout'
 import { MetarFragment } from '../../queries/generated/graphql'
+import {
+	RiWeatherDrizzleLine,
+	RiWeatherFoggyLine,
+	RiWeatherHailLine,
+	RiWeatherHazeLine,
+	RiWeatherMistLine,
+	RiWeatherShowersLine,
+	RiWeatherSnowyLine,
+	RiWeatherThunderstormsLine,
+	RiWeatherTornadoLine,
+	RiWeatherWindyLine,
+} from 'solid-icons/ri'
 
 interface PrecipitationElementProps {
 	latestMetar: MetarFragment
@@ -72,6 +84,50 @@ const ConditionElement = (props: { condition: string }) => {
 
 	return (
 		<div class="flex flex-row gap-1 justify-center text-xl">
+			<Switch>
+				<Match when={precipitationType() === PrecipitationType.Drizzle}>
+					<RiWeatherDrizzleLine class="text-blue-500" />
+				</Match>
+				<Match when={descriptor() === Descriptor.Showers || precipitationType() === PrecipitationType.Rain}>
+					<RiWeatherShowersLine size={24} />
+				</Match>
+				<Match when={descriptor() === Descriptor.Thunderstorm}>
+					<RiWeatherThunderstormsLine size={24} />
+				</Match>
+				<Match when={precipitationType() === PrecipitationType.Snow}>
+					<RiWeatherSnowyLine size={24} />
+				</Match>
+				<Match
+					when={
+						precipitationType() === PrecipitationType.Hail ||
+						precipitationType() === PrecipitationType.SmallHail
+					}>
+					<RiWeatherHailLine size={24} />
+				</Match>
+				<Match when={obscuration() === Obscuration.Fog}>
+					<RiWeatherFoggyLine size={24} />
+				</Match>
+				<Match when={obscuration() === Obscuration.Mist}>
+					<RiWeatherMistLine size={24} />
+				</Match>
+				<Match when={obscuration() === Obscuration.Haze}>
+					<RiWeatherHazeLine size={24} />
+				</Match>
+				<Match
+					when={
+						other() === Other.Duststorm ||
+						other() === Other.Sandstorm ||
+						other() === Other.Squalls ||
+						other() === Other.SandOrDustWhirls ||
+						other() === Other.DustWhirls
+					}>
+					<RiWeatherWindyLine />
+				</Match>
+				<Match when={other() === Other.Tornado || other() === Other.FunnelCloud}>
+					<RiWeatherTornadoLine />
+				</Match>
+			</Switch>
+
 			{/* Intensity or Proximity */}
 			<Show when={intensityOrProximity()}>
 				<span>
@@ -155,7 +211,7 @@ const PrecipitationElement: Component<PrecipitationElementProps> = props => {
 	const conditions = () => props.latestMetar.presentWeather.split(' ')
 
 	return (
-		<WeatherElementLayout name='Precipitation'>
+		<WeatherElementLayout name="Precipitation">
 			<div class="flex flex-col gap-1">
 				<For each={conditions()}>{condition => <ConditionElement condition={condition} />}</For>
 			</div>

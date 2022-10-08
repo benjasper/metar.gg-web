@@ -3,6 +3,7 @@ import { AirportSearchFragment } from '../queries/generated/graphql'
 import WeatherElementLayout from '../layouts/WeatherElementLayout'
 import PrecipitationElement from './weather-elements/PrecipitationElement'
 import WindElement from './weather-elements/WindElement'
+import SkyConditionsElement from './weather-elements/SkyConditionsElement'
 
 const WeatherElements = (props: { airport: AirportSearchFragment; class?: string }) => {
 	const latestMetar = () => {
@@ -27,21 +28,7 @@ const WeatherElements = (props: { airport: AirportSearchFragment; class?: string
 						</p>
 					</WeatherElementLayout>
 
-					<WeatherElementLayout name="Sky conditions">
-						<div class="flex flex-col gap-2 text-center text-xl">
-							<For each={latestMetar().skyConditions.sort((a, b) => b.cloudBase - a.cloudBase)}>
-								{(condition, i) => (
-									<div class="flex flex-row gap-1 mx-auto text-center">
-										<span>{condition.skyCover}</span>
-										<Show when={condition.cloudBase}>
-											<span>at</span>
-											<span class="my-auto">{Math.round(condition.cloudBase)} ft</span>
-										</Show>
-									</div>
-								)}
-							</For>
-						</div>
-					</WeatherElementLayout>
+					<SkyConditionsElement metar={latestMetar()} />
 
 					<WeatherElementLayout name="Temperature">
 						<p class="text-center text-xl">{latestMetar().temperature} °C</p>
