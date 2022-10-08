@@ -172,8 +172,13 @@ const AirportSearchDetail: Component = () => {
 							<span
 								class="text-xs px-3 py-1 rounded-full text-white cursor-default"
 								classList={{
-									'bg-orange-500': nextImportPredictionDuration().isPast() && nextImportPredictionDuration().asMinutes() > 5,
-									'bg-green-600': nextImportPredictionDuration().isFuture() || (nextImportPredictionDuration().asMinutes() <= 5 && nextImportPredictionDuration().isPast()),
+									'bg-orange-500':
+										nextImportPredictionDuration().isPast() &&
+										nextImportPredictionDuration().asMinutes() > 5,
+									'bg-green-600':
+										nextImportPredictionDuration().isFuture() ||
+										(nextImportPredictionDuration().asMinutes() <= 5 &&
+											nextImportPredictionDuration().isPast()),
 								}}
 								title={nextImportPrediction().toLocaleTimeString([], {
 									hour: 'numeric',
@@ -182,7 +187,9 @@ const AirportSearchDetail: Component = () => {
 									month: 'long',
 									year: 'numeric',
 								})}>
-								Next update expected {nextImportPredictionDuration().humanImprecise()}
+								<Show when={nextImportPredictionDuration().isFuture()} fallback={`Next update expected any moment now`}>
+									Next update expected {nextImportPredictionDuration().humanImprecise()}
+								</Show>
 							</span>
 						</div>
 					</div>
