@@ -131,7 +131,7 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 		const maximums = calculateMinMaxOfCoordinates(preparingRunways)
 
 		// Scaling size lower is bigger
-		setRealDiagonal(Math.sqrt(Math.pow(maximums.maxX, 2) + Math.pow(maximums.maxY, 2)) * 0.65)
+		setRealDiagonal(Math.sqrt(Math.pow(maximums.maxX, 2) + Math.pow(maximums.maxY, 2)) * 0.8)
 
 		setCenterX(realDiagonal() - maximums.maxX / 2)
 		setCenterY(realDiagonal() - maximums.maxY / 2)
@@ -140,7 +140,7 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 	})
 
 	// Calculate the radius around the center of the airport, to show a wind arrow
-	const radius = () => realDiagonal() * 0.96
+	const radius = () => realDiagonal() * 0.95
 
 	const windDirectionInDegree = () => props.latestMetar.windDirection - 90
 
@@ -166,17 +166,16 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 		<Show when={runways().length > 0}>
 			<div class="relative w-full rounded-full mx-auto md:mx-0">
 				<svg
-					class="cartesian w-full h-full"
+					class="cartesian md:w-[24rem] h-full"
 					viewBox={`${-centerX()} ${-centerY()}  ${realDiagonal() * 2} ${realDiagonal() * 2}`}
 					xmlns="http://www.w3.org/2000/svg">
 					<circle
 						transform-origin="center"
-						class="stroke-gray-200"
-						stroke-width="0.1"
-						fill="none"
+						class="fill-gray-100"
+						stroke-width="0.2"
 						cx={realCenterX()}
 						cy={realCenterY()}
-						r={realDiagonal() * 0.9}></circle>
+						r={realDiagonal() * 0.85}></circle>
 
 					<Show when={props.latestMetar.windSpeed > 0 && props.latestMetar.windDirection != 0}>
 						<svg
@@ -191,10 +190,10 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 								transform-origin="center"
 								transform={`rotate(${windArrowAngle()})`}
 								stroke="currentColor"
-								class="stroke-gray-500"
+								class="stroke-gray-800"
 								stroke-linecap="round"
 								stroke-linejoin="round"
-								stroke-width="1"
+								stroke-width="1.25"
 								d="M15.25 10.75L12 14.25L8.75 10.75"></path>
 						</svg>
 					</Show>
@@ -234,7 +233,7 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 									}}
 									cx={r.direction1.x}
 									cy={r.direction1.y}
-									r="1.4"
+									r="1.5"
 								/>
 								<circle
 									class=""
@@ -245,7 +244,7 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 									}}
 									cx={r.direction2.x}
 									cy={r.direction2.y}
-									r="1.4"
+									r="1.5"
 								/>
 							</>
 						)}

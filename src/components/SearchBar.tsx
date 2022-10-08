@@ -88,7 +88,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 		}
 
 		if (keys().includes('ENTER')) {
-			if (id === undefined || airportResults() === undefined || !airportResults().getAirports.edges[id] || airportResults().getAirports.totalCount === 0) {
+			if (id === undefined || airportResults() === undefined || airportResults.loading || !airportResults().getAirports.edges[id] || airportResults().getAirports.totalCount === 0) {
 				return
 			}
 
