@@ -1,6 +1,6 @@
 import { createEffect, createSignal, For, Show, untrack } from 'solid-js'
 import * as merc from 'mercator-projection'
-import { AirportSearchFragment, MetarFragment } from '../queries/generated/graphql'
+import { AirportSearchFragment, MetarFragment } from '../../queries/generated/graphql'
 import { FaSolidChevronDown } from 'solid-icons/fa'
 
 const cartesianCoordinates = (lat, lon) => {
@@ -40,7 +40,7 @@ interface Airport {
 	runways: Runway[]
 }
 
-const RunwayRenderer = (props: { airport: AirportSearchFragment; latestMetar: MetarFragment }) => {
+const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMetar: MetarFragment }) => {
 	const [runways, setRunways] = createSignal<Runway[]>([])
 
 	const [centerX, setCenterX] = createSignal(0)
@@ -278,4 +278,4 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment; latestMetar: Me
 	)
 }
 
-export default RunwayRenderer
+export default RunwayAndWindRenderer

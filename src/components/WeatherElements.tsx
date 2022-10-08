@@ -1,9 +1,8 @@
 import { For, Show, Switch } from 'solid-js'
 import { AirportSearchFragment } from '../queries/generated/graphql'
 import WeatherElementLayout from '../layouts/WeatherElementLayout'
-import RunwayRenderer from './RunwayRenderer'
-import RunwayLayout from './RunwayRenderer'
 import PrecipitationElement from './weather-elements/PrecipitationElement'
+import WindElement from './weather-elements/WindElement'
 
 const WeatherElements = (props: { airport: AirportSearchFragment; class?: string }) => {
 	const latestMetar = () => {
@@ -18,16 +17,7 @@ const WeatherElements = (props: { airport: AirportSearchFragment; class?: string
 		<div class={`flex flex-col md:flex-row gap-8 justify-center ${props.class ?? ''}`}>
 			<Show when={latestMetar()} fallback={<span class="text-lg mx-auto">No recent weather available.</span>}>
 				<div class="flex flex-col flex-shrink-0">
-					<WeatherElementLayout name="Wind" class="flex-shrink-0">
-						<RunwayRenderer
-							airport={props.airport}
-							latestMetar={latestMetar()}></RunwayRenderer>
-						<Show when={latestMetar()}>
-							<p class="text-center">
-								<Show when={latestMetar().windDirection !== 0} fallback="Variable">{latestMetar().windDirection}°</Show> at {latestMetar().windSpeed}kt
-							</p>
-						</Show>
-					</WeatherElementLayout>
+					<WindElement airport={props.airport} latestMetar={latestMetar()} />
 				</div>
 				<div class="flex flex-row flex-wrap justify-center md:justify-start gap-8">
 					<WeatherElementLayout name="Visibility">
