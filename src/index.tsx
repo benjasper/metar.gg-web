@@ -6,7 +6,6 @@ import { Component } from 'solid-js'
 import { GraphQLProvider } from './context/GraphQLClient'
 import { Route, Router, Routes } from '@solidjs/router'
 import AirportSearch from './pages/AirportSearch'
-import AirportSearchDetail from './pages/AirportSearchDetail'
 import { MetaProvider } from '@solidjs/meta'
 
 const App: Component = () => {
@@ -16,7 +15,7 @@ const App: Component = () => {
 		<MetaProvider>
 			<Router>
 				<GraphQLProvider client={client}>
-					<div class="container mx-auto w-full h-screen">
+					<div class="container mx-auto w-full">
 						<AirportSearch></AirportSearch>
 					</div>
 				</GraphQLProvider>
