@@ -1,6 +1,7 @@
 import { createEffect, createSignal, For, Show, untrack } from 'solid-js'
 import * as merc from 'mercator-projection'
-import { AirportSearchFragment } from '../queries/generated/graphql'
+import { AirportSearchFragment, MetarFragment } from '../queries/generated/graphql'
+import { FaSolidChevronDown } from 'solid-icons/fa'
 
 const cartesianCoordinates = (lat, lon) => {
 	const x = merc.fromLatLngToPoint({ lat: lat, lng: lon }).x
@@ -28,15 +29,18 @@ interface Runway {
 
 interface RunwayDirection {
 	runway: string
+	heading: number
 	x: number
 	y: number
+	windAngle: number
+	favourableLevel: number
 }
 
 interface Airport {
 	runways: Runway[]
 }
 
-const RunwayRenderer = (props: { airport: AirportSearchFragment, windDirection: number }) => {
+const RunwayRenderer = (props: { airport: AirportSearchFragment; latestMetar: MetarFragment }) => {
 	const [runways, setRunways] = createSignal<Runway[]>([])
 
 	const [centerX, setCenterX] = createSignal(0)
@@ -44,11 +48,11 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment, windDirection: 
 
 	const [realDiagonal, setRealDiagonal] = createSignal(0)
 
-	// Lower is larger
-	const scale = 0.04
+	// Scaling zoom
+	const scale = 0.03
 
 	createEffect(() => {
-		const preparingRunways = []
+		const preparingRunways: Runway[] = []
 
 		props.airport.runways.forEach(runway => {
 			// Check if all runways have coordinates
@@ -78,16 +82,40 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment, windDirection: 
 			preparingRunways.push({
 				direction1: {
 					runway: runway.lowRunwayIdentifier,
+					heading: runway.lowRunwayHeading,
 					x: direction1.x,
 					y: direction1.y,
+					favourableLevel: 0,
+					windAngle:
+						180 - Math.abs(Math.abs(runway.lowRunwayHeading - props.latestMetar.windDirection) - 180),
 				},
 				direction2: {
 					runway: runway.highRunwayIdentifier,
+					heading: runway.highRunwayHeading,
 					x: direction2.x,
 					y: direction2.y,
+					favourableLevel: 0,
+					windAngle:
+						180 - Math.abs(Math.abs(runway.highRunwayHeading - props.latestMetar.windDirection) - 180),
 				},
 			})
 		})
+
+		if (props.latestMetar.windSpeed > 2) {
+			// Calculate the best runway heading
+			const bestRunways = preparingRunways.filter(runway => {
+				return runway.direction1.windAngle < 90 || runway.direction2.windAngle < 90
+			})
+
+			bestRunways.forEach(runway => {
+				// Set the favourable level to 1 if the wind angle is less than 90 and 2 if the wind angle is less than 45 degrees
+				if (runway.direction1.windAngle < 90)
+					runway.direction1.favourableLevel = runway.direction1.windAngle < 45 ? 2 : 1
+
+				if (runway.direction2.windAngle < 90)
+					runway.direction2.favourableLevel = runway.direction2.windAngle < 45 ? 2 : 1
+			})
+		}
 
 		const { minX, minY, maxX, maxY } = calculateMinMaxOfCoordinates(preparingRunways)
 
@@ -102,7 +130,9 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment, windDirection: 
 
 		const maximums = calculateMinMaxOfCoordinates(preparingRunways)
 
-		setRealDiagonal(Math.sqrt(Math.pow(maximums.maxX, 2) + Math.pow(maximums.maxY, 2)) * 0.6)
+		// Scaling size lower is bigger
+		setRealDiagonal(Math.sqrt(Math.pow(maximums.maxX, 2) + Math.pow(maximums.maxY, 2)) * 0.65)
+
 		setCenterX(realDiagonal() - maximums.maxX / 2)
 		setCenterY(realDiagonal() - maximums.maxY / 2)
 
@@ -110,9 +140,9 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment, windDirection: 
 	})
 
 	// Calculate the radius around the center of the airport, to show a wind arrow
-	const radius = () => realDiagonal()
+	const radius = () => realDiagonal() * 0.96
 
-	const windDirectionInDegree = () => props.windDirection - 90
+	const windDirectionInDegree = () => props.latestMetar.windDirection - 90
 
 	const realCenterX = () => -centerX() + realDiagonal()
 	const realCenterY = () => -centerY() + realDiagonal()
@@ -134,18 +164,40 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment, windDirection: 
 
 	return (
 		<Show when={runways().length > 0}>
-			<div class="w-full rounded-full mx-auto md:mx-0">
+			<div class="relative w-full rounded-full mx-auto md:mx-0">
 				<svg
 					class="cartesian w-full h-full"
 					viewBox={`${-centerX()} ${-centerY()}  ${realDiagonal() * 2} ${realDiagonal() * 2}`}
 					xmlns="http://www.w3.org/2000/svg">
-					<rect
-						class="fill-grey-800"
-						x={windArrowX() - 0.25}
-						y={windArrowY()}
-						width="0.5"
-						height={2}
-						transform={`rotate(${windArrowAngle()}, ${windArrowX()}, ${windArrowY()})`}></rect>
+					<circle
+						transform-origin="center"
+						class="stroke-gray-200"
+						stroke-width="0.1"
+						fill="none"
+						cx={realCenterX()}
+						cy={realCenterY()}
+						r={realDiagonal() * 0.9}></circle>
+
+					<Show when={props.latestMetar.windSpeed > 0 && props.latestMetar.windDirection != 0}>
+						<svg
+							width="8"
+							height="8"
+							fill="none"
+							viewBox="0 0 24 24"
+							transform-origin="center"
+							x={windArrowX() - 4}
+							y={windArrowY() - 4}>
+							<path
+								transform-origin="center"
+								transform={`rotate(${windArrowAngle()})`}
+								stroke="currentColor"
+								class="stroke-gray-500"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="1"
+								d="M15.25 10.75L12 14.25L8.75 10.75"></path>
+						</svg>
+					</Show>
 
 					<For each={runways()}>
 						{(r, i) => (
@@ -173,18 +225,38 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment, windDirection: 
 					<For each={runways()}>
 						{(r, i) => (
 							<>
-								<circle class="fill-gray-600" cx={r.direction1.x} cy={r.direction1.y} r="1" />
+								<circle
+									class=""
+									classList={{
+										'fill-gray-600': r.direction1.favourableLevel === 0,
+										'fill-blue-600': r.direction1.favourableLevel === 1,
+										'fill-green-600': r.direction1.favourableLevel === 2,
+									}}
+									cx={r.direction1.x}
+									cy={r.direction1.y}
+									r="1.2"
+								/>
 								<text
-									class="text-[0.8px] fill-white"
+									class="text-[1px] fill-white"
 									x={r.direction1.x}
 									y={r.direction1.y}
 									dominant-baseline="middle"
 									text-anchor="middle">
 									{r.direction1.runway}
 								</text>
-								<circle class="fill-gray-600" cx={r.direction2.x} cy={r.direction2.y} r="1" />
+								<circle
+									class=""
+									classList={{
+										'fill-gray-600': r.direction2.favourableLevel === 0,
+										'fill-blue-600': r.direction2.favourableLevel === 1,
+										'fill-green-600': r.direction2.favourableLevel === 2,
+									}}
+									cx={r.direction2.x}
+									cy={r.direction2.y}
+									r="1.2"
+								/>
 								<text
-									class="text-[0.8px] fill-white"
+									class="text-[1px] fill-white"
 									x={r.direction2.x}
 									y={r.direction2.y}
 									dominant-baseline="middle"

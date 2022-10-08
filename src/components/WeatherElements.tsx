@@ -21,10 +21,10 @@ const WeatherElements = (props: { airport: AirportSearchFragment; class?: string
 					<WeatherElementLayout name="Wind" class="flex-shrink-0">
 						<RunwayRenderer
 							airport={props.airport}
-							windDirection={latestMetar().windDirection}></RunwayRenderer>
+							latestMetar={latestMetar()}></RunwayRenderer>
 						<Show when={latestMetar()}>
 							<p class="text-center">
-								{latestMetar().windDirection}° at {latestMetar().windSpeed}kt
+								<Show when={latestMetar().windDirection !== 0} fallback="Variable">{latestMetar().windDirection}°</Show> at {latestMetar().windSpeed}kt
 							</p>
 						</Show>
 					</WeatherElementLayout>
