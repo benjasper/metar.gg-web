@@ -208,7 +208,7 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment; latestMetar: Me
 									x2={r.direction2.x}
 									y2={r.direction2.y}
 									class="stroke-gray-600"
-									stroke-width="0.8"
+									stroke-width="0.9"
 								/>
 								<line
 									x1={r.direction1.x}
@@ -216,7 +216,7 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment; latestMetar: Me
 									x2={r.direction2.x}
 									y2={r.direction2.y}
 									class="stroke-white"
-									stroke-width="0.15"
+									stroke-width="0.2"
 									stroke-dasharray="0.9,0.6"
 								/>
 							</>
@@ -234,16 +234,8 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment; latestMetar: Me
 									}}
 									cx={r.direction1.x}
 									cy={r.direction1.y}
-									r="1.2"
+									r="1.4"
 								/>
-								<text
-									class="text-[1px] fill-white"
-									x={r.direction1.x}
-									y={r.direction1.y}
-									dominant-baseline="middle"
-									text-anchor="middle">
-									{r.direction1.runway}
-								</text>
 								<circle
 									class=""
 									classList={{
@@ -253,10 +245,24 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment; latestMetar: Me
 									}}
 									cx={r.direction2.x}
 									cy={r.direction2.y}
-									r="1.2"
+									r="1.4"
 								/>
+							</>
+						)}
+					</For>
+					<For each={runways()}>
+						{(r, i) => (
+							<>
 								<text
-									class="text-[1px] fill-white"
+									class="text-[1.1px] fill-white"
+									x={r.direction1.x}
+									y={r.direction1.y}
+									dominant-baseline="middle"
+									text-anchor="middle">
+									{r.direction1.runway}
+								</text>
+								<text
+									class="text-[1.1px] fill-white"
 									x={r.direction2.x}
 									y={r.direction2.y}
 									dominant-baseline="middle"
