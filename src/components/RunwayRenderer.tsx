@@ -101,8 +101,8 @@ const RunwayRenderer = (props: { airport: AirportSearchFragment; latestMetar: Me
 			})
 		})
 
-		if (props.latestMetar.windSpeed > 2) {
-			// Calculate the best runway heading
+		// Calculate the best runway heading
+		if (props.latestMetar.windSpeed > 2 && props.latestMetar.windDirection != 0) {
 			const bestRunways = preparingRunways.filter(runway => {
 				return runway.direction1.windAngle < 90 || runway.direction2.windAngle < 90
 			})
