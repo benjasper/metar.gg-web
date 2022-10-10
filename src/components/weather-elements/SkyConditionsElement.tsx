@@ -70,7 +70,9 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 						{(condition, i) => (
 							<div class="flex flex-row gap-1 mx-auto text-center">
 								<SkyConditionIcon skyCover={condition.skyCover} class="w-5 my-auto" />
-								<span class="my-auto text-base"><SkyConditionText skyCover={condition.skyCover}></SkyConditionText></span>
+								<span class="my-auto text-base">
+									<SkyConditionText skyCover={condition.skyCover}></SkyConditionText>
+								</span>
 								<Show when={condition.cloudBase}>
 									<span class="my-auto text-base">at {Math.round(condition.cloudBase)} ft</span>
 								</Show>
@@ -82,7 +84,12 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 					<div class="mx-auto">
 						<SkyConditionIcon skyCover={props.metar.skyConditions[0].skyCover} class="w-10" />
 					</div>
-					<span class="text-sm"><SkyConditionText skyCover={props.metar.skyConditions[0].skyCover}></SkyConditionText></span>
+					<span class="text-sm">
+						<SkyConditionText skyCover={props.metar.skyConditions[0].skyCover}></SkyConditionText>
+						<Show when={props.metar.skyConditions[0].cloudBase}>
+							&nbsp;at {Math.round(props.metar.skyConditions[0].cloudBase)} ft
+						</Show>
+					</span>
 				</Show>
 			</div>
 		</WeatherElementLayout>

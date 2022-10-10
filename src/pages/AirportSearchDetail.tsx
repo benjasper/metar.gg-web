@@ -6,6 +6,7 @@ import WeatherElements from '../components/WeatherElements'
 import { useGraphQL } from '../context/GraphQLClient'
 import { AIRPORT_SINGLE } from '../queries/AirportQueries'
 import { HiOutlineRefresh } from 'solid-icons/hi'
+import { ImSpinner5 } from 'solid-icons/im'
 import {
 	GetSingleAirportQueryVariables,
 	GetSingleAirportQuery,
@@ -16,15 +17,6 @@ import Duration from '../models/duration'
 const AirportSearchDetail: Component = () => {
 	const params = useParams()
 	const newQuery = useGraphQL()
-
-	let refreshInterval = 1000 * 60 * 10
-	const setRefreshInterval = (interval: number) => {
-		if (refreshInterval !== interval) {
-			refreshInterval = interval
-			clearTimeout(refetchTimeout)
-			refreshAirport()
-		}
-	}
 
 	const [lastRefreshed, setLastRefreshed] = createSignal<Date>(new Date())
 	const [airportIdentifier, setAirportIdentifier] = createSignal<GetSingleAirportQueryVariables | false>(false)
@@ -59,6 +51,10 @@ const AirportSearchDetail: Component = () => {
 		setNow(new Date())
 	}, 3000)
 
+	const refetchInterval = setTimeout(() => {
+		refreshAirport()
+	}, 1000 * 30)
+
 	const doSearch = (airportIdentifier: string) => {
 		if (airportIdentifier.length === 0) {
 			setAirportIdentifier(false)
@@ -70,15 +66,9 @@ const AirportSearchDetail: Component = () => {
 		throttledLoading(airportIdentifier)
 	}
 
-	let refetchTimeout: NodeJS.Timeout
 	const refreshAirport = () => {
 		refetchAirport()
 		setLastRefreshed(new Date())
-
-		refetchTimeout = setTimeout(() => {
-			console.log('refreshing')
-			refreshAirport()
-		}, refreshInterval)
 	}
 
 	// Make a search base on the route parameter
@@ -88,30 +78,15 @@ const AirportSearchDetail: Component = () => {
 		}
 	})
 
-	// Change the refresh interval based on the next import prediction
-	createEffect(() => {
-		if (nextImportPrediction() && nextImportPredictionDuration().asSeconds() < 60) {
-			setRefreshInterval(1000 * 10) // 10 seconds
-			return
-		} else if (nextImportPrediction() && nextImportPredictionDuration().asMinutes() < 5) {
-			setRefreshInterval(1000 * 30 /* 30 seconds */)
-			return
-		} else if (nextImportPrediction() && nextImportPredictionDuration().asMinutes() < 10) {
-			setRefreshInterval(1000 * 60 /* 1 minute */)
-			return
-		} else {
-			setRefreshInterval(1000 * 60 * 10 /* 10 minutes */)
-			return
-		}
-	})
-
 	onCleanup(() => {
 		clearInterval(nowInterval)
-		clearTimeout(refetchTimeout)
+		clearTimeout(refetchInterval)
 	})
 
 	return (
-		<Show when={airport() !== undefined}>
+		<Show
+			when={airport() !== undefined || (airport() !== undefined && !airportRequest.loading)}
+			fallback={<ImSpinner5 class="animate-spin w-16 mx-auto mt-24" size={36} />}>
 			<Title>
 				{airport().icaoCode} / {airport().iataCode} - Weather | metar.gg
 			</Title>
@@ -138,7 +113,6 @@ const AirportSearchDetail: Component = () => {
 						</span>
 					</Show>
 				</div>
-
 				<div class="flex flex-col md:flex-row justify-between">
 					<div class="flex flex-col">
 						<h3 class="text-xl">Current weather</h3>
@@ -187,7 +161,9 @@ const AirportSearchDetail: Component = () => {
 									month: 'long',
 									year: 'numeric',
 								})}>
-								<Show when={nextImportPredictionDuration().isFuture()} fallback={`Next update expected any moment now`}>
+								<Show
+									when={nextImportPredictionDuration().isFuture()}
+									fallback={`Next update expected any moment now`}>
 									Next update expected {nextImportPredictionDuration().humanImprecise()}
 								</Show>
 							</span>
@@ -198,9 +174,7 @@ const AirportSearchDetail: Component = () => {
 						Refreshed {Duration.fromDates(lastRefreshed(), now()).humanImprecise()}
 					</span>
 				</div>
-
 				<WeatherElements class="mt-4" airport={airport()}></WeatherElements>
-
 				<div class="flex flex-col gap-4 py-16">
 					<Show when={airport() && airport().station.metars.edges[0]}>
 						<p class="text-xl text-center">{airport().station.metars.edges[0].node.rawText}</p>
