@@ -51,7 +51,7 @@ const AirportSearchDetail: Component = () => {
 		setNow(new Date())
 	}, 3000)
 
-	const refetchInterval = setTimeout(() => {
+	const refetchInterval = setInterval(() => {
 		refreshAirport()
 	}, 1000 * 30)
 
