@@ -22,7 +22,7 @@ const WeatherElements = (props: { airport: AirportSearchFragment; class?: string
 				</div>
 				<div class="flex flex-row flex-wrap justify-center md:justify-start gap-8">
 					<WeatherElementLayout name="Visibility">
-						<p class="text-center text-xl">
+						<p class="text-center text-xl dark:text-white-dark">
 							<Show when={Math.round(latestMetar().visibility) === 10}>&gt;</Show>
 							{latestMetar().visibility.toFixed(1)} km
 						</p>
@@ -31,15 +31,15 @@ const WeatherElements = (props: { airport: AirportSearchFragment; class?: string
 					<SkyConditionsElement metar={latestMetar()} />
 
 					<WeatherElementLayout name="Temperature">
-						<p class="text-center text-xl">{latestMetar().temperature} °C</p>
+						<p class="text-center text-xl dark:text-white-dark">{latestMetar().temperature} °C</p>
 					</WeatherElementLayout>
 
 					<WeatherElementLayout name="Dewpoint">
-						<p class="text-center text-xl">{latestMetar().dewpoint} °C</p>
+						<p class="text-center text-xl dark:text-white-dark">{latestMetar().dewpoint} °C</p>
 					</WeatherElementLayout>
 
 					<WeatherElementLayout name="Altimeter">
-						<p class="text-center text-xl">{latestMetar().altimeter.toFixed(0)} hPa</p>
+						<p class="text-center text-xl dark:text-white-dark">{latestMetar().altimeter.toFixed(0)} hPa</p>
 					</WeatherElementLayout>
 
 					<Show when={latestMetar().presentWeather}>
@@ -48,7 +48,7 @@ const WeatherElements = (props: { airport: AirportSearchFragment; class?: string
 
 					<Show when={latestMetar().flightCategory}>
 						<WeatherElementLayout name="Flight category">
-							<p class="text-center text-xl">{latestMetar().flightCategory}</p>
+							<p class="text-center text-xl dark:text-white-dark">{latestMetar().flightCategory}</p>
 						</WeatherElementLayout>
 					</Show>
 				</div>

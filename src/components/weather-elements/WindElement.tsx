@@ -14,7 +14,7 @@ const WindElement: Component<WindElementProps> = (props) => {
 			<RunwayAndWindRenderer airport={props.airport} latestMetar={props.latestMetar}></RunwayAndWindRenderer>
 			<div class="flex flex-col text-center">
 				<Show when={props.latestMetar.windSpeed !== 0} fallback="Wind calm">
-					<span>
+					<span class='dark:text-white-dark'>
 						<Show when={props.latestMetar.windDirection !== 0} fallback="Variable">
 							{props.latestMetar.windDirection}°
 						</Show>{' '}

@@ -16,8 +16,8 @@ const AirportSearch = () => {
 
 	return (
 		<>
-			<div class="flex flex-col gap-8 transition-all h-1/6 pt-8">
-				<h2 class="text-center mt-auto">What's the weather like in...</h2>
+			<div class="flex flex-col gap-8 transition-all h-1/6 pt-16">
+				<h2 class="text-center mt-auto dark:text-white-dark">What's the weather like in...</h2>
 				<SearchBar onSearch={doSearch}></SearchBar>
 			</div>
 			<div class="flex flex-col h-5/6 transition-all">

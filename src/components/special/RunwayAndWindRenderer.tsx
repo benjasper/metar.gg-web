@@ -171,7 +171,7 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 					xmlns="http://www.w3.org/2000/svg">
 					<circle
 						transform-origin="center"
-						class="fill-gray-100"
+						class="fill-gray-100 dark:fill-black-300"
 						stroke-width="0.2"
 						cx={realCenterX()}
 						cy={realCenterY()}
@@ -190,7 +190,7 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 								transform-origin="center"
 								transform={`rotate(${windArrowAngle()})`}
 								stroke="currentColor"
-								class="stroke-gray-600"
+								class="stroke-gray-600 dark:stroke-white-dark"
 								stroke-linecap="round"
 								stroke-linejoin="round"
 								stroke-width="1.25"
@@ -228,8 +228,8 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 									class=""
 									classList={{
 										'fill-gray-600': r.direction1.favourableLevel === 0,
-										'fill-blue-600': r.direction1.favourableLevel === 1,
-										'fill-green-600': r.direction1.favourableLevel === 2,
+										'fill-blue-600 dark:bg-blue-800': r.direction1.favourableLevel === 1,
+										'fill-green-600 dark:bg-green-800': r.direction1.favourableLevel === 2,
 									}}
 									cx={r.direction1.x}
 									cy={r.direction1.y}
@@ -239,8 +239,8 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 									class=""
 									classList={{
 										'fill-gray-600': r.direction2.favourableLevel === 0,
-										'fill-blue-600': r.direction2.favourableLevel === 1,
-										'fill-green-600': r.direction2.favourableLevel === 2,
+										'fill-blue-600 dark:bg-blue-800': r.direction2.favourableLevel === 1,
+										'fill-green-600 dark:bg-green-800': r.direction2.favourableLevel === 2,
 									}}
 									cx={r.direction2.x}
 									cy={r.direction2.y}

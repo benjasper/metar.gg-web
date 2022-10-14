@@ -118,7 +118,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 						onInput={e => handleInput(e)}
 						onFocus={e => setIsFocused(true)}
 						onFocusOut={e => onFocusLeave(e)}
-						class={`w-full text-left bg-gray-100 text-gray-700 text-xl px-6 py-2 rounded-full transition-all outline-none`}
+						class={`w-full text-left bg-white dark:bg-black-200 text-gray-700 dark:text-white-dark text-xl px-6 py-2 rounded-full transition-all outline-none`}
 					/>
 					<Transition
 						show={airportResults.loading}
@@ -159,7 +159,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 					leaveFrom="opacity-100 rotate-0"
 					leaveTo="opacity-0">
 					<div
-						class="absolute w-full overflow-y-auto left-0 z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+						class="absolute w-full overflow-y-auto left-0 z-10 mt-2 origin-top-right rounded-md bg-white dark:bg-black-200 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
 						role="menu"
 						aria-orientation="vertical"
 						aria-labelledby="menu-button"
@@ -170,8 +170,8 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 									{(airportNode, i) => (
 										<a
 											href="#"
-											class="w-full text-gray-700 block px-6 py-2 text-sm"
-											classList={{ 'bg-gray-100': i() === selectedAirportId() }}
+											class="w-full text-gray-700 dark:text-white-dark block px-6 py-2 text-sm"
+											classList={{ 'bg-gray-100 dark:bg-black-100': i() === selectedAirportId() }}
 											onMouseEnter={e => setSelectedAirportId(i())}
 											onClick={e => onSubmit(airportNode.node.identifier)}
 											role="menuitem"
@@ -185,7 +185,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 							<Show when={airportResults() && airportResults().getAirports.totalCount === 0}>
 								<a
 									href="#"
-									class="w-full text-gray-700 block px-6 py-2 text-sm pointer-events-none"
+									class="w-full text-gray-700 dark:text-white-dark block px-6 py-2 text-sm pointer-events-none"
 									role="menuitem">
 									Nothing found.
 								</a>

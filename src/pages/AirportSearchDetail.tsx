@@ -86,7 +86,7 @@ const AirportSearchDetail: Component = () => {
 	return (
 		<Show
 			when={airport() !== undefined || (airport() !== undefined && !airportRequest.loading)}
-			fallback={<ImSpinner5 class="animate-spin w-16 mx-auto mt-24" size={36} />}>
+			fallback={<ImSpinner5 class="animate-spin w-16 mx-auto mt-24 dark:text-white-dark" size={36} />}>
 			<Title>
 				{airport().icaoCode} / {airport().iataCode} - Weather | metar.gg
 			</Title>
@@ -94,7 +94,7 @@ const AirportSearchDetail: Component = () => {
 				Get the latest METAR and TAF information for {airport().name} ({airport().identifier}).
 			</Meta>
 			<div class="my-auto flex flex-col">
-				<div class="flex flex-col mx-auto text-center py-16">
+				<div class="flex flex-col mx-auto text-center py-16 dark:text-white-dark">
 					<h2>
 						{airport().icaoCode} <Show when={airport().iataCode}>/ {airport().iataCode}</Show>
 					</h2>
@@ -103,7 +103,7 @@ const AirportSearchDetail: Component = () => {
 						<Show when={airport().municipality}>{airport().municipality},</Show> {airport().country.name}
 					</span>
 					<Show when={airport().timezone}>
-						<span class="text-xs px-3 py-1 mt-2 mx-auto rounded-full bg-gray-50 text-black cursor-default">
+						<span class="text-xs px-3 py-1 mt-2 mx-auto rounded-full bg-gray-50 dark:bg-black-200 text-black dark:text-white-dark cursor-default">
 							Local time{' '}
 							{now().toLocaleTimeString([], {
 								hour: 'numeric',
@@ -115,13 +115,13 @@ const AirportSearchDetail: Component = () => {
 				</div>
 				<div class="flex flex-col md:flex-row justify-between">
 					<div class="flex flex-col">
-						<h3 class="text-xl">Current weather</h3>
+						<h3 class="text-xl dark:text-white-dark">Current weather</h3>
 						<div class="flex flex-row flex-wrap gap-2 justify-start pt-2">
 							<span
-								class="text-xs px-3 py-1 rounded-full text-white cursor-default"
+								class="text-xs px-3 py-1 rounded-full text-white dark:text-white-light cursor-default"
 								classList={{
-									'bg-green-600': lastObservationDuration().asHours() <= 2,
-									'bg-red-600': lastObservationDuration().asHours() > 2,
+									'bg-green-600 dark:bg-green-800': lastObservationDuration().asHours() <= 2,
+									'bg-red-600 dark:bg-red-800': lastObservationDuration().asHours() > 2,
 								}}
 								title={metarObservationTime().toLocaleTimeString([], {
 									hour: 'numeric',
@@ -133,7 +133,7 @@ const AirportSearchDetail: Component = () => {
 								Observed {lastObservationDuration().humanImprecise()}
 							</span>
 							<span
-								class="text-xs px-3 py-1 rounded-full bg-gray-200 text-black cursor-default"
+								class="text-xs px-3 py-1 rounded-full bg-white dark:bg-black-200 text-black dark:text-white-light cursor-default"
 								title={importTime().toLocaleTimeString([], {
 									hour: 'numeric',
 									minute: '2-digit',
@@ -144,12 +144,12 @@ const AirportSearchDetail: Component = () => {
 								Published {importTimeDuration().humanImprecise()}
 							</span>
 							<span
-								class="text-xs px-3 py-1 rounded-full text-white cursor-default"
+								class="text-xs px-3 py-1 rounded-full text-white dark:text-white-light cursor-default"
 								classList={{
-									'bg-orange-500':
+									'bg-orange-500 dark:bg-orange-800':
 										nextImportPredictionDuration().isPast() &&
 										nextImportPredictionDuration().asMinutes() > 5,
-									'bg-green-600':
+									'bg-green-600 dark:bg-green-800':
 										nextImportPredictionDuration().isFuture() ||
 										(nextImportPredictionDuration().asMinutes() <= 5 &&
 											nextImportPredictionDuration().isPast()),
@@ -169,7 +169,7 @@ const AirportSearchDetail: Component = () => {
 							</span>
 						</div>
 					</div>
-					<span class="flex mt-4 md:mt-auto text-gray-700">
+					<span class="flex mt-4 md:mt-auto text-gray-700 dark:text-white-dark">
 						<HiOutlineRefresh class="my-auto mr-2" />
 						Refreshed {Duration.fromDates(lastRefreshed(), now()).humanImprecise()}
 					</span>
@@ -177,7 +177,7 @@ const AirportSearchDetail: Component = () => {
 				<WeatherElements class="mt-4" airport={airport()}></WeatherElements>
 				<div class="flex flex-col gap-4 py-16">
 					<Show when={airport() && airport().station.metars.edges[0]}>
-						<p class="text-xl text-center">{airport().station.metars.edges[0].node.rawText}</p>
+						<p class="text-xl text-center dark:text-white-dark">{airport().station.metars.edges[0].node.rawText}</p>
 					</Show>
 				</div>
 			</div>

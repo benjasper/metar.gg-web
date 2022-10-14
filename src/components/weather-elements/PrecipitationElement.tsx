@@ -86,7 +86,7 @@ const ConditionElement = (props: { condition: string }) => {
 		<div class="flex flex-row gap-1 justify-center text-xl">
 			<Switch>
 				<Match when={precipitationType() === PrecipitationType.Drizzle}>
-					<RiWeatherDrizzleLine class="text-blue-500" />
+					<RiWeatherDrizzleLine size={24} />
 				</Match>
 				<Match when={descriptor() === Descriptor.Showers || precipitationType() === PrecipitationType.Rain}>
 					<RiWeatherShowersLine size={24} />
@@ -121,10 +121,10 @@ const ConditionElement = (props: { condition: string }) => {
 						other() === Other.SandOrDustWhirls ||
 						other() === Other.DustWhirls
 					}>
-					<RiWeatherWindyLine />
+					<RiWeatherWindyLine size={24} />
 				</Match>
 				<Match when={other() === Other.Tornado || other() === Other.FunnelCloud}>
-					<RiWeatherTornadoLine />
+					<RiWeatherTornadoLine size={24} />
 				</Match>
 			</Switch>
 
@@ -212,10 +212,10 @@ const PrecipitationElement: Component<PrecipitationElementProps> = props => {
 
 	return (
 		<WeatherElementLayout name="Precipitation">
-			<div class="flex flex-col gap-1">
+			<div class="flex flex-col gap-1 dark:text-white-dark">
 				<For each={conditions()}>{condition => <ConditionElement condition={condition} />}</For>
 			</div>
-			<span class="mx-auto">{props.latestMetar.presentWeather}</span>
+			<span class="mx-auto dark:text-white-dark">{props.latestMetar.presentWeather}</span>
 		</WeatherElementLayout>
 	)
 }

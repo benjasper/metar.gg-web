@@ -15,8 +15,10 @@ const App: Component = () => {
 		<MetaProvider>
 			<Router>
 				<GraphQLProvider client={client}>
-					<div class="container mx-auto w-full">
-						<AirportSearch></AirportSearch>
+					<div class="bg-white-light dark:bg-black min-h-screen">
+						<div class="container mx-auto w-full">
+							<AirportSearch></AirportSearch>
+						</div>
 					</div>
 				</GraphQLProvider>
 			</Router>

@@ -64,7 +64,7 @@ const SkyConditionText = (props: { skyCover: SkyConditionSkyCover }) => {
 const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 	return (
 		<WeatherElementLayout name="Sky conditions">
-			<div class="flex flex-col gap-2 text-center text-xl">
+			<div class="flex flex-col gap-2 text-center text-xl dark:text-white-dark">
 				<Show when={props.metar.skyConditions.length > 1}>
 					<For each={props.metar.skyConditions.sort((a, b) => b.cloudBase - a.cloudBase)}>
 						{(condition, i) => (
