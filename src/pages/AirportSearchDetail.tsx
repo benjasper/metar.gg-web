@@ -1,6 +1,6 @@
 import { debounce } from '@solid-primitives/scheduled'
 import { Meta, Title } from '@solidjs/meta'
-import { useParams } from '@solidjs/router'
+import { useIsRouting, useParams } from '@solidjs/router'
 import { Component, createEffect, createSignal, onCleanup, Show, untrack } from 'solid-js'
 import WeatherElements from '../components/WeatherElements'
 import { useGraphQL } from '../context/GraphQLClient'
@@ -56,6 +56,7 @@ const AirportSearchDetail: Component = () => {
 	}, 1000 * 30)
 
 	const doSearch = (airportIdentifier: string) => {
+		mutate(undefined)
 		if (airportIdentifier.length === 0) {
 			setAirportIdentifier(false)
 			mutate(undefined)
@@ -86,7 +87,7 @@ const AirportSearchDetail: Component = () => {
 	return (
 		<Show
 			when={airport() !== undefined || (airport() !== undefined && !airportRequest.loading)}
-			fallback={<ImSpinner5 class="animate-spin w-16 mx-auto mt-24 dark:text-white-dark" size={36} />}>
+			fallback={<ImSpinner5 class="animate-spin w-16 mx-auto mt-32 dark:text-white-dark" size={36} />}>
 			<Title>
 				{airport().icaoCode} / {airport().iataCode} - Weather | metar.gg
 			</Title>
