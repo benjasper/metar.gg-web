@@ -1,7 +1,8 @@
 import { createEffect, createSignal, For, Show, untrack } from 'solid-js'
 import * as merc from 'mercator-projection'
 import { AirportSearchFragment, MetarFragment } from '../../queries/generated/graphql'
-import { FaSolidChevronDown } from 'solid-icons/fa'
+import { FaSolidArrowUpWideShort, FaSolidChevronDown } from 'solid-icons/fa'
+import { VariableWind } from '../weather-elements/WindElement'
 
 const cartesianCoordinates = (lat, lon) => {
 	const x = merc.fromLatLngToPoint({ lat: lat, lng: lon }).x
@@ -36,11 +37,11 @@ interface RunwayDirection {
 	favourableLevel: number
 }
 
-interface Airport {
-	runways: Runway[]
-}
-
-const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMetar: MetarFragment }) => {
+const RunwayAndWindRenderer = (props: {
+	airport: AirportSearchFragment
+	latestMetar: MetarFragment
+	variableWind: VariableWind | undefined
+}) => {
 	const [runways, setRunways] = createSignal<Runway[]>([])
 
 	const [centerX, setCenterX] = createSignal(0)
@@ -142,24 +143,39 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 	// Calculate the radius around the center of the airport, to show a wind arrow
 	const radius = () => realDiagonal() * 0.95
 
-	const windDirectionInDegree = () => props.latestMetar.windDirection - 90
-
 	const realCenterX = () => -centerX() + realDiagonal()
 	const realCenterY = () => -centerY() + realDiagonal()
 
-	// Place the wind arrow onto the circle around the center of the airport
-	const windArrowX = () => realCenterX() + radius() * Math.cos((windDirectionInDegree() * Math.PI) / 180)
-	const windArrowY = () => realCenterY() + radius() * Math.sin((windDirectionInDegree() * Math.PI) / 180)
+	// Calculate the wind arrow from the wind direction and variable wind if present
+	const windArrows = (): { angle: number; x: number; y: number; isVariable: boolean }[] => {
+		const arrows: { angle: number; x: number; y: number; isVariable: boolean }[] = []
 
-	// Calculate the angle of the wind arrow
-	const windArrowAngle = () => {
-		const angle = windDirectionInDegree() + 90
-
-		if (angle > 180) {
-			return angle - 360
+		if (props.latestMetar.windSpeed > 2 && props.latestMetar.windDirection != 0) {
+			arrows.push({
+				angle: props.latestMetar.windDirection,
+				x: realCenterX() + radius() * Math.cos(((props.latestMetar.windDirection - 90) * Math.PI) / 180),
+				y: realCenterY() + radius() * Math.sin(((props.latestMetar.windDirection - 90) * Math.PI) / 180),
+				isVariable: false,
+			})
 		}
 
-		return angle
+		if (props.variableWind) {
+			arrows.push({
+				angle: props.variableWind.from,
+				x: realCenterX() + radius() * Math.cos(((props.variableWind.from - 90) * Math.PI) / 180),
+				y: realCenterY() + radius() * Math.sin(((props.variableWind.from - 90) * Math.PI) / 180),
+				isVariable: true,
+			})
+
+			arrows.push({
+				angle: props.variableWind.to,
+				x: realCenterX() + radius() * Math.cos(((props.variableWind.to - 90) * Math.PI) / 180),
+				y: realCenterY() + radius() * Math.sin(((props.variableWind.to - 90) * Math.PI) / 180),
+				isVariable: true,
+			})
+		}
+
+		return arrows
 	}
 
 	return (
@@ -180,24 +196,31 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 
 					{/* Wind arrow */}
 					<Show when={props.latestMetar.windSpeed > 0 && props.latestMetar.windDirection != 0}>
-						<svg
-							width="8"
-							height="8"
-							fill="none"
-							viewBox="0 0 24 24"
-							transform-origin="center"
-							x={windArrowX() - 4}
-							y={windArrowY() - 4}>
-							<path
-								transform-origin="center"
-								transform={`rotate(${windArrowAngle()})`}
-								stroke="currentColor"
-								class="stroke-gray-600 dark:stroke-white-dark"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="1.25"
-								d="M15.25 10.75L12 14.25L8.75 10.75"></path>
-						</svg>
+						<For each={windArrows()}>
+							{arrow => (
+								<svg
+									width="8"
+									height="8"
+									fill="none"
+									viewBox="0 0 24 24"
+									transform-origin="center"
+									x={arrow.x - 4}
+									y={arrow.y - 4}>
+									<title>{arrow.isVariable ? "Variable wind direction" : "Wind direction"}</title>
+									<path
+										transform-origin="center"
+										transform={`rotate(${arrow.angle})`}
+										stroke="currentColor"
+										class="stroke-gray-600 dark:stroke-white-dark"
+										classList={{ 'opacity-50': arrow.isVariable }}
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-dasharray={arrow.isVariable ? '1 1.2' : ''}
+										stroke-width={arrow.isVariable ? '0.75' : '1.25'}
+										d="M15.25 10.75L12 14.25L8.75 10.75"></path>
+								</svg>
+							)}
+						</For>
 					</Show>
 
 					{/* Runways including stripes */}

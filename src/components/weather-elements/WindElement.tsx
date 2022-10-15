@@ -8,7 +8,7 @@ interface WindElementProps {
 	latestMetar: MetarFragment
 }
 
-interface VariableWind {
+export interface VariableWind {
 	from: number
 	to: number
 }
@@ -32,7 +32,7 @@ const WindElement: Component<WindElementProps> = props => {
 
 	return (
 		<WeatherElementLayout name="Wind" class="flex-shrink-0">
-			<RunwayAndWindRenderer airport={props.airport} latestMetar={props.latestMetar}></RunwayAndWindRenderer>
+			<RunwayAndWindRenderer airport={props.airport} latestMetar={props.latestMetar} variableWind={variableWind()}></RunwayAndWindRenderer>
 			<div class="flex flex-col text-center dark:text-white-dark">
 				<Show when={props.latestMetar.windSpeed !== 0} fallback="Wind calm">
 					<span>
