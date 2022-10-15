@@ -169,14 +169,16 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 					class="cartesian md:w-[24rem] h-full"
 					viewBox={`${-centerX()} ${-centerY()}  ${realDiagonal() * 2} ${realDiagonal() * 2}`}
 					xmlns="http://www.w3.org/2000/svg">
+					{/* Compass circle */}
 					<circle
 						transform-origin="center"
-						class="fill-gray-100 dark:fill-black-300"
+						class="fill-gray-100 dark:fill-[#212637]"
 						stroke-width="0.2"
 						cx={realCenterX()}
 						cy={realCenterY()}
 						r={realDiagonal() * 0.85}></circle>
 
+					{/* Wind arrow */}
 					<Show when={props.latestMetar.windSpeed > 0 && props.latestMetar.windDirection != 0}>
 						<svg
 							width="8"
@@ -198,6 +200,7 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 						</svg>
 					</Show>
 
+					{/* Runways including stripes */}
 					<For each={runways()}>
 						{(r, i) => (
 							<>
@@ -221,6 +224,8 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 							</>
 						)}
 					</For>
+
+					{/* Runway bubbles outside when favourable */}
 					<For each={runways()}>
 						{(r, i) => (
 							<>
@@ -251,6 +256,8 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 							</>
 						)}
 					</For>
+
+					{/* Runway bubbles inside */}
 					<For each={runways()}>
 						{(r, i) => (
 							<>
@@ -279,6 +286,8 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 							</>
 						)}
 					</For>
+
+					{/* Runway labels */}
 					<For each={runways()}>
 						{(r, i) => (
 							<>
