@@ -1,6 +1,6 @@
 import { debounce } from '@solid-primitives/scheduled'
 import { Meta, Title } from '@solidjs/meta'
-import { useIsRouting, useParams } from '@solidjs/router'
+import { useIsRouting, useNavigate, useParams } from '@solidjs/router'
 import { Component, createEffect, createSignal, onCleanup, Show, untrack } from 'solid-js'
 import WeatherElements from '../components/WeatherElements'
 import { useGraphQL } from '../context/GraphQLClient'
@@ -13,9 +13,11 @@ import {
 	AirportSearchFragment,
 } from '../queries/generated/graphql'
 import Duration from '../models/duration'
+import SearchBar from '../components/SearchBar'
 
 const AirportSearchDetail: Component = () => {
 	const params = useParams()
+	const navigate = useNavigate()
 	const newQuery = useGraphQL()
 
 	const [lastRefreshed, setLastRefreshed] = createSignal<Date>(new Date())
@@ -72,6 +74,10 @@ const AirportSearchDetail: Component = () => {
 		setLastRefreshed(new Date())
 	}
 
+	const navigateTo = (airportIdentifier: string) => {
+		navigate(`/${airportIdentifier.toLowerCase()}`, { replace: true })
+	}
+
 	// Make a search base on the route parameter
 	createEffect(() => {
 		if (params.airportIdentifier) {
@@ -85,16 +91,17 @@ const AirportSearchDetail: Component = () => {
 	})
 
 	return (
-		<Show
-			when={airport() !== undefined || (airport() !== undefined && !airportRequest.loading)}
-			fallback={<ImSpinner5 class="animate-spin w-16 mx-auto mt-32 dark:text-white-dark" size={36} />}>
-			<Title>
-				{airport().icaoCode} / {airport().iataCode} - Weather | metar.gg
-			</Title>
-			<Meta name="description">
-				Get the latest METAR and TAF information for {airport().name} ({airport().identifier}).
-			</Meta>
-			<div class="my-auto flex flex-col">
+		<div class="flex flex-col pt-24">
+			<SearchBar class="mb-auto" onSearch={navigateTo}></SearchBar>
+			<Show
+				when={airport() !== undefined || (airport() !== undefined && !airportRequest.loading)}
+				fallback={<ImSpinner5 class="animate-spin w-16 mx-auto mt-32 dark:text-white-dark" size={36} />}>
+				<Title>
+					{airport().icaoCode} / {airport().iataCode} - {airport().name} weather | metar.gg
+				</Title>
+				<Meta name="description">
+					Get the latest METAR and TAF information for {airport().name} ({airport().identifier}).
+				</Meta>
 				<div class="flex flex-col mx-auto text-center py-16 dark:text-white-dark">
 					<h2>
 						{airport().icaoCode} <Show when={airport().iataCode}>/ {airport().iataCode}</Show>
@@ -104,7 +111,7 @@ const AirportSearchDetail: Component = () => {
 						<Show when={airport().municipality}>{airport().municipality},</Show> {airport().country.name}
 					</span>
 					<Show when={airport().timezone}>
-						<span class="text-xs px-3 py-1 mt-2 mx-auto rounded-full bg-gray-50 dark:bg-black-200 text-black dark:text-white-dark cursor-default">
+						<span class="text-xs px-3 py-1 mt-2 mx-auto rounded-full bg-white dark:bg-black-200 text-black dark:text-white-dark cursor-default">
 							Local time{' '}
 							{now().toLocaleTimeString([], {
 								hour: 'numeric',
@@ -178,11 +185,13 @@ const AirportSearchDetail: Component = () => {
 				<WeatherElements class="mt-4" airport={airport()}></WeatherElements>
 				<div class="flex flex-col gap-4 py-16">
 					<Show when={airport() && airport().station.metars.edges[0]}>
-						<p class="text-xl text-center dark:text-white-dark">{airport().station.metars.edges[0].node.rawText}</p>
+						<p aria-label='METAR' class="text-xl text-center dark:text-white-dark">
+							{airport().station.metars.edges[0].node.rawText}
+						</p>
 					</Show>
 				</div>
-			</div>
-		</Show>
+			</Show>
+		</div>
 	)
 }
 

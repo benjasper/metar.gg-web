@@ -84,7 +84,7 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 					<div class="mx-auto">
 						<SkyConditionIcon skyCover={props.metar.skyConditions[0].skyCover} class="w-10" />
 					</div>
-					<span class="text-sm">
+					<span class="text-base">
 						<SkyConditionText skyCover={props.metar.skyConditions[0].skyCover}></SkyConditionText>
 						<Show when={props.metar.skyConditions[0].cloudBase}>
 							&nbsp;at {Math.round(props.metar.skyConditions[0].cloudBase)} ft

@@ -224,6 +224,36 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 					<For each={runways()}>
 						{(r, i) => (
 							<>
+								<Show when={r.direction1.favourableLevel > 0}>
+									<circle
+										class=""
+										classList={{
+											'fill-blue-400 dark:bg-blue-600': r.direction1.favourableLevel === 1,
+											'fill-green-400 dark:bg-green-600': r.direction1.favourableLevel === 2,
+										}}
+										cx={r.direction1.x}
+										cy={r.direction1.y}
+										r="2"
+									/>
+								</Show>
+								<Show when={r.direction2.favourableLevel > 0}>
+									<circle
+										class=""
+										classList={{
+											'fill-blue-400 dark:bg-blue-600': r.direction2.favourableLevel === 1,
+											'fill-green-400 dark:bg-green-600': r.direction2.favourableLevel === 2,
+										}}
+										cx={r.direction2.x}
+										cy={r.direction2.y}
+										r="2"
+									/>
+								</Show>
+							</>
+						)}
+					</For>
+					<For each={runways()}>
+						{(r, i) => (
+							<>
 								<circle
 									class=""
 									classList={{

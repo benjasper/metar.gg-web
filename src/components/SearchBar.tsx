@@ -103,8 +103,8 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 	})
 
 	return (
-		<div class='flex flex-col'>
-			<div ref={root} class={`relative w-full max-w-lg mx-auto ${props.class}`}>
+		<div class={`flex flex-col ${props.class}`}>
+			<div ref={root} class={`relative w-full max-w-lg mx-auto`}>
 				<div class="flex flex-col">
 					<input
 						ref={input}

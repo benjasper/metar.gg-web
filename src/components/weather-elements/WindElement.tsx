@@ -8,19 +8,46 @@ interface WindElementProps {
 	latestMetar: MetarFragment
 }
 
-const WindElement: Component<WindElementProps> = (props) => {
+interface VariableWind {
+	from: number
+	to: number
+}
+
+const WindElement: Component<WindElementProps> = props => {
+	const variableWind = (): VariableWind | undefined => {
+		const result = props.latestMetar.rawText.match(/\d{3}V\d{3}/g)
+		const vWindString = result ? result[0] : undefined
+
+		if (vWindString === undefined) {
+			return undefined
+		}
+
+		const fromTo = vWindString.split('V').map(v => parseInt(v))
+
+		console.log({
+			from: fromTo[0],
+			to: fromTo[1],
+		})
+
+		return {
+			from: fromTo[0],
+			to: fromTo[1],
+		}
+	}
+
 	return (
 		<WeatherElementLayout name="Wind" class="flex-shrink-0">
 			<RunwayAndWindRenderer airport={props.airport} latestMetar={props.latestMetar}></RunwayAndWindRenderer>
-			<div class="flex flex-col text-center">
+			<div class="flex flex-col text-center dark:text-white-dark">
 				<Show when={props.latestMetar.windSpeed !== 0} fallback="Wind calm">
-					<span class='dark:text-white-dark'>
+					<span>
 						<Show when={props.latestMetar.windDirection !== 0} fallback="Variable">
 							{props.latestMetar.windDirection}°
 						</Show>{' '}
-						at {props.latestMetar.windSpeed}kt
+						at {props.latestMetar.windSpeed} kt
 					</span>
-					<Show when={props.latestMetar.windGust}>with gusts up to {props.latestMetar.windGust}kt</Show>
+					<Show when={variableWind()}>variable from {variableWind().from}° to {variableWind().to}°</Show>
+					<Show when={props.latestMetar.windGust}>with gusts up to {props.latestMetar.windGust} kt</Show>
 				</Show>
 			</div>
 		</WeatherElementLayout>

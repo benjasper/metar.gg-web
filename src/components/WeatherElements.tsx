@@ -4,6 +4,7 @@ import WeatherElementLayout from '../layouts/WeatherElementLayout'
 import PrecipitationElement from './weather-elements/PrecipitationElement'
 import WindElement from './weather-elements/WindElement'
 import SkyConditionsElement from './weather-elements/SkyConditionsElement'
+import FlightCategoryElement from './weather-elements/FlightCategoryElement'
 
 const WeatherElements = (props: { airport: AirportSearchFragment; class?: string }) => {
 	const latestMetar = () => {
@@ -23,7 +24,7 @@ const WeatherElements = (props: { airport: AirportSearchFragment; class?: string
 				<div class="flex flex-row flex-wrap justify-center md:justify-start gap-8">
 					<WeatherElementLayout name="Visibility">
 						<p class="text-center text-xl dark:text-white-dark">
-							<Show when={Math.round(latestMetar().visibility) === 10}>&gt;</Show>
+							<Show when={Math.round(latestMetar().visibility) === 10 || latestMetar().visibility.toFixed(1) === '16.1'}>&ge;&nbsp;</Show>
 							{latestMetar().visibility.toFixed(1)} km
 						</p>
 					</WeatherElementLayout>
@@ -31,11 +32,11 @@ const WeatherElements = (props: { airport: AirportSearchFragment; class?: string
 					<SkyConditionsElement metar={latestMetar()} />
 
 					<WeatherElementLayout name="Temperature">
-						<p class="text-center text-xl dark:text-white-dark">{latestMetar().temperature} °C</p>
+						<p class="text-center text-xl dark:text-white-dark">{Math.round(latestMetar().temperature)} °C</p>
 					</WeatherElementLayout>
 
 					<WeatherElementLayout name="Dewpoint">
-						<p class="text-center text-xl dark:text-white-dark">{latestMetar().dewpoint} °C</p>
+						<p class="text-center text-xl dark:text-white-dark">{Math.round(latestMetar().dewpoint)} °C</p>
 					</WeatherElementLayout>
 
 					<WeatherElementLayout name="Altimeter">
@@ -47,9 +48,7 @@ const WeatherElements = (props: { airport: AirportSearchFragment; class?: string
 					</Show>
 
 					<Show when={latestMetar().flightCategory}>
-						<WeatherElementLayout name="Flight category">
-							<p class="text-center text-xl dark:text-white-dark">{latestMetar().flightCategory}</p>
-						</WeatherElementLayout>
+						<FlightCategoryElement latestMetar={latestMetar()}></FlightCategoryElement>
 					</Show>
 				</div>
 			</Show>
