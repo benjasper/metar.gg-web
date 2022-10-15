@@ -233,8 +233,8 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 									<circle
 										class=""
 										classList={{
-											'fill-blue-400 dark:bg-blue-600': r.direction1.favourableLevel === 1,
-											'fill-green-400 dark:bg-green-600': r.direction1.favourableLevel === 2,
+											'fill-blue-400 dark:fill-blue-600': r.direction1.favourableLevel === 1,
+											'fill-green-400 dark:fill-green-600': r.direction1.favourableLevel === 2,
 										}}
 										cx={r.direction1.x}
 										cy={r.direction1.y}
@@ -245,8 +245,8 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 									<circle
 										class=""
 										classList={{
-											'fill-blue-400 dark:bg-blue-600': r.direction2.favourableLevel === 1,
-											'fill-green-400 dark:bg-green-600': r.direction2.favourableLevel === 2,
+											'fill-blue-400 dark:fill-blue-600': r.direction2.favourableLevel === 1,
+											'fill-green-400 dark:fill-green-600': r.direction2.favourableLevel === 2,
 										}}
 										cx={r.direction2.x}
 										cy={r.direction2.y}
@@ -265,8 +265,8 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 									class=""
 									classList={{
 										'fill-gray-600': r.direction1.favourableLevel === 0,
-										'fill-blue-600 dark:bg-blue-800': r.direction1.favourableLevel === 1,
-										'fill-green-600 dark:bg-green-800': r.direction1.favourableLevel === 2,
+										'fill-blue-600 dark:fill-blue-800': r.direction1.favourableLevel === 1,
+										'fill-green-600 dark:fill-green-800': r.direction1.favourableLevel === 2,
 									}}
 									cx={r.direction1.x}
 									cy={r.direction1.y}
@@ -276,8 +276,8 @@ const RunwayAndWindRenderer = (props: { airport: AirportSearchFragment; latestMe
 									class=""
 									classList={{
 										'fill-gray-600': r.direction2.favourableLevel === 0,
-										'fill-blue-600 dark:bg-blue-800': r.direction2.favourableLevel === 1,
-										'fill-green-600 dark:bg-green-800': r.direction2.favourableLevel === 2,
+										'fill-blue-600 dark:fill-blue-800': r.direction2.favourableLevel === 1,
+										'fill-green-600 dark:fill-green-800': r.direction2.favourableLevel === 2,
 									}}
 									cx={r.direction2.x}
 									cy={r.direction2.y}

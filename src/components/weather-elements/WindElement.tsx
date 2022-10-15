@@ -24,11 +24,6 @@ const WindElement: Component<WindElementProps> = props => {
 
 		const fromTo = vWindString.split('V').map(v => parseInt(v))
 
-		console.log({
-			from: fromTo[0],
-			to: fromTo[1],
-		})
-
 		return {
 			from: fromTo[0],
 			to: fromTo[1],
