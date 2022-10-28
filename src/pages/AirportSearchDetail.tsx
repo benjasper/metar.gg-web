@@ -177,9 +177,9 @@ const AirportSearchDetail: Component = () => {
 							</span>
 						</div>
 					</div>
-					<span class="flex mt-4 md:mt-auto text-gray-700 dark:text-white-dark">
+					<span class="flex mt-4 md:mt-auto text-gray-700 dark:text-white-dark" title={`Refreshed ${Duration.fromDates(lastRefreshed(), now()).humanPrecise()}`}>
 						<HiOutlineRefresh class="my-auto mr-2" />
-						Refreshed {Duration.fromDates(lastRefreshed(), now()).humanImprecise()}
+						Information is up to date
 					</span>
 				</div>
 				<WeatherElements class="mt-4" airport={airport()}></WeatherElements>

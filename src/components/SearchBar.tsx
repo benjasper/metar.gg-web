@@ -31,7 +31,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 		queryVars
 	)
 
-	const throttledSearch = debounce((queryVars: AirportSearchQueryVariables | false) => setQueryVars(queryVars), 300)
+	const throttledSearch = debounce((queryVars: AirportSearchQueryVariables | false) => setQueryVars(queryVars), 200)
 
 	function handleInput(event: Event) {
 		const target = event.target as HTMLInputElement
