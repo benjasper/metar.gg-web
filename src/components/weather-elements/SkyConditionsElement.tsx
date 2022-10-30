@@ -54,6 +54,7 @@ const SkyConditionText = (props: { skyCover: SkyConditionSkyCover }) => {
 			<Match when={props.skyCover === SkyConditionSkyCover.Clr}>Clear</Match>
 			<Match when={props.skyCover === SkyConditionSkyCover.Skc}>Sky Clear</Match>
 			<Match when={props.skyCover === SkyConditionSkyCover.Cavok}>Ceiling and Visibility OK</Match>
+			<Match when={props.skyCover === SkyConditionSkyCover.Ovx}>Sky Obscured</Match>
 			<Match when={true}>
 				<span>{props.skyCover}</span>
 			</Match>
