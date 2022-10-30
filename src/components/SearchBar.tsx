@@ -63,7 +63,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 		const id = untrack(selectedAirportId)
 		const untrackedEvent = untrack(event)
 
-		if (keys().length === 0) {
+		if (keys().length === 0 || keys().length > 1) {
 			return
 		}
 
