@@ -94,10 +94,10 @@ const AirportSearchDetail: Component = () => {
 
 	return (
 		<PageContent>
-			<div class="grid grid-rows-2 pt-4 md:grid-cols-3 md:grid-rows-none">
+			<div class="grid grid-rows-2 pt-6 md:grid-cols-3 md:grid-rows-none">
 				<Logo class="mx-auto md:mx-0"></Logo>
 				<SearchBar
-					class="mb-auto mt-4 justify-center"
+					class="mb-auto my-auto justify-center"
 					onSearch={navigateTo}
 					placeholder="Search for another airport"></SearchBar>
 			</div>
