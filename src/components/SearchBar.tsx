@@ -5,6 +5,8 @@ import { useGraphQL } from '../context/GraphQLClient'
 import { AirportSearchQuery, AirportSearchQueryVariables } from '../queries/generated/graphql'
 import { AIRPORT_SEARCH } from '../queries/AirportQueries'
 import { debounce } from '@solid-primitives/scheduled'
+import { AiOutlineSearch } from 'solid-icons/ai'
+import { A } from '@solidjs/router'
 
 interface SearchBarProps {
 	class?: string
@@ -119,8 +121,9 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 						onInput={e => handleInput(e)}
 						onFocus={e => setIsFocused(true)}
 						onFocusOut={e => onFocusLeave(e)}
-						class={`w-full text-left bg-white dark:bg-black-200 text-gray-700 dark:text-white-dark text-xl px-6 py-2 rounded-full transition-all outline-none`}
+						class={`w-full text-left bg-white dark:bg-black-200 text-gray-700 dark:text-white-dark text-xl px-10 py-2 rounded-full transition-all outline-none`}
 					/>
+					<AiOutlineSearch class='absolute left-3 top-1/2 transform -translate-y-1/2 fill-gray-700 dark:fill-white-dark' size={20}></AiOutlineSearch>
 					<Transition
 						show={airportResults.loading}
 						enter="transition duration-[25ms]"
@@ -129,9 +132,9 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 						leave="duration-200 transition ease-in-out"
 						leaveFrom="opacity-100"
 						leaveTo="opacity-0">
-						<div class="absolute right-0 top-1/2 transform -translate-y-1/2">
+						<div class="absolute right-3 top-1/2 transform -translate-y-1/2">
 							<svg
-								class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-700"
+								class="animate-spin -ml-1 h-5 w-5 text-gray-700 dark:text-white-dark"
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
 								viewBox="0 0 24 24">

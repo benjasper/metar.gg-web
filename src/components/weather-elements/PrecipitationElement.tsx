@@ -84,7 +84,7 @@ const ConditionElement = (props: { condition: string }) => {
 
 	return (
 		<div class="flex flex-row gap-1 justify-center text-xl">
-			<div class='text-gray-800'>
+			<div class='text-gray-800 dark:text-white-dark'>
 				<Switch>
 					<Match when={precipitationType() === PrecipitationType.Drizzle}>
 						<RiWeatherDrizzleLine size={24} />

@@ -188,7 +188,7 @@ const RunwayAndWindRenderer = (props: {
 					{/* Compass circle */}
 					<circle
 						transform-origin="center"
-						class="fill-gray-100 dark:fill-[#212637]"
+						class="fill-gray-100 dark:fill-[#212637] transition-colors"
 						stroke-width="0.2"
 						cx={realCenterX()}
 						cy={realCenterY()}
@@ -211,7 +211,7 @@ const RunwayAndWindRenderer = (props: {
 										transform-origin="center"
 										transform={`rotate(${arrow.angle})`}
 										stroke="currentColor"
-										class="stroke-gray-600 dark:stroke-white-dark"
+										class="stroke-gray-600 dark:stroke-white-dark transition-colors"
 										classList={{ 'opacity-50': arrow.isVariable }}
 										stroke-linecap="round"
 										stroke-linejoin="round"
@@ -254,7 +254,7 @@ const RunwayAndWindRenderer = (props: {
 							<>
 								<Show when={r.direction1.favourableLevel > 0}>
 									<circle
-										class=""
+										class="transition-colors"
 										classList={{
 											'fill-blue-400 dark:fill-blue-600': r.direction1.favourableLevel === 1,
 											'fill-green-400 dark:fill-green-600': r.direction1.favourableLevel === 2,
@@ -266,7 +266,7 @@ const RunwayAndWindRenderer = (props: {
 								</Show>
 								<Show when={r.direction2.favourableLevel > 0}>
 									<circle
-										class=""
+										class="transition-colors"
 										classList={{
 											'fill-blue-400 dark:fill-blue-600': r.direction2.favourableLevel === 1,
 											'fill-green-400 dark:fill-green-600': r.direction2.favourableLevel === 2,
@@ -285,7 +285,7 @@ const RunwayAndWindRenderer = (props: {
 						{(r, i) => (
 							<>
 								<circle
-									class=""
+									class="transition-colors"
 									classList={{
 										'fill-gray-600': r.direction1.favourableLevel === 0,
 										'fill-blue-600 dark:fill-blue-800': r.direction1.favourableLevel === 1,
@@ -296,7 +296,7 @@ const RunwayAndWindRenderer = (props: {
 									r="1.5"
 								/>
 								<circle
-									class=""
+									class="transition-colors"
 									classList={{
 										'fill-gray-600': r.direction2.favourableLevel === 0,
 										'fill-blue-600 dark:fill-blue-800': r.direction2.favourableLevel === 1,

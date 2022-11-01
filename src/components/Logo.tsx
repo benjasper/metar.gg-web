@@ -14,9 +14,9 @@ const Logo: Component<LogoProps> = props => {
 
 	return (
 		<A href="/" class={`flex flex-row gap-4 ${props.class ?? ''}`}>
-			<LogoDay class="w-12 flex-shrink-0 rounded-full bg-white text-primary"></LogoDay>
+			<LogoDay class="w-12 flex-shrink-0 rounded-full bg-white text-primary dark:bg-transparent dark:text-white-light transition-colors"></LogoDay>
 			<Show when={props.showText}>
-				<span class="my-auto font-display text-2xl text-primary dark:text-white-dark">metar.gg</span>
+				<span class="my-auto font-display text-2xl text-primary dark:text-white-light transition-colors">metar.gg</span>
 			</Show>
 		</A>
 	)

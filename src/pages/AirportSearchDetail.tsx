@@ -16,6 +16,7 @@ import Duration from '../models/duration'
 import SearchBar from '../components/SearchBar'
 import Logo from '../components/Logo'
 import PageContent from '../layouts/PageContent'
+import DarkModeToggle from '../components/DarkModeToggle'
 
 const AirportSearchDetail: Component = () => {
 	const params = useParams()
@@ -94,12 +95,13 @@ const AirportSearchDetail: Component = () => {
 
 	return (
 		<PageContent>
-			<div class="grid grid-rows-2 gap-6 pt-6 md:grid-cols-3 md:grid-rows-none md:gap-0">
+			<div class="flex flex-col md:flex-row justify-between gap-6 pt-6">
 				<Logo class="mx-auto md:mx-0"></Logo>
 				<SearchBar
-					class="my-auto mb-auto justify-center"
+					class="my-auto mb-auto flex-grow justify-center"
 					onSearch={navigateTo}
 					placeholder="Search for another airport"></SearchBar>
+				<DarkModeToggle class="mx-auto md:ml-auto md:mr-0"></DarkModeToggle>
 			</div>
 			<ErrorBoundary fallback={err => <span class="m-auto">This airport could not be found</span>}>
 				<Show
@@ -108,8 +110,8 @@ const AirportSearchDetail: Component = () => {
 						(airport() !== undefined && !airportRequest.loading && !airportRequest.error)
 					}
 					fallback={
-						<div class="flex h-full justify-center">
-							<ImSpinner5 class="m-auto w-16 animate-spin dark:text-white-dark" size={36} />
+						<div class="flex h-full justify-center text-gray-700 dark:text-white-dark">
+							<ImSpinner5 class="m-auto w-16 animate-spin" size={36} />
 						</div>
 					}>
 					<Title>

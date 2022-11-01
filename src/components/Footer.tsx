@@ -11,7 +11,7 @@ const Footer: Component = () => {
 					<Logo showText={false}></Logo>
 				</div>
 			
-				<div class="flex flex-col items-start gap-4 pl-8 border-l border-l-gray-400">
+				<div class="flex flex-col items-start gap-4 pl-8 border-l border-l-gray-400 dark:text-white-light">
 					<A href="/">About</A>
 					<A href="/">Legal</A>
 					<A href="/">Terms of Use</A>
