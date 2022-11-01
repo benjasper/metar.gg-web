@@ -14,33 +14,38 @@ interface SkyConditionsElementProps {
 }
 
 const SkyConditionIcon = (props: { skyCover: SkyConditionSkyCover; class: string }) => {
+	const classes = `h-auto ${props.class ?? ''}`
+
 	return (
-		<Switch>
+		<div class='text-gray-800'>
+			<Switch>
 			<Match when={props.skyCover === SkyConditionSkyCover.Few}>
-				<RiWeatherSunCloudyLine class={`h-auto ${props.class}`} />
+				<RiWeatherSunCloudyLine class={classes} />
 			</Match>
 			<Match when={props.skyCover === SkyConditionSkyCover.Sct}>
-				<RiWeatherSunCloudyFill class={`h-auto ${props.class}`} />
+				<RiWeatherSunCloudyFill class={classes} />
 			</Match>
 			<Match when={props.skyCover === SkyConditionSkyCover.Bkn}>
-				<RiWeatherCloudyLine class={`h-auto ${props.class}`} />
+				<RiWeatherCloudyLine class={classes} />
 			</Match>
 			<Match when={props.skyCover === SkyConditionSkyCover.Ovc}>
-				<RiWeatherCloudyFill class={`h-auto ${props.class}`} />
+				<RiWeatherCloudyFill class={classes} />
 			</Match>
 			<Match when={props.skyCover === SkyConditionSkyCover.Clr}>
-				<RiWeatherSunFill class={`h-auto ${props.class}`} />
+				<RiWeatherSunFill class={classes} />
 			</Match>
 			<Match when={props.skyCover === SkyConditionSkyCover.Skc}>
-				<RiWeatherSunFill class={`h-auto ${props.class}`} />
+				<RiWeatherSunFill class={classes} />
 			</Match>
 			<Match when={props.skyCover === SkyConditionSkyCover.Cavok}>
-				<RiWeatherSunFill class={`h-auto ${props.class}`} />
+				<RiWeatherSunFill class={classes} />
 			</Match>
 			<Match when={true}>
 				<span>{props.skyCover}</span>
 			</Match>
 		</Switch>
+		</div>
+		
 	)
 }
 

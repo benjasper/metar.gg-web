@@ -9,10 +9,11 @@ import { debounce } from '@solid-primitives/scheduled'
 interface SearchBarProps {
 	class?: string
 	onSearch: (airportIdentifier: string) => void
+	placeholder?: string
 }
 
 const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
-	const props = mergeProps({ class: '' }, properties)
+	const props = mergeProps({ class: '', placeholder: 'Search for an airport' }, properties)
 
 	const [isFocused, setIsFocused] = createSignal(false)
 	const [queryVars, setQueryVars] = createSignal<AirportSearchQueryVariables | false>(false)
@@ -114,7 +115,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 						tabIndex={1}
 						role="combobox"
 						autocomplete="off"
-						placeholder="Search for an airport"
+						placeholder={props.placeholder}
 						onInput={e => handleInput(e)}
 						onFocus={e => setIsFocused(true)}
 						onFocusOut={e => onFocusLeave(e)}
@@ -194,7 +195,6 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 					</div>
 				</Transition>
 			</div>
-			<span class='text-center mx-auto mt-2 text-gray-500'>Simply start typing</span>
 		</div>
 	)
 }

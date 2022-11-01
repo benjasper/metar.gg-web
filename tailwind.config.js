@@ -4,10 +4,15 @@ module.exports = {
     './index.html',
     './src/**/*.{js,ts,jsx,tsx,css,md,mdx,html,json,scss}',
   ],
-  darkMode: 'media',
+  darkMode: 'class',
   theme: {
+    fontFamily: {
+      display: ['Varela Round', 'sans-serif'],
+    },
     extend: {
       colors: {
+        'primary': '#03045e',
+        'gray-light': '#F5F5F7',
         'white-dark': 'rgb(208, 214, 224)',
         'white-light': '#E6EBF8',
         black: 'rgb(0, 2, 18)',
@@ -18,6 +23,9 @@ module.exports = {
       container: {
         center: true,
         padding: '2rem'
+      },
+      gridTemplateRows: {
+        'layout': '1fr auto',
       }
     },
   },
