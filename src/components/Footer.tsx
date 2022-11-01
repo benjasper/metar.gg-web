@@ -16,6 +16,9 @@ const Footer: Component = () => {
 					<A href="/">About</A>
 					<A href="/">Legal</A>
 					<A href="/">Terms of Use</A>
+				</div>
+
+				<div class="flex flex-col items-start gap-4 border-l-gray-400 pl-8 dark:text-white-light md:flex-row md:border-l">
 					<A href="/" class="flex gap-2">
 						<AiOutlineGithub class="my-auto" size={18} />
 						GitHub
