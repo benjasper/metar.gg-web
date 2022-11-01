@@ -96,12 +96,12 @@ const AirportSearchDetail: Component = () => {
 	return (
 		<PageContent>
 			<div class="flex flex-col md:flex-row justify-between gap-6 pt-6">
-				<Logo class="mx-auto md:mx-0"></Logo>
+				<Logo class="mx-auto md:mx-0 md:w-1/4"></Logo>
 				<SearchBar
 					class="my-auto mb-auto flex-grow justify-center"
 					onSearch={navigateTo}
 					placeholder="Search for another airport"></SearchBar>
-				<DarkModeToggle class="mx-auto md:ml-auto md:mr-0"></DarkModeToggle>
+				<div class="md:w-1/4"></div>
 			</div>
 			<ErrorBoundary fallback={err => <span class="m-auto">This airport could not be found</span>}>
 				<Show
