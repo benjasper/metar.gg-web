@@ -12,20 +12,20 @@ const Footer: Component = () => {
 					<Logo showText={false}></Logo>
 				</div>
 
-				<div class="flex flex-col items-start gap-4 border-l-gray-400 pl-8 dark:text-white-light md:flex-row md:border-l">
-					<A href="/">About</A>
-					<A href="/">Legal</A>
-					<A href="/">Terms of Use</A>
+				<div class="flex flex-col items-start gap-4 border-l-gray-400 md:pl-8 dark:text-white-light md:flex-row md:border-l">
+					<A class="mx-auto" href="/about">About</A>
+					<A class="mx-auto" href="/">Legal</A>
+					<A class="mx-auto" href="/">Terms of Use</A>
 				</div>
 
-				<div class="flex flex-col items-start gap-4 border-l-gray-400 pl-8 dark:text-white-light md:flex-row md:border-l">
-					<A href="/" class="flex gap-2">
+				<div class="flex flex-col items-start gap-4 border-l-gray-400 md:pl-8 dark:text-white-light md:flex-row md:border-l">
+					<A href="/" class="flex gap-2 mx-auto">
 						<AiOutlineGithub class="my-auto" size={18} />
 						GitHub
 					</A>
 				</div>
 			</div>
-			<div class="flex flex-row items-start gap-4 mx-auto">
+			<div class="flex flex-row items-start gap-4 mx-auto pt-4 md:pt-0">
 				<DarkModeToggle></DarkModeToggle>
 			</div>
 		</footer>
