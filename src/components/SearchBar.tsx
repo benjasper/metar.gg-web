@@ -91,7 +91,13 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 		}
 
 		if (keys().includes('ENTER')) {
-			if (id === undefined || airportResults() === undefined || airportResults.loading || !airportResults().getAirports.edges[id] || airportResults().getAirports.totalCount === 0) {
+			if (
+				id === undefined ||
+				airportResults() === undefined ||
+				airportResults.loading ||
+				!airportResults().getAirports.edges[id] ||
+				airportResults().getAirports.totalCount === 0
+			) {
 				return
 			}
 
@@ -99,7 +105,10 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 		}
 
 		// If it doesn't have focus we want to give it focus when we detect letters and numbers
-		if (document.activeElement !== input && ((untrackedEvent.key.length === 1 && untrackedEvent.key.match(/[a-z0-9]/i)) || keys().includes('BACKSPACE'))) {
+		if (
+			document.activeElement !== input &&
+			((untrackedEvent.key.length === 1 && untrackedEvent.key.match(/[a-z0-9]/i)) || keys().includes('BACKSPACE'))
+		) {
 			input.focus()
 			return
 		}
@@ -107,7 +116,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 
 	return (
 		<div class={`flex flex-col ${props.class}`}>
-			<div ref={root} class={`relative w-full max-w-lg mx-auto`}>
+			<div ref={root} class={`relative mx-auto w-full max-w-lg`}>
 				<div class="flex flex-col">
 					<input
 						ref={input}
@@ -121,9 +130,11 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 						onInput={e => handleInput(e)}
 						onFocus={e => setIsFocused(true)}
 						onFocusOut={e => onFocusLeave(e)}
-						class={`w-full text-left bg-white dark:bg-black-200 text-gray-700 dark:text-white-dark text-xl px-10 py-2 rounded-full transition-all outline-none`}
+						class={`w-full rounded-full bg-white px-10 py-2 text-left text-xl text-gray-700 outline-none transition-all dark:bg-black-200 dark:text-white-dark`}
 					/>
-					<AiOutlineSearch class='absolute left-3 top-1/2 transform -translate-y-1/2 fill-gray-700 dark:fill-white-dark' size={20}></AiOutlineSearch>
+					<AiOutlineSearch
+						class="absolute left-3 top-1/2 -translate-y-1/2 transform fill-gray-700 dark:fill-white-dark"
+						size={20}></AiOutlineSearch>
 					<Transition
 						show={airportResults.loading}
 						enter="transition duration-[25ms]"
@@ -132,9 +143,9 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 						leave="duration-200 transition ease-in-out"
 						leaveFrom="opacity-100"
 						leaveTo="opacity-0">
-						<div class="absolute right-3 top-1/2 transform -translate-y-1/2">
+						<div class="absolute right-3 top-1/2 -translate-y-1/2 transform">
 							<svg
-								class="animate-spin -ml-1 h-5 w-5 text-gray-700 dark:text-white-dark"
+								class="-ml-1 h-5 w-5 animate-spin text-gray-700 dark:text-white-dark"
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
 								viewBox="0 0 24 24">
@@ -163,7 +174,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 					leaveFrom="opacity-100 rotate-0"
 					leaveTo="opacity-0">
 					<div
-						class="absolute w-full overflow-y-auto left-0 z-10 mt-2 origin-top-right rounded-md bg-white dark:bg-black-200 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+						class="absolute left-0 z-10 mt-2 w-full origin-top-right overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black-200"
 						role="menu"
 						aria-orientation="vertical"
 						aria-labelledby="menu-button"
@@ -174,7 +185,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 									{(airportNode, i) => (
 										<a
 											href="#"
-											class="w-full text-gray-700 dark:text-white-dark block px-6 py-2 text-sm"
+											class="block w-full px-6 py-2 text-sm text-gray-700 dark:text-white-dark"
 											classList={{ 'bg-gray-100 dark:bg-black-100': i() === selectedAirportId() }}
 											onMouseEnter={e => setSelectedAirportId(i())}
 											onClick={e => onSubmit(airportNode.node.identifier)}
@@ -189,7 +200,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 							<Show when={airportResults() && airportResults().getAirports.totalCount === 0}>
 								<a
 									href="#"
-									class="w-full text-gray-700 dark:text-white-dark block px-6 py-2 text-sm pointer-events-none"
+									class="pointer-events-none block w-full px-6 py-2 text-sm text-gray-700 dark:text-white-dark"
 									role="menuitem">
 									Nothing found.
 								</a>

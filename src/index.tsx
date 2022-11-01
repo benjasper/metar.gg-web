@@ -8,6 +8,7 @@ import { Route, Router, Routes } from '@solidjs/router'
 import Home from './pages/Home'
 import { MetaProvider } from '@solidjs/meta'
 import AirportSearchDetail from './pages/AirportSearchDetail'
+import About from './pages/About'
 
 const App: Component = () => {
 	const client = createGraphQLClient('https://api.metar.gg/graphql')
@@ -18,6 +19,7 @@ const App: Component = () => {
 				<GraphQLProvider client={client}>
 					<Routes>
 						<Route path="/" component={Home} />
+						<Route path="/about" component={About} />
 						<Route path="/:airportIdentifier" component={AirportSearchDetail} />
 					</Routes>
 				</GraphQLProvider>

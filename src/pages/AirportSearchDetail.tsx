@@ -5,7 +5,7 @@ import { Component, createEffect, createSignal, ErrorBoundary, onCleanup, Show, 
 import WeatherElements from '../components/WeatherElements'
 import { useGraphQL } from '../context/GraphQLClient'
 import { AIRPORT_SINGLE } from '../queries/AirportQueries'
-import { HiOutlineRefresh } from 'solid-icons/hi'
+import { HiOutlineRefresh, HiSolidClock } from 'solid-icons/hi'
 import { ImSpinner5 } from 'solid-icons/im'
 import {
 	GetSingleAirportQueryVariables,
@@ -16,7 +16,11 @@ import Duration from '../models/duration'
 import SearchBar from '../components/SearchBar'
 import Logo from '../components/Logo'
 import PageContent from '../layouts/PageContent'
-import DarkModeToggle from '../components/DarkModeToggle'
+import { IoLocationSharp } from 'solid-icons/io'
+import { CgWebsite } from 'solid-icons/cg'
+import { TbMountain } from 'solid-icons/tb'
+import { FiExternalLink } from 'solid-icons/fi'
+import { LinkTag, Tag } from '../components/Tag'
 
 const AirportSearchDetail: Component = () => {
 	const params = useParams()
@@ -95,7 +99,7 @@ const AirportSearchDetail: Component = () => {
 
 	return (
 		<PageContent>
-			<div class="flex flex-col md:flex-row justify-between gap-6 pt-6">
+			<div class="flex flex-col justify-between gap-6 md:flex-row">
 				<Logo class="mx-auto md:mx-0 md:w-1/4"></Logo>
 				<SearchBar
 					class="my-auto mb-auto flex-grow justify-center"
@@ -125,20 +129,38 @@ const AirportSearchDetail: Component = () => {
 							{airport().icaoCode} <Show when={airport().iataCode}>/ {airport().iataCode}</Show>
 						</h2>
 						<span class="mt-1 text-lg">{airport().name}</span>
-						<span class="text-sm">
-							<Show when={airport().municipality}>{airport().municipality},</Show>{' '}
-							{airport().country.name}
-						</span>
-						<Show when={airport().timezone}>
-							<span class="mx-auto mt-2 cursor-default rounded-full bg-white px-3 py-1 text-xs text-black dark:bg-black-200 dark:text-white-dark">
-								Local time{' '}
-								{now().toLocaleTimeString([], {
-									hour: 'numeric',
-									minute: '2-digit',
-									timeZone: airport().timezone,
-								})}
-							</span>
-						</Show>
+
+						<div class="flex max-w-md flex-wrap justify-center gap-2 pt-4">
+							<Tag>
+								<IoLocationSharp class="my-auto mr-1"></IoLocationSharp>
+								<Show when={airport().municipality}>{airport().municipality},</Show>{' '}
+								{airport().country.name}
+							</Tag>
+							<Show when={airport().elevation}>
+								<Tag>
+									<TbMountain class="my-auto mr-1" />
+									Elevation {airport().elevation} ft
+								</Tag>
+							</Show>
+							<Show when={airport().timezone}>
+								<Tag>
+									<HiSolidClock class="my-auto mr-1"></HiSolidClock>
+									Local time{' '}
+									{now().toLocaleTimeString([], {
+										hour: 'numeric',
+										minute: '2-digit',
+										timeZone: airport().timezone,
+									})}
+								</Tag>
+							</Show>
+							<Show when={airport().website}>
+								<LinkTag href={airport().website}>
+									<CgWebsite class="my-auto mr-1" />
+									Website
+									<FiExternalLink class="my-auto ml-1" />
+								</LinkTag>
+							</Show>
+						</div>
 					</div>
 					<div class="flex flex-col justify-between md:flex-row">
 						<div class="flex flex-col">

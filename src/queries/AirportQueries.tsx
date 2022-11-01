@@ -48,6 +48,8 @@ export const AIRPORT_SINGLE = gql`
 		iataCode
 		name
 		timezone
+		elevation
+		website
 		runways(closed: false) {
 			closed
 			surface
