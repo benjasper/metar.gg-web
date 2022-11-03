@@ -19,6 +19,7 @@ The accompanying Go GraphQL API can be found [here](https://github.com/benjasper
 
 ### Tech
 * SolidJS
+* Typescript
 * Tailwind
 
 ### Prerequisites
@@ -31,6 +32,8 @@ The accompanying Go GraphQL API can be found [here](https://github.com/benjasper
 2. Run `pnpm install` to download the dependencies
 3. Run `pnpm start` to start the dev server
 4. The app is now available on port 3000
+
+If you changed a GraphQL query, run `pnpm generate` to regenerate the Typescript types.
 
 ### Pull Requests
 PRs are welcome!
