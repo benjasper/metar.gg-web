@@ -34,6 +34,10 @@ p {
 	@apply text-base;
 }
 
+p a {
+  @apply text-primary dark:text-blue-300 hover:underline;
+}
+
 svg.cartesian {
 	display:flex;
   }
