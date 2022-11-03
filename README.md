@@ -1,34 +1,39 @@
-## Usage
+<h1 align="center">metar.gg</h1>
+<p align="center">🛫☀️🌦</p>
+<p align="center">Latest worldwide aviation weather</p>
 
-Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
+## What is this?
 
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
+metar.gg is an app that fetches latest METAR and TAF data from [NOAA](https://www.aviationweather.gov/adds) and presents it in a intuitive way.
 
-```bash
-$ npm install # or pnpm install or yarn install
-```
+The accompanying Go GraphQL API can be found [here](https://github.com/benjasper/metar.gg-backend).
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+### Features
+* ⚡ Latest, up to date METAR
+* 🕑 Next METAR publishing time prediction
+* 🔄 Automatic polling for weather updates
+* 🧭 Runway wind renderer
+* 🌑 Dark mode
 
-## Available Scripts
+## Development 💻
 
-In the project directory, you can run:
+### Tech
+* SolidJS
+* Tailwind
 
-### `npm dev` or `npm start`
+### Prerequisites
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- PNPM
 
-The page will reload if you make edits.<br>
+### Setup
 
-### `npm run build`
+1. Clone the repository
+2. Run `pnpm install` to download the dependencies
+3. Run `pnpm start` to start the dev server
+4. The app is now available on port 3000
 
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
+### Pull Requests
+PRs are welcome!
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-## Deployment
-
-You can deploy the `dist` folder to any static host provider (netlify, surge, now, etc.)
+## License 📝
+[MIT](LICENSE)
