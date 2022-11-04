@@ -14,7 +14,7 @@ const Home: Component = () => {
 			return
 		}
 
-		navigate(`/${airportIdentifier.toLowerCase()}`)
+		navigate(`/airport/${airportIdentifier}`)
 	}
 
 	return (

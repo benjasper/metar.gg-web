@@ -52,7 +52,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 	}
 
 	const onSubmit = (airportIdentifier: string) => {
-		props.onSearch(airportIdentifier)
+		props.onSearch(airportIdentifier.toUpperCase())
 		input.blur()
 		setIsFocused(false)
 		input.value = ''

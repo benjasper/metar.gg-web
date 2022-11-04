@@ -82,7 +82,7 @@ const AirportSearchDetail: Component = () => {
 	}
 
 	const navigateTo = (airportIdentifier: string) => {
-		navigate(`/${airportIdentifier.toLowerCase()}`, { replace: true })
+		navigate(`/airport/${airportIdentifier}`)
 	}
 
 	// Make a search base on the route parameter

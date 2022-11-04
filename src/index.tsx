@@ -24,7 +24,7 @@ const App: Component = () => {
 						<Route path="/about" component={About} />
 						<Route path="/legal" component={Legal} />
 						<Route path="/terms" component={TermsOfUse} />
-						<Route path="/:airportIdentifier" component={AirportSearchDetail} />
+						<Route path="/airport/:airportIdentifier" component={AirportSearchDetail} />
 					</Routes>
 				</GraphQLProvider>
 			</Router>
