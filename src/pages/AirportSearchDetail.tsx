@@ -192,30 +192,36 @@ const AirportSearchDetail: Component = () => {
 									})}>
 									Published {importTimeDuration().humanImprecise()}
 								</span>
-								<span
-									class="cursor-default rounded-full px-3 py-1 text-xs text-white dark:text-white-light"
-									classList={{
-										'bg-orange-500 dark:bg-orange-800':
-											nextImportPredictionDuration().isPast() &&
-											nextImportPredictionDuration().asMinutes() > 5,
-										'bg-green-600 dark:bg-green-800':
-											nextImportPredictionDuration().isFuture() ||
-											(nextImportPredictionDuration().asMinutes() <= 5 &&
-												nextImportPredictionDuration().isPast()),
-									}}
-									title={nextImportPrediction().toLocaleTimeString([], {
-										hour: 'numeric',
-										minute: '2-digit',
-										day: 'numeric',
-										month: 'long',
-										year: 'numeric',
-									})}>
-									<Show
-										when={nextImportPredictionDuration().isFuture()}
-										fallback={`Next update expected any moment now`}>
-										Next update expected {nextImportPredictionDuration().humanImprecise()}
-									</Show>
-								</span>
+								<Show
+									when={
+										!(nextImportPredictionDuration().isPast() &&
+										nextImportPredictionDuration().asHours() > 2)
+									}>
+									<span
+										class="cursor-default rounded-full px-3 py-1 text-xs text-white dark:text-white-light"
+										classList={{
+											'bg-orange-500 dark:bg-orange-800':
+												nextImportPredictionDuration().isPast() &&
+												nextImportPredictionDuration().asMinutes() > 5,
+											'bg-green-600 dark:bg-green-800':
+												nextImportPredictionDuration().isFuture() ||
+												(nextImportPredictionDuration().asMinutes() <= 5 &&
+													nextImportPredictionDuration().isPast()),
+										}}
+										title={nextImportPrediction().toLocaleTimeString([], {
+											hour: 'numeric',
+											minute: '2-digit',
+											day: 'numeric',
+											month: 'long',
+											year: 'numeric',
+										})}>
+										<Show
+											when={nextImportPredictionDuration().isFuture()}
+											fallback={`Next update expected any moment now`}>
+											Next update expected {nextImportPredictionDuration().humanImprecise()}
+										</Show>
+									</span>
+								</Show>
 							</div>
 						</div>
 						<span
