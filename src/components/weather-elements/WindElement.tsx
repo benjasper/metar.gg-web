@@ -32,17 +32,26 @@ const WindElement: Component<WindElementProps> = props => {
 
 	return (
 		<WeatherElementLayout name="Wind" class="flex-shrink-0">
-			<RunwayAndWindRenderer airport={props.airport} latestMetar={props.latestMetar} variableWind={variableWind()}></RunwayAndWindRenderer>
+			<RunwayAndWindRenderer
+				airport={props.airport}
+				latestMetar={props.latestMetar}
+				variableWind={variableWind()}></RunwayAndWindRenderer>
 			<div class="flex flex-col text-center dark:text-white-dark">
 				<Show when={props.latestMetar.windSpeed !== 0} fallback="Wind calm">
-					<span>
+					<span class="text-lg">
 						<Show when={props.latestMetar.windDirection !== 0} fallback="Variable">
 							{props.latestMetar.windDirection}°
 						</Show>{' '}
 						at {props.latestMetar.windSpeed} kt
 					</span>
-					<Show when={variableWind()}>variable from {variableWind().from}° to {variableWind().to}°</Show>
-					<Show when={props.latestMetar.windGust}>with gusts up to {props.latestMetar.windGust} kt</Show>
+					<Show when={variableWind()}>
+						<span>
+							variable from {variableWind().from}° to {variableWind().to}°
+						</span>
+					</Show>
+					<Show when={props.latestMetar.windGust}>
+						<span>with gusts up to {props.latestMetar.windGust} kt</span>
+					</Show>
 				</Show>
 			</div>
 		</WeatherElementLayout>

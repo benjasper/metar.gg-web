@@ -122,7 +122,8 @@ const AirportSearchDetail: Component = () => {
 						{airport().icaoCode} / {airport().iataCode} - {airport().name} weather | metar.gg
 					</Title>
 					<Meta name="description">
-						Get the latest METAR information for {airport().name} ({airport().identifier}).
+						Get the latest METAR information for {airport().name} ({airport().identifier}) located in{' '}
+						<Show when={airport().municipality}>{airport().municipality},</Show> {airport().country.name}.
 					</Meta>
 					<div class="mx-auto flex flex-col py-16 text-center dark:text-white-dark">
 						<h2>
@@ -194,8 +195,10 @@ const AirportSearchDetail: Component = () => {
 								</span>
 								<Show
 									when={
-										!(nextImportPredictionDuration().isPast() &&
-										nextImportPredictionDuration().asHours() > 2)
+										!(
+											nextImportPredictionDuration().isPast() &&
+											nextImportPredictionDuration().asHours() > 2
+										)
 									}>
 									<span
 										class="cursor-default rounded-full px-3 py-1 text-xs text-white dark:text-white-light"
