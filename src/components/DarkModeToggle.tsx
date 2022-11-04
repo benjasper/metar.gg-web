@@ -2,8 +2,6 @@ import { Tab, TabGroup, TabList } from 'solid-headless'
 import { Component, createEffect, createSignal, onCleanup } from 'solid-js'
 import { BsMoonStars } from 'solid-icons/bs'
 import { WiDaySunny } from 'solid-icons/wi'
-import resolveConfig from 'tailwindcss/resolveConfig'
-import tailwindConfig from '../../tailwind.config.js'
 
 interface TabGroupProps {
 	class?: string
@@ -17,7 +15,6 @@ enum Modes {
 
 const DarkModeToggle: Component<TabGroupProps> = props => {
 	const [currentMode, setCurrentMode] = createSignal<Modes>(Modes.System)
-	const fullTailwindConfig = resolveConfig(tailwindConfig)
 
 	setCurrentMode(localStorage.theme ?? Modes.System)
 
@@ -36,7 +33,7 @@ const DarkModeToggle: Component<TabGroupProps> = props => {
 			// Set Meta Tag Theme Color
 			document
 				.querySelector('meta[name="theme-color"]')
-				?.setAttribute('content', fullTailwindConfig.theme.colors['black'])
+				?.setAttribute('content', '#000212')
 
 			localStorage.theme = Modes.Dark
 		} else if (
@@ -46,7 +43,7 @@ const DarkModeToggle: Component<TabGroupProps> = props => {
 			document.documentElement.classList.remove('dark')
 			document
 				.querySelector('meta[name="theme-color"]')
-				?.setAttribute('content', fullTailwindConfig.theme.colors['gray-background'])
+				?.setAttribute('content', '#f9f8f9')
 
 			localStorage.theme = Modes.Light
 		}
