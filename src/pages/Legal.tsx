@@ -1,9 +1,12 @@
+import { Meta } from '@solidjs/meta'
 import Logo from '../components/Logo'
 import PageContent from '../layouts/PageContent'
 
 const Legal = () => {
 	return (
 		<PageContent>
+			<Meta name='robots' content='noindex'></Meta>
+			
 			<div class="container text-black dark:text-white-dark">
 				<div class="flex flex-col justify-between gap-6 md:flex-row">
 					<Logo class="mx-auto md:mx-0 md:w-1/4"></Logo>

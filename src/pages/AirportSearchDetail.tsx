@@ -122,7 +122,7 @@ const AirportSearchDetail: Component = () => {
 						{airport().icaoCode} / {airport().iataCode} - {airport().name} weather | metar.gg
 					</Title>
 					<Meta name="description">
-						Get the latest METAR and TAF information for {airport().name} ({airport().identifier}).
+						Get the latest METAR information for {airport().name} ({airport().identifier}).
 					</Meta>
 					<div class="mx-auto flex flex-col py-16 text-center dark:text-white-dark">
 						<h2>
