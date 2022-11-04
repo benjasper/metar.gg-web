@@ -1,6 +1,7 @@
 /* inter-regular - latin */
 @font-face {
   font-family: 'Inter';
+  font-display: swap;
   font-style: normal;
   font-weight: 400;
   src: local(''),
@@ -11,6 +12,7 @@
 /* inter-600 - latin */
 @font-face {
   font-family: 'Inter';
+  font-display: swap;
   font-style: normal;
   font-weight: 600;
   src: url('../fonts/inter-v12-latin-600.eot'); /* IE9 Compat Modes */
@@ -25,6 +27,7 @@
 /* inter-700 - latin */
 @font-face {
   font-family: 'Inter';
+  font-display: swap;
   font-style: normal;
   font-weight: 700;
   src: local(''),
@@ -34,6 +37,7 @@
 /* inter-900 - latin */
 @font-face {
   font-family: 'Inter';
+  font-display: swap;
   font-style: normal;
   font-weight: 900;
   src: local(''),
@@ -44,6 +48,7 @@
 /* varela-round-regular - latin */
 @font-face {
   font-family: 'Varela Round';
+  font-display: swap;
   font-style: normal;
   font-weight: 400;
   src: url('../fonts/varela-round-v19-latin-regular.eot'); /* IE9 Compat Modes */
