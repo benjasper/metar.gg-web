@@ -121,10 +121,13 @@ const AirportSearchDetail: Component = () => {
 					<Title>
 						{airport().icaoCode} / {airport().iataCode} - {airport().name} weather | metar.gg
 					</Title>
-					<Meta name="description">
-						Get the latest METAR information for {airport().name} ({airport().identifier}) located in{' '}
-						<Show when={airport().municipality}>{airport().municipality},</Show> {airport().country.name}.
-					</Meta>
+					<Meta
+						name="description"
+						content={`Get the latest METAR information for ${airport().name} - ${
+							airport().identifier
+						} located in ${airport().municipality ? airport().municipality + ',' : ''} ${
+							airport().country.name
+						}.`}></Meta>
 					<div class="mx-auto flex flex-col py-16 text-center dark:text-white-dark">
 						<h2>
 							{airport().icaoCode} <Show when={airport().iataCode}>/ {airport().iataCode}</Show>

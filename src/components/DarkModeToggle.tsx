@@ -2,6 +2,8 @@ import { Tab, TabGroup, TabList } from 'solid-headless'
 import { Component, createEffect, createSignal, onCleanup } from 'solid-js'
 import { BsMoonStars } from 'solid-icons/bs'
 import { WiDaySunny } from 'solid-icons/wi'
+import resolveConfig from 'tailwindcss/resolveConfig'
+import tailwindConfig from '../../tailwind.config.js'
 
 interface TabGroupProps {
 	class?: string
@@ -15,6 +17,7 @@ enum Modes {
 
 const DarkModeToggle: Component<TabGroupProps> = props => {
 	const [currentMode, setCurrentMode] = createSignal<Modes>(Modes.System)
+	const fullTailwindConfig = resolveConfig(tailwindConfig)
 
 	setCurrentMode(localStorage.theme ?? Modes.System)
 
@@ -25,15 +28,27 @@ const DarkModeToggle: Component<TabGroupProps> = props => {
 	}
 
 	const evaluateColorScheme = (updatedColorScheme?: Modes) => {
-		if (updatedColorScheme === Modes.Dark) {
+		if (
+			updatedColorScheme === Modes.Dark ||
+			(updatedColorScheme === Modes.System && window.matchMedia('(prefers-color-scheme: dark)').matches)
+		) {
 			document.documentElement.classList.add('dark')
+			// Set Meta Tag Theme Color
+			document
+				.querySelector('meta[name="theme-color"]')
+				?.setAttribute('content', fullTailwindConfig.theme.colors['black'])
+
 			localStorage.theme = Modes.Dark
-		} else if (updatedColorScheme === Modes.Light) {
+		} else if (
+			updatedColorScheme === Modes.Light ||
+			(updatedColorScheme === Modes.System && !window.matchMedia('(prefers-color-scheme: dark)').matches)
+		) {
 			document.documentElement.classList.remove('dark')
+			document
+				.querySelector('meta[name="theme-color"]')
+				?.setAttribute('content', fullTailwindConfig.theme.colors['gray-background'])
+
 			localStorage.theme = Modes.Light
-		} else {
-			document.documentElement.classList.toggle('dark', window.matchMedia('(prefers-color-scheme: dark)').matches)
-			localStorage.theme = Modes.System
 		}
 	}
 
@@ -61,7 +76,7 @@ const DarkModeToggle: Component<TabGroupProps> = props => {
 							'bg-white dark:bg-black-100 dark:text-white-light bg-opacity-75 text-black cursor-default shadow-sm':
 								isSelected(Modes.Dark),
 						}}>
-						<BsMoonStars class='my-auto' size={16}></BsMoonStars>
+						<BsMoonStars class="my-auto" size={16}></BsMoonStars>
 					</Tab>
 					<Tab
 						class="flex cursor-pointer rounded-lg py-2 px-4 align-middle text-sm font-medium"
@@ -70,7 +85,7 @@ const DarkModeToggle: Component<TabGroupProps> = props => {
 							'bg-white dark:bg-black-100 dark:text-white-light bg-opacity-75 text-black cursor-default shadow-sm':
 								isSelected(Modes.Light),
 						}}>
-						<WiDaySunny class='my-auto' size={26}></WiDaySunny>
+						<WiDaySunny class="my-auto" size={26}></WiDaySunny>
 					</Tab>
 					<Tab
 						class="flex cursor-pointer rounded-lg py-2 px-4 align-middle text-sm font-medium"

@@ -1,7 +1,7 @@
-module.exports = {
-  purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
-};
+import tailwind from 'tailwindcss'
+import autoprefixer from 'autoprefixer'
+import tailwindConfig from './tailwind.config.js'
+
+export default {
+  plugins: [tailwind(tailwindConfig), autoprefixer],
+}

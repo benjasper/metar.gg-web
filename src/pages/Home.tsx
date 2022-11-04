@@ -20,7 +20,7 @@ const Home: Component = () => {
 	return (
 		<>
 			<Title>Latest aviation weather | metar.gg</Title>
-			<Meta name="description">Find the latest aviation weather for any airport around the world. Get your METARs here.</Meta>
+			<Meta name="description" content='Find the latest aviation weather for any airport around the world. Get your METARs here.'></Meta>
 			<PageLanding>
 				<div class="mt-[33%] flex flex-col gap-8 transition-all">
 					<Logo class="mx-auto"></Logo>

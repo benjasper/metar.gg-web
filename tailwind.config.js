@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     './index.html',
     './src/**/*.{js,ts,jsx,tsx,css,md,mdx,html,json,scss}',
@@ -16,7 +16,7 @@ module.exports = {
         'gray-background': '#f9f8f9',
         'white-dark': 'rgb(208, 214, 224)',
         'white-light': '#E6EBF8',
-        black: 'rgb(0, 2, 18)',
+        black: '#000212',
         'black-100': '#242B3E',
         'black-200': '#191E2B',
         'black-300': '#060609',
