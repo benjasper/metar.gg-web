@@ -123,8 +123,10 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 						type="text"
 						autofocus={true}
 						spellcheck={false}
-						tabIndex={1}
+						tabIndex={0}
 						role="combobox"
+						aria-expanded={isFocused() && airportResults.latest !== undefined && airportResults().getAirports.totalCount > 0}
+						aria-owns="owned_listbox" aria-haspopup="listbox"
 						autocomplete="off"
 						placeholder={props.placeholder}
 						onInput={e => handleInput(e)}
@@ -168,32 +170,30 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 					class="my-auto flex flex-col gap-32"
 					show={isFocused() && currentInput() !== '' && airportResults.latest !== undefined}
 					enter="transform transition duration-[200ms]"
+					role='listbox'
+					id='owned_listbox'
 					enterFrom="opacity-0"
 					enterTo="opacity-100"
 					leave="transform duration-200 transition ease-in-out"
 					leaveFrom="opacity-100 rotate-0"
 					leaveTo="opacity-0">
-					<div
-						class="absolute left-0 z-10 mt-2 w-full origin-top-right overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black-200"
-						role="menu"
+					<ul class="py-1 absolute left-0 z-10 mt-2 w-full origin-top-right overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black-200"
+						role="listbox"
 						aria-orientation="vertical"
-						aria-labelledby="menu-button"
 						tabindex="-1">
-						<div class="py-1" role="none">
 							<Show when={airportResults.latest && airportResults().getAirports.totalCount > 0}>
 								<For each={airportResults().getAirports.edges}>
 									{(airportNode, i) => (
-										<a
-											href="#"
-											class="block w-full px-6 py-2 text-sm text-gray-700 dark:text-white-dark"
+										<li
+											class="block w-full px-6 py-2 text-sm text-gray-700 dark:text-white-dark cursor-pointer"
 											classList={{ 'bg-gray-100 dark:bg-black-100': i() === selectedAirportId() }}
 											onMouseEnter={e => setSelectedAirportId(i())}
 											onClick={e => onSubmit(airportNode.node.identifier)}
-											role="menuitem"
+											role="option"
 											tabindex={i()}>
 											{airportNode.node.icaoCode} / {airportNode.node.iataCode} •{' '}
 											{airportNode.node.name}
-										</a>
+										</li>
 									)}
 								</For>
 							</Show>
@@ -205,8 +205,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 									Nothing found.
 								</a>
 							</Show>
-						</div>
-					</div>
+						</ul>
 				</Transition>
 			</div>
 		</div>
