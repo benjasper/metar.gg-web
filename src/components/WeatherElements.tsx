@@ -1,4 +1,4 @@
-import { For, Show, Switch } from 'solid-js'
+import { createMemo, For, Show, Switch } from 'solid-js'
 import { AirportSearchFragment } from '../queries/generated/graphql'
 import WeatherElementLayout from '../layouts/WeatherElementLayout'
 import PrecipitationElement from './weather-elements/PrecipitationElement'
@@ -7,13 +7,7 @@ import SkyConditionsElement from './weather-elements/SkyConditionsElement'
 import FlightCategoryElement from './weather-elements/FlightCategoryElement'
 
 const WeatherElements = (props: { airport: AirportSearchFragment; class?: string }) => {
-	const latestMetar = () => {
-		if (props.airport.station.metars.edges.length === 0) {
-			return undefined
-		}
-
-		return props.airport.station.metars.edges[0].node
-	}
+	const latestMetar = createMemo(() => props.airport?.station.metars?.edges[0]?.node)
 
 	return (
 		<div class={`flex flex-col md:flex-row gap-8 justify-center h-full ${props.class ?? ''}`}>

@@ -1,7 +1,7 @@
 import { debounce } from '@solid-primitives/scheduled'
 import { Meta, Title } from '@solidjs/meta'
 import { useIsRouting, useNavigate, useParams } from '@solidjs/router'
-import { Component, createEffect, createSignal, ErrorBoundary, onCleanup, Show, untrack } from 'solid-js'
+import { Component, createEffect, createMemo, createSignal, ErrorBoundary, onCleanup, Show, untrack } from 'solid-js'
 import WeatherElements from '../components/WeatherElements'
 import { useGraphQL } from '../context/GraphQLClient'
 import { AIRPORT_SINGLE } from '../queries/AirportQueries'
@@ -36,13 +36,13 @@ const AirportSearchDetail: Component = () => {
 
 	const throttledLoading = debounce((id: string) => setAirportIdentifier({ identifier: id }), 100)
 
-	const airport = (): AirportSearchFragment => {
+	const airport = createMemo((): AirportSearchFragment|undefined => {
 		if (airportRequest() && airportRequest().getAirport) {
 			return airportRequest().getAirport
 		}
 
 		return undefined
-	}
+	})
 
 	const [now, setNow] = createSignal<Date>(new Date())
 
