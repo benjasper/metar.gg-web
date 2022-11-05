@@ -16,8 +16,8 @@ const WeatherElements = (props: { airport: AirportSearchFragment; class?: string
 	}
 
 	return (
-		<div class={`flex flex-col md:flex-row gap-8 justify-center ${props.class ?? ''}`}>
-			<Show when={latestMetar()} fallback={<span class="text-lg mx-auto">No recent weather available.</span>}>
+		<div class={`flex flex-col md:flex-row gap-8 justify-center h-full ${props.class ?? ''}`}>
+			<Show when={latestMetar()} fallback={<span class="text-lg m-auto">No recent weather available.</span>}>
 				<div class="flex flex-col flex-shrink-0">
 					<WindElement airport={props.airport} latestMetar={latestMetar()} />
 				</div>

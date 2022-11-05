@@ -167,75 +167,77 @@ const AirportSearchDetail: Component = () => {
 						</div>
 					</div>
 					<div class="flex flex-col justify-between md:flex-row">
-						<div class="flex flex-col">
-							<h3 class="text-xl dark:text-white-dark">Current weather</h3>
-							<div class="flex flex-row flex-wrap justify-start gap-2 pt-2">
-								<span
-									class="cursor-default rounded-full px-3 py-1 text-xs text-white dark:text-white-light"
-									classList={{
-										'bg-green-600 dark:bg-green-800': lastObservationDuration().asHours() <= 2,
-										'bg-red-600 dark:bg-red-800': lastObservationDuration().asHours() > 2,
-									}}
-									title={metarObservationTime().toLocaleTimeString([], {
-										hour: 'numeric',
-										minute: '2-digit',
-										day: 'numeric',
-										month: 'long',
-										year: 'numeric',
-									})}>
-									Observed {lastObservationDuration().humanImprecise()}
-								</span>
-								<span
-									class="cursor-default rounded-full bg-white px-3 py-1 text-xs text-black dark:bg-black-200 dark:text-white-light"
-									title={importTime().toLocaleTimeString([], {
-										hour: 'numeric',
-										minute: '2-digit',
-										day: 'numeric',
-										month: 'long',
-										year: 'numeric',
-									})}>
-									Published {importTimeDuration().humanImprecise()}
-								</span>
-								<Show
-									when={
-										!(
-											nextImportPredictionDuration().isPast() &&
-											nextImportPredictionDuration().asHours() > 2
-										)
-									}>
+						<Show when={airport().station.metars.edges.length > 0}>
+							<div class="flex flex-col">
+								<h3 class="text-xl dark:text-white-dark">Current weather</h3>
+								<div class="flex flex-row flex-wrap justify-start gap-2 pt-2">
 									<span
 										class="cursor-default rounded-full px-3 py-1 text-xs text-white dark:text-white-light"
 										classList={{
-											'bg-orange-500 dark:bg-orange-800':
-												nextImportPredictionDuration().isPast() &&
-												nextImportPredictionDuration().asMinutes() > 5,
-											'bg-green-600 dark:bg-green-800':
-												nextImportPredictionDuration().isFuture() ||
-												(nextImportPredictionDuration().asMinutes() <= 5 &&
-													nextImportPredictionDuration().isPast()),
+											'bg-green-600 dark:bg-green-800': lastObservationDuration().asHours() <= 2,
+											'bg-red-600 dark:bg-red-800': lastObservationDuration().asHours() > 2,
 										}}
-										title={nextImportPrediction().toLocaleTimeString([], {
+										title={metarObservationTime().toLocaleTimeString([], {
 											hour: 'numeric',
 											minute: '2-digit',
 											day: 'numeric',
 											month: 'long',
 											year: 'numeric',
 										})}>
-										<Show
-											when={nextImportPredictionDuration().isFuture()}
-											fallback={`Next update expected any moment now`}>
-											Next update expected {nextImportPredictionDuration().humanImprecise()}
-										</Show>
+										Observed {lastObservationDuration().humanImprecise()}
 									</span>
-								</Show>
+									<span
+										class="cursor-default rounded-full bg-white px-3 py-1 text-xs text-black dark:bg-black-200 dark:text-white-light"
+										title={importTime().toLocaleTimeString([], {
+											hour: 'numeric',
+											minute: '2-digit',
+											day: 'numeric',
+											month: 'long',
+											year: 'numeric',
+										})}>
+										Published {importTimeDuration().humanImprecise()}
+									</span>
+									<Show
+										when={
+											!(
+												nextImportPredictionDuration().isPast() &&
+												nextImportPredictionDuration().asHours() > 2
+											)
+										}>
+										<span
+											class="cursor-default rounded-full px-3 py-1 text-xs text-white dark:text-white-light"
+											classList={{
+												'bg-orange-500 dark:bg-orange-800':
+													nextImportPredictionDuration().isPast() &&
+													nextImportPredictionDuration().asMinutes() > 5,
+												'bg-green-600 dark:bg-green-800':
+													nextImportPredictionDuration().isFuture() ||
+													(nextImportPredictionDuration().asMinutes() <= 5 &&
+														nextImportPredictionDuration().isPast()),
+											}}
+											title={nextImportPrediction().toLocaleTimeString([], {
+												hour: 'numeric',
+												minute: '2-digit',
+												day: 'numeric',
+												month: 'long',
+												year: 'numeric',
+											})}>
+											<Show
+												when={nextImportPredictionDuration().isFuture()}
+												fallback={`Next update expected any moment now`}>
+												Next update expected {nextImportPredictionDuration().humanImprecise()}
+											</Show>
+										</span>
+									</Show>
+								</div>
 							</div>
-						</div>
-						<span
-							class="mt-4 flex text-gray-700 dark:text-white-dark md:mt-auto"
-							title={`Refreshed ${Duration.fromDates(lastRefreshed(), now()).humanPrecise()}`}>
-							<HiOutlineRefresh class="my-auto mr-2" />
-							Constantly checking for updates
-						</span>
+							<span
+								class="mt-4 flex text-gray-700 dark:text-white-dark md:mt-auto"
+								title={`Refreshed ${Duration.fromDates(lastRefreshed(), now()).humanPrecise()}`}>
+								<HiOutlineRefresh class="my-auto mr-2" />
+								Constantly checking for updates
+							</span>
+						</Show>
 					</div>
 					<WeatherElements class="mt-4" airport={airport()}></WeatherElements>
 					<div class="flex flex-col gap-4 py-16">
