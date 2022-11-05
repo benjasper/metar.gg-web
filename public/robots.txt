@@ -1,0 +1,1 @@
+Sitemap: https://api.metar.gg/sitemap.xml
