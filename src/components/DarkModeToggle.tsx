@@ -34,8 +34,6 @@ const DarkModeToggle: Component<TabGroupProps> = props => {
 			document
 				.querySelector('meta[name="theme-color"]')
 				?.setAttribute('content', '#000212')
-
-			localStorage.theme = Modes.Dark
 		} else if (
 			updatedColorScheme === Modes.Light ||
 			(updatedColorScheme === Modes.System && !window.matchMedia('(prefers-color-scheme: dark)').matches)
@@ -44,9 +42,10 @@ const DarkModeToggle: Component<TabGroupProps> = props => {
 			document
 				.querySelector('meta[name="theme-color"]')
 				?.setAttribute('content', '#f9f8f9')
-
-			localStorage.theme = Modes.Light
 		}
+
+		// Save the current mode
+		localStorage.theme = updatedColorScheme ?? currentMode()
 	}
 
 	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onSystemChange)
