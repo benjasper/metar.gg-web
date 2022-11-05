@@ -13,6 +13,7 @@ import {
 	RiWeatherTornadoLine,
 	RiWeatherWindyLine,
 } from 'solid-icons/ri'
+import { TbGrain } from 'solid-icons/tb'
 
 interface PrecipitationElementProps {
 	latestMetar: MetarFragment
@@ -213,7 +214,7 @@ const PrecipitationElement: Component<PrecipitationElementProps> = props => {
 	const conditions = () => props.latestMetar.presentWeather.split(' ')
 
 	return (
-		<WeatherElementLayout name="Precipitation">
+		<WeatherElementLayout name="Precipitation" icon={<TbGrain></TbGrain>}>
 			<div class="flex flex-col gap-1 dark:text-white-dark">
 				<For each={conditions()}>{condition => <ConditionElement condition={condition} />}</For>
 			</div>

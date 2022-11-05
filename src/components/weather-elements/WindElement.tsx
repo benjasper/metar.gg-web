@@ -1,3 +1,4 @@
+import { RiWeatherWindyLine } from 'solid-icons/ri'
 import { Component, createMemo, Show } from 'solid-js'
 import WeatherElementLayout from '../../layouts/WeatherElementLayout'
 import { AirportSearchFragment, MetarFragment } from '../../queries/generated/graphql'
@@ -31,7 +32,7 @@ const WindElement: Component<WindElementProps> = props => {
 	})
 
 	return (
-		<WeatherElementLayout name="Wind" class="flex-shrink-0">
+		<WeatherElementLayout name="Wind" class="flex-shrink-0" icon={<RiWeatherWindyLine></RiWeatherWindyLine>}>
 			<RunwayAndWindRenderer
 				airport={props.airport}
 				latestMetar={props.latestMetar}

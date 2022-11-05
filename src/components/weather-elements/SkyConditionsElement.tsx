@@ -1,51 +1,61 @@
-import { Component, For, Match, Show, Switch } from 'solid-js'
+import { Component, createMemo, For, Match, Show, Switch } from 'solid-js'
 import WeatherElementLayout from '../../layouts/WeatherElementLayout'
-import { MetarFragment, SkyConditionSkyCover } from '../../queries/generated/graphql'
+import { AirportSearchFragment, MetarFragment, SkyConditionSkyCover } from '../../queries/generated/graphql'
 import {
+	RiMediaLandscapeFill,
 	RiWeatherCloudyFill,
 	RiWeatherCloudyLine,
+	RiWeatherMoonClearFill,
+	RiWeatherMoonCloudyFill,
+	RiWeatherMoonCloudyLine,
 	RiWeatherSunCloudyFill,
 	RiWeatherSunCloudyLine,
 	RiWeatherSunFill,
 } from 'solid-icons/ri'
+import { IoCloudy, IoEarth } from 'solid-icons/io'
 
-interface SkyConditionsElementProps {
-	metar: MetarFragment
-}
-
-const SkyConditionIcon = (props: { skyCover: SkyConditionSkyCover; class: string }) => {
+const SkyConditionIcon = (props: { skyCover: SkyConditionSkyCover; class: string; isDayTime: boolean }) => {
 	const classes = `h-auto ${props.class ?? ''}`
 
 	return (
-		<div class='text-gray-800 dark:text-white-light'>
+		<div class="text-gray-800 dark:text-white-light">
 			<Switch>
-			<Match when={props.skyCover === SkyConditionSkyCover.Few}>
-				<RiWeatherSunCloudyLine class={classes} />
-			</Match>
-			<Match when={props.skyCover === SkyConditionSkyCover.Sct}>
-				<RiWeatherSunCloudyFill class={classes} />
-			</Match>
-			<Match when={props.skyCover === SkyConditionSkyCover.Bkn}>
-				<RiWeatherCloudyLine class={classes} />
-			</Match>
-			<Match when={props.skyCover === SkyConditionSkyCover.Ovc}>
-				<RiWeatherCloudyFill class={classes} />
-			</Match>
-			<Match when={props.skyCover === SkyConditionSkyCover.Clr}>
-				<RiWeatherSunFill class={classes} />
-			</Match>
-			<Match when={props.skyCover === SkyConditionSkyCover.Skc}>
-				<RiWeatherSunFill class={classes} />
-			</Match>
-			<Match when={props.skyCover === SkyConditionSkyCover.Cavok}>
-				<RiWeatherSunFill class={classes} />
-			</Match>
-			<Match when={true}>
-				<span>{props.skyCover}</span>
-			</Match>
-		</Switch>
+				<Match when={props.skyCover === SkyConditionSkyCover.Few}>
+					<Show when={props.isDayTime} fallback={<RiWeatherMoonCloudyLine class={classes} />}>
+						<RiWeatherSunCloudyLine class={classes} />
+					</Show>
+				</Match>
+				<Match when={props.skyCover === SkyConditionSkyCover.Sct}>
+					<Show when={props.isDayTime} fallback={<RiWeatherMoonCloudyFill class={classes} />}>
+						<RiWeatherSunCloudyFill class={classes} />
+					</Show>
+				</Match>
+				<Match when={props.skyCover === SkyConditionSkyCover.Bkn}>
+					<RiWeatherCloudyLine class={classes} />
+				</Match>
+				<Match when={props.skyCover === SkyConditionSkyCover.Ovc}>
+					<RiWeatherCloudyFill class={classes} />
+				</Match>
+				<Match when={props.skyCover === SkyConditionSkyCover.Clr}>
+					<Show when={props.isDayTime} fallback={<RiWeatherMoonClearFill class={classes} />}>
+						<RiWeatherSunFill class={classes} />
+					</Show>
+				</Match>
+				<Match when={props.skyCover === SkyConditionSkyCover.Skc}>
+					<Show when={props.isDayTime} fallback={<RiWeatherMoonClearFill class={classes} />}>
+						<RiWeatherSunFill class={classes} />
+					</Show>
+				</Match>
+				<Match when={props.skyCover === SkyConditionSkyCover.Cavok}>
+					<Show when={props.isDayTime} fallback={<RiWeatherMoonClearFill class={classes} />}>
+						<RiWeatherSunFill class={classes} />
+					</Show>
+				</Match>
+				<Match when={true}>
+					<span>{props.skyCover}</span>
+				</Match>
+			</Switch>
 		</div>
-		
 	)
 }
 
@@ -67,15 +77,34 @@ const SkyConditionText = (props: { skyCover: SkyConditionSkyCover }) => {
 	)
 }
 
+interface SkyConditionsElementProps {
+	metar: MetarFragment
+	airport: AirportSearchFragment
+}
+
 const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
+	const localHour = createMemo(() =>
+		parseInt(
+			new Date()
+				.toLocaleTimeString('en', { hour: '2-digit', hourCycle: 'h24', timeZone: props.airport.timezone })
+				.substring(0, 2)
+		)
+	)
+
+	const isDayTime = () => localHour() >= 6 && localHour() <= 18
+
 	return (
-		<WeatherElementLayout name="Sky conditions">
+		<WeatherElementLayout name="Sky conditions" icon={<IoCloudy></IoCloudy>}>
 			<div class="flex flex-col gap-2 text-center text-xl dark:text-white-dark">
 				<Show when={props.metar.skyConditions.length > 1}>
 					<For each={props.metar.skyConditions.sort((a, b) => b.cloudBase - a.cloudBase)}>
 						{(condition, i) => (
-							<div class="flex flex-row gap-1 mx-auto text-center">
-								<SkyConditionIcon skyCover={condition.skyCover} class="w-5 my-auto" />
+							<div class="mx-auto flex flex-row gap-1 text-center">
+								<SkyConditionIcon
+									skyCover={condition.skyCover}
+									class="my-auto w-5"
+									isDayTime={isDayTime()}
+								/>
 								<span class="my-auto text-base">
 									<SkyConditionText skyCover={condition.skyCover}></SkyConditionText>
 								</span>
@@ -88,7 +117,7 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 				</Show>
 				<Show when={props.metar.skyConditions.length === 1}>
 					<div class="mx-auto">
-						<SkyConditionIcon skyCover={props.metar.skyConditions[0].skyCover} class="w-10" />
+						<SkyConditionIcon skyCover={props.metar.skyConditions[0].skyCover} isDayTime={isDayTime()} class="w-10" />
 					</div>
 					<span class="text-base">
 						<SkyConditionText skyCover={props.metar.skyConditions[0].skyCover}></SkyConditionText>

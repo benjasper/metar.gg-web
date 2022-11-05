@@ -1,6 +1,7 @@
 import { Component } from 'solid-js'
 import WeatherElementLayout from '../../layouts/WeatherElementLayout'
 import { MetarFlightCategory, MetarFragment } from '../../queries/generated/graphql'
+import { BiRegularCategoryAlt } from 'solid-icons/bi'
 
 interface FlightCategoryElementProps {
 	latestMetar: MetarFragment
@@ -8,7 +9,7 @@ interface FlightCategoryElementProps {
 
 const FlightCategoryElement: Component<FlightCategoryElementProps> = props => {
 	return (
-		<WeatherElementLayout name="Flight category">
+		<WeatherElementLayout name="Flight category" icon={<BiRegularCategoryAlt />}>
 			<div class="flex flex-col text-center">
 				<div
 					class="relative w-5 h-5 rounded-full mx-auto mb-2"
