@@ -1,4 +1,4 @@
-import { Component, Show } from 'solid-js'
+import { Component, createMemo, Show } from 'solid-js'
 import WeatherElementLayout from '../../layouts/WeatherElementLayout'
 import { AirportSearchFragment, MetarFragment } from '../../queries/generated/graphql'
 import RunwayAndWindRenderer from '../special/RunwayAndWindRenderer'
@@ -14,7 +14,7 @@ export interface VariableWind {
 }
 
 const WindElement: Component<WindElementProps> = props => {
-	const variableWind = (): VariableWind | undefined => {
+	const variableWind = createMemo((): VariableWind | undefined => {
 		const result = props.latestMetar.rawText.match(/\d{3}V\d{3}/g)
 		const vWindString = result ? result[0] : undefined
 
@@ -28,7 +28,7 @@ const WindElement: Component<WindElementProps> = props => {
 			from: fromTo[0],
 			to: fromTo[1],
 		}
-	}
+	})
 
 	return (
 		<WeatherElementLayout name="Wind" class="flex-shrink-0">
@@ -37,21 +37,21 @@ const WindElement: Component<WindElementProps> = props => {
 				latestMetar={props.latestMetar}
 				variableWind={variableWind()}></RunwayAndWindRenderer>
 			<div class="flex flex-col text-center dark:text-white-dark">
-				<Show when={props.latestMetar.windSpeed !== 0} fallback="Wind calm">
-					<span class="text-lg">
+				<span class="text-lg">
+					<Show when={props.latestMetar.windSpeed !== 0} fallback="Wind calm">
 						<Show when={props.latestMetar.windDirection !== 0} fallback="Variable">
 							{props.latestMetar.windDirection}°
 						</Show>{' '}
 						at {props.latestMetar.windSpeed} kt
+					</Show>
+				</span>
+				<Show when={variableWind()}>
+					<span>
+						variable from {variableWind().from}° to {variableWind().to}°
 					</span>
-					<Show when={variableWind()}>
-						<span>
-							variable from {variableWind().from}° to {variableWind().to}°
-						</span>
-					</Show>
-					<Show when={props.latestMetar.windGust}>
-						<span>with gusts up to {props.latestMetar.windGust} kt</span>
-					</Show>
+				</Show>
+				<Show when={props.latestMetar.windGust}>
+					<span>with gusts up to {props.latestMetar.windGust} kt</span>
 				</Show>
 			</div>
 		</WeatherElementLayout>
