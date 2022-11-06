@@ -14,53 +14,42 @@ enum Modes {
 }
 
 const DarkModeToggle: Component<TabGroupProps> = props => {
-	const [currentMode, setCurrentMode] = createSignal<Modes>(Modes.System)
+	// Represents the state of the toggle
+	const [selected, setSelected] = createSignal<Modes>(localStorage.getItem('theme') as Modes ?? Modes.System)
 
-	setCurrentMode(localStorage.theme ?? Modes.System)
+	const evaluateColorScheme = () => {
 
-	const onSystemChange = (e: MediaQueryListEvent) => {
-		if (currentMode() === Modes.System) {
-			evaluateColorScheme()
-		}
-	}
-
-	const evaluateColorScheme = (updatedColorScheme?: Modes) => {
-		if (
-			updatedColorScheme === Modes.Dark ||
-			(updatedColorScheme === Modes.System && window.matchMedia('(prefers-color-scheme: dark)').matches)
-		) {
+		// If the toggle has selected a specific mode, use that, otherwise (if system is selected) use the system preference
+		if (selected() === Modes.Dark || (window.matchMedia('(prefers-color-scheme: dark)').matches && selected() === Modes.System)) {
 			document.documentElement.classList.add('dark')
 			// Set Meta Tag Theme Color
-			document
-				.querySelector('meta[name="theme-color"]')
-				?.setAttribute('content', '#000212')
-		} else if (
-			updatedColorScheme === Modes.Light ||
-			(updatedColorScheme === Modes.System && !window.matchMedia('(prefers-color-scheme: dark)').matches)
-		) {
+			document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#000212')
+		} else if (selected() === Modes.Light || (!window.matchMedia('(prefers-color-scheme: dark)').matches && selected() === Modes.System)) {
 			document.documentElement.classList.remove('dark')
-			document
-				.querySelector('meta[name="theme-color"]')
-				?.setAttribute('content', '#f9f8f9')
+			document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#f9f8f9')
 		}
 
 		// Save the current mode
-		localStorage.theme = updatedColorScheme ?? currentMode()
+		localStorage.theme = selected()
 	}
 
-	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onSystemChange)
+	createEffect(evaluateColorScheme)
 
-	createEffect(() => {
-		evaluateColorScheme(currentMode())
-	})
+	// If the system preference changes, re-evaluate the color scheme
+	const onSystemChange = (e: MediaQueryListEvent) => {
+		evaluateColorScheme()
+	}
+
+	// Listen for system changes
+	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onSystemChange)
 
 	onCleanup(() => {
 		window.removeEventListener('change', onSystemChange)
 	})
 
 	return (
-		<TabGroup horizontal defaultValue={currentMode()} class="flex" onChange={x => setCurrentMode(x)}>
-			{({ isSelected, isActive }) => (
+		<TabGroup horizontal defaultValue={selected()} class="flex" onChange={x => setSelected(x as Modes)}>
+			{({ isSelected }) => (
 				<TabList
 					class={`flex rounded-xl bg-gray-background p-1 dark:bg-black-200 dark:text-white-light ${
 						props.class ?? ''
