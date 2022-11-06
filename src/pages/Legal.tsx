@@ -4,7 +4,7 @@ import PageContent from '../layouts/PageContent'
 
 const Legal = () => {
 	return (
-		<PageContent>
+		<PageContent title='Legal' description=''>
 			<Meta name='robots' content='noindex'></Meta>
 			
 			<div class="container text-black dark:text-white-dark">

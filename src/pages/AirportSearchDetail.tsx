@@ -21,6 +21,7 @@ import { CgWebsite } from 'solid-icons/cg'
 import { TbMountain } from 'solid-icons/tb'
 import { FiExternalLink } from 'solid-icons/fi'
 import { LinkTag, Tag } from '../components/Tag'
+import PageTitle from '../components/PageTitle'
 
 const AirportSearchDetail: Component = () => {
 	const params = useParams()
@@ -36,7 +37,7 @@ const AirportSearchDetail: Component = () => {
 
 	const throttledLoading = debounce((id: string) => setAirportIdentifier({ identifier: id }), 100)
 
-	const airport = createMemo((): AirportSearchFragment|undefined => {
+	const airport = createMemo((): AirportSearchFragment | undefined => {
 		if (airportRequest() && airportRequest().getAirport) {
 			return airportRequest().getAirport
 		}
@@ -55,6 +56,21 @@ const AirportSearchDetail: Component = () => {
 
 	const importTime = () => new Date(airport()?.station.metars?.edges[0]?.node.importTime) ?? undefined
 	const importTimeDuration = (): Duration => Duration.fromDates(importTime(), now())
+
+	const title = createMemo(() => {
+		if (airport()) {
+			return `${airport().icaoCode} / ${airport().iataCode} - ${airport().name} weather`
+		}
+
+		return `Loading ${params.airportIdentifier}...`
+	})
+	const description = createMemo(() =>
+		airport()
+			? `Latest METAR information for ${airport().name} (${airport().identifier}${
+					airport().iataCode ? ' / ' + airport().iataCode : ''
+			  }) located in ${airport().municipality ? airport().municipality + ',' : ''} ${airport().country.name}.`
+			: ''
+	)
 
 	const nowInterval = setInterval(() => {
 		setNow(new Date())
@@ -98,7 +114,7 @@ const AirportSearchDetail: Component = () => {
 	})
 
 	return (
-		<PageContent>
+		<PageContent title={title()} description={description()}>
 			<div class="flex flex-col justify-between gap-6 md:flex-row">
 				<Logo class="mx-auto md:mx-0 md:w-1/4"></Logo>
 				<SearchBar
@@ -118,16 +134,7 @@ const AirportSearchDetail: Component = () => {
 							<ImSpinner5 class="m-auto w-16 animate-spin" size={36} />
 						</div>
 					}>
-					<Title>
-						{airport().icaoCode} / {airport().iataCode} - {airport().name} weather | metar.gg
-					</Title>
-					<Meta
-						name="description"
-						content={`Get the latest METAR information for ${airport().name} - ${
-							airport().identifier
-						} located in ${airport().municipality ? airport().municipality + ',' : ''} ${
-							airport().country.name
-						}.`}></Meta>
+					
 					<div class="mx-auto flex flex-col py-16 text-center dark:text-white-dark">
 						<h2>
 							{airport().icaoCode} <Show when={airport().iataCode}>/ {airport().iataCode}</Show>

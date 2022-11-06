@@ -4,7 +4,7 @@ import PageContent from '../layouts/PageContent'
 
 const TermsOfUse = () => {
 	return (
-		<PageContent>
+		<PageContent title='Terms of Use' description=''>
 			<Meta name='robots' content='noindex'></Meta>
 			
 			<div class="container text-black dark:text-white-dark">

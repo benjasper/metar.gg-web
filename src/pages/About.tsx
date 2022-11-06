@@ -1,12 +1,12 @@
 import { Title } from '@solidjs/meta'
 import { AiOutlineGithub } from 'solid-icons/ai'
 import Logo from '../components/Logo'
+import PageTitle from '../components/PageTitle'
 import PageContent from '../layouts/PageContent'
 
 const About = () => {
 	return (
-		<PageContent>
-			<Title>About | metar.gg</Title>
+		<PageContent title='About' description='An app for getting up to date METAR information. Get latest weather observations and forecasts here.'>
 			<div class="container text-black dark:text-white-dark">
 				<div class="flex flex-col justify-between gap-6 md:flex-row">
 					<Logo class="mx-auto md:mx-0 md:w-1/4"></Logo>

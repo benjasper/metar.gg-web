@@ -4,6 +4,7 @@ import { Component } from 'solid-js'
 import { Meta, Title } from '@solidjs/meta'
 import Logo from '../components/Logo'
 import PageLanding from '../layouts/PageLanding'
+import PageTitle from '../components/PageTitle'
 
 const Home: Component = () => {
 	const navigate = useNavigate()
@@ -19,9 +20,7 @@ const Home: Component = () => {
 
 	return (
 		<>
-			<Title>Latest aviation weather | metar.gg</Title>
-			<Meta name="description" content='Find the latest aviation weather for any airport around the world. Get your METARs here.'></Meta>
-			<PageLanding>
+			<PageLanding title='Latest aviation weather' description='Find the latest aviation weather observations and forecasts for any airport around the world. Get your METARs and TAFs here.'>
 				<div class="mt-[25vh] md:mt-[33vh] flex flex-col gap-8 transition-all">
 					<Logo class="mx-auto"></Logo>
 					<h2 class="mt-4 text-center dark:text-white-dark">What's the weather like in...</h2>

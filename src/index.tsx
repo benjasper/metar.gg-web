@@ -4,7 +4,7 @@ import { render } from 'solid-js/web'
 import { createGraphQLClient } from '@solid-primitives/graphql'
 import { Component } from 'solid-js'
 import { GraphQLProvider } from './context/GraphQLClient'
-import { Route, Router, Routes } from '@solidjs/router'
+import { Navigate, Route, Router, Routes, useParams } from '@solidjs/router'
 import Home from './pages/Home'
 import { MetaProvider } from '@solidjs/meta'
 import AirportSearchDetail from './pages/AirportSearchDetail'
@@ -25,6 +25,7 @@ const App: Component = () => {
 						<Route path="/legal" component={Legal} />
 						<Route path="/terms" component={TermsOfUse} />
 						<Route path="/airport/:airportIdentifier" component={AirportSearchDetail} />
+						<Route path="/:airportIdentifier" element={<Navigate href={(() => '/airport/' + useParams().airportIdentifier)}/>} />
 					</Routes>
 				</GraphQLProvider>
 			</Router>
