@@ -14,7 +14,7 @@ interface ParsedWeatherElementsProps {
 	class?: string
 }
 
-const WeatherElements: Component<ParsedWeatherElementsProps> = (props) => {
+const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 	const latestMetar = createMemo(() => props.airport?.station.metars?.edges[0]?.node)
 
 	return (
@@ -51,9 +51,13 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = (props) => {
 						<p class="text-center text-xl dark:text-white-dark">{Math.round(latestMetar().dewpoint)} °C</p>
 					</WeatherElementLayout>
 
-					<WeatherElementLayout name="Altimeter" icon={<FaSolidGauge class=''></FaSolidGauge>}>
-						<p class="text-center text-xl dark:text-white-dark">{latestMetar().altimeter.toFixed(0)} hPa</p>
-					</WeatherElementLayout>
+					<Show when={latestMetar().altimeter !== 0}>
+						<WeatherElementLayout name="Altimeter" icon={<FaSolidGauge class=""></FaSolidGauge>}>
+							<p class="text-center text-xl dark:text-white-dark">
+								{latestMetar().altimeter.toFixed(0)} hPa
+							</p>
+						</WeatherElementLayout>
+					</Show>
 
 					<Show when={latestMetar().presentWeather}>
 						<PrecipitationElement latestMetar={latestMetar()}></PrecipitationElement>
