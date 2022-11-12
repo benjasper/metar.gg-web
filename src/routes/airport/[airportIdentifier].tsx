@@ -2,25 +2,25 @@ import { debounce } from '@solid-primitives/scheduled'
 import { Meta, Title } from '@solidjs/meta'
 import { useIsRouting, useNavigate, useParams } from '@solidjs/router'
 import { Component, createEffect, createMemo, createSignal, ErrorBoundary, onCleanup, Show, untrack } from 'solid-js'
-import WeatherElements from '../components/WeatherElements'
-import { useGraphQL } from '../context/GraphQLClient'
-import { AIRPORT_SINGLE } from '../queries/AirportQueries'
+import WeatherElements from '~/components/WeatherElements'
+import { useGraphQL } from '~/context/GraphQLClient'
+import { AIRPORT_SINGLE } from '~/queries/AirportQueries'
 import { HiOutlineRefresh, HiSolidClock } from 'solid-icons/hi'
 import { ImSpinner5 } from 'solid-icons/im'
 import {
 	GetSingleAirportQueryVariables,
 	GetSingleAirportQuery,
 	AirportSearchFragment,
-} from '../queries/generated/graphql'
-import Duration from '../models/duration'
-import SearchBar from '../components/SearchBar'
-import Logo from '../components/Logo'
-import PageContent from '../layouts/PageContent'
+} from '~/queries/generated/graphql'
+import Duration from '~/models/duration'
+import SearchBar from '~/components/SearchBar'
+import Logo from '~/components/Logo'
+import PageContent from '~/layouts/PageContent'
 import { IoLocationSharp } from 'solid-icons/io'
 import { CgWebsite } from 'solid-icons/cg'
 import { TbMountain } from 'solid-icons/tb'
 import { FiExternalLink } from 'solid-icons/fi'
-import { LinkTag, Tag } from '../components/Tag'
+import { LinkTag, Tag } from '~/components/Tag'
 import { createStore, reconcile } from "solid-js/store"
 
 const AirportSearchDetail: Component = () => {

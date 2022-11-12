@@ -1,13 +1,10 @@
 import { defineConfig } from 'vite';
-import solidPlugin from 'vite-plugin-solid';
+import solid from "solid-start/vite";
 import solidSvg from 'vite-plugin-solid-svg';
 
 export default defineConfig({
-  plugins: [solidPlugin(), solidSvg()],
+  plugins: [solid(), solidSvg()],
   server: {
     port: 3000,
-  },
-  build: {
-    target: 'esnext',
   },
 });

@@ -1,0 +1,57 @@
+@import 'fonts.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	html {
+		font-family: Inter, system-ui, sans-serif;
+	}
+}
+
+body {
+	@apply h-screen;
+}
+
+h1 {
+	@apply text-4xl;
+}
+
+h2 {
+	@apply text-3xl;
+}
+
+h3 {
+	@apply text-2xl;
+}
+
+h4 {
+	@apply text-xl;
+}
+
+h5 {
+	@apply text-lg;
+}
+
+p {
+	@apply text-base;
+}
+
+p a {
+	@apply text-primary hover:underline dark:text-blue-300;
+}
+
+svg.cartesian {
+	display: flex;
+}
+
+/* Flip the vertical axis in <g> to emulate cartesian. */
+svg.cartesian > svg {
+	transform: scaleY(-1);
+}
+
+/* Re-flip all <text> element descendants to their original side up. */
+svg.cartesian > svg text {
+	transform: scaleY(-1);
+}

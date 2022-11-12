@@ -1,5 +1,5 @@
 import { Meta } from '@solidjs/meta'
-import { Component, ParentComponent } from 'solid-js'
+import { ParentComponent } from 'solid-js'
 import Footer from '../components/Footer'
 import PageTitle from '../components/PageTitle'
 

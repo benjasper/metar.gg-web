@@ -1,8 +1,8 @@
 import { Title } from '@solidjs/meta'
 import { AiOutlineGithub } from 'solid-icons/ai'
-import Logo from '../components/Logo'
-import PageTitle from '../components/PageTitle'
-import PageContent from '../layouts/PageContent'
+import Logo from '~/components/Logo'
+import PageTitle from '~/components/PageTitle'
+import PageContent from '~/layouts/PageContent'
 
 const About = () => {
 	return (

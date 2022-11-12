@@ -1,7 +1,6 @@
 import { Component, mergeProps, Show } from 'solid-js'
 
-import LogoDay from '/src/icons/metargg-logo.svg?component'
-import LogoNight from '/src/icons/metargg-logo-night.svg?component'
+import LogoDay from '/src/assets/icons/metargg-logo.svg?component'
 import { A } from '@solidjs/router'
 
 interface LogoProps {

@@ -2,7 +2,7 @@ import { Meta } from '@solidjs/meta'
 import { Component, ParentComponent } from 'solid-js'
 import Footer from '../components/Footer'
 import PageTitle from '../components/PageTitle'
-import metarGGLogo from '../images/metargg-logo.webp'
+import metarGGLogo from '../assets/images/metargg-logo.webp'
 
 interface PageContentProps {
 	title: string

@@ -1,5 +1,5 @@
 import { Tab, TabGroup, TabList } from 'solid-headless'
-import { Component, createEffect, createSignal, onCleanup } from 'solid-js'
+import { Component, createEffect, createSignal, onCleanup, onMount } from 'solid-js'
 import { BsMoonStars } from 'solid-icons/bs'
 import { WiDaySunny } from 'solid-icons/wi'
 
@@ -15,7 +15,7 @@ enum Modes {
 
 const DarkModeToggle: Component<TabGroupProps> = props => {
 	// Represents the state of the toggle
-	const [selected, setSelected] = createSignal<Modes>(localStorage.getItem('theme') as Modes ?? Modes.System)
+	const [selected, setSelected] = createSignal<Modes>(Modes.System)
 
 	const evaluateColorScheme = () => {
 
@@ -40,8 +40,12 @@ const DarkModeToggle: Component<TabGroupProps> = props => {
 		evaluateColorScheme()
 	}
 
-	// Listen for system changes
-	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onSystemChange)
+	onMount(() => {
+		// Listen for system changes
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onSystemChange)
+
+		setSelected(localStorage?.theme ?? Modes.System)
+	})
 
 	onCleanup(() => {
 		window.removeEventListener('change', onSystemChange)

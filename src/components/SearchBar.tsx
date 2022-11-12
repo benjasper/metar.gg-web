@@ -6,7 +6,6 @@ import { AirportSearchQuery, AirportSearchQueryVariables } from '../queries/gene
 import { AIRPORT_SEARCH } from '../queries/AirportQueries'
 import { debounce } from '@solid-primitives/scheduled'
 import { AiOutlineSearch } from 'solid-icons/ai'
-import { A } from '@solidjs/router'
 
 interface SearchBarProps {
 	class?: string

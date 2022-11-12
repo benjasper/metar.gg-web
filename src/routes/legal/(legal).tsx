@@ -1,6 +1,6 @@
 import { Meta } from '@solidjs/meta'
-import Logo from '../components/Logo'
-import PageContent from '../layouts/PageContent'
+import Logo from '~/components/Logo'
+import PageContent from '~/layouts/PageContent'
 
 const Legal = () => {
 	return (
