@@ -8,9 +8,11 @@ specifiers:
   '@graphql-codegen/typescript-operations': 2.5.6
   '@solid-primitives/graphql': ^1.4.2
   '@solid-primitives/keyboard': ^1.0.5
+  '@solid-primitives/promise': ^1.0.4
   '@solid-primitives/scheduled': ^1.2.0
   '@solidjs/meta': ^0.28.0
   '@solidjs/router': ^0.5.0
+  add: ^2.0.6
   autoprefixer: ^10.4.13
   graphql: ^16.6.0
   mercator-projection: ^0.0.2
@@ -32,9 +34,11 @@ specifiers:
 dependencies:
   '@solid-primitives/graphql': 1.4.2_solid-js@1.6.2
   '@solid-primitives/keyboard': 1.0.5_solid-js@1.6.2
+  '@solid-primitives/promise': 1.0.4_solid-js@1.6.2
   '@solid-primitives/scheduled': 1.2.0_solid-js@1.6.2
   '@solidjs/meta': 0.28.2_solid-js@1.6.2
   '@solidjs/router': 0.5.0_solid-js@1.6.2
+  add: 2.0.6
   graphql: 16.6.0
   mercator-projection: 0.0.2
   solid-headless: 0.13.0_solid-js@1.6.2
@@ -2047,6 +2051,15 @@ packages:
       solid-js: 1.6.2
     dev: false
 
+  /@solid-primitives/promise/1.0.4_solid-js@1.6.2:
+    resolution: {integrity: sha512-YJwWxRIfxqqi5B9kekGlAQyFDZF3k4ezLYlV2cKXF7ATn027Kdd2SdDToX1XbYlwGsF1wDBXr18PyLp4UgHtPQ==}
+    peerDependencies:
+      solid-js: ^1.6.0
+    dependencies:
+      '@solid-primitives/utils': 4.0.0_solid-js@1.6.2
+      solid-js: 1.6.2
+    dev: false
+
   /@solid-primitives/rootless/1.2.1_solid-js@1.6.2:
     resolution: {integrity: sha512-8RpdyS1e58PQbDjgjpyCh+IGoX3QEs/2LauMfl94eXJ5d/o1y/c6P61z9XqQm+Bx1Otdgx4nbFCoF7HPqa0mwg==}
     peerDependencies:
@@ -2275,6 +2288,10 @@ packages:
     resolution: {integrity: sha512-7zFpHzhnqYKrkYdUjF1HI1bzd0VygEGX8lFk4k5zVMqHEoES+P+7TKI+EvLO9WVMJ8eekdO0aDEK044xTXwPPA==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  /add/2.0.6:
+    resolution: {integrity: sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==}
+    dev: false
 
   /agent-base/6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}

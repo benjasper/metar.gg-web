@@ -1,6 +1,6 @@
 import { debounce } from '@solid-primitives/scheduled'
 import { Meta, Title } from '@solidjs/meta'
-import { useIsRouting, useNavigate, useParams } from '@solidjs/router'
+import { useIsRouting, useNavigate, useParams, useRouteData } from '@solidjs/router'
 import { Component, createEffect, createMemo, createSignal, ErrorBoundary, onCleanup, Show, untrack } from 'solid-js'
 import WeatherElements from '~/components/WeatherElements'
 import { useGraphQL } from '~/context/GraphQLClient'
@@ -21,33 +21,57 @@ import { CgWebsite } from 'solid-icons/cg'
 import { TbMountain } from 'solid-icons/tb'
 import { FiExternalLink } from 'solid-icons/fi'
 import { LinkTag, Tag } from '~/components/Tag'
-import { createStore, reconcile } from "solid-js/store"
+import { createStore, reconcile } from 'solid-js/store'
+import { createRouteData } from 'solid-start'
+import { until } from '@solid-primitives/promise'
+
+export function routeData() {
+	const params = useParams()
+	const newQuery = useGraphQL()
+
+	const airportIdentifier: GetSingleAirportQueryVariables | false = { identifier: params.airportIdentifier }
+	return createRouteData(async () => {
+		const [airportRequest] = newQuery<GetSingleAirportQuery, GetSingleAirportQueryVariables>(
+			AIRPORT_SINGLE, airportIdentifier
+		)
+
+		return await until(airportRequest)
+	})
+}
 
 const AirportSearchDetail: Component = () => {
 	const params = useParams()
 	const navigate = useNavigate()
 	const newQuery = useGraphQL()
 
-	const [airportStore, setAirportStore] = createStore<{airport: AirportSearchFragment | undefined}>(undefined)
+	const airport = useRouteData<typeof routeData>();
+
+	const [airportStore, setAirportStore] = createStore<{ airport: AirportSearchFragment | undefined }>(undefined)
 
 	const [lastRefreshed, setLastRefreshed] = createSignal<Date>(new Date())
 	const [airportIdentifier, setAirportIdentifier] = createSignal<GetSingleAirportQueryVariables | false>(false)
+	
 	const [airportRequest, { mutate, refetch: refetchAirport }] = newQuery<
 		GetSingleAirportQuery,
 		GetSingleAirportQueryVariables
-	>(AIRPORT_SINGLE, () => airportIdentifier())
+	>(AIRPORT_SINGLE, false)
 
 	const throttledLoading = debounce((id: string) => setAirportIdentifier({ identifier: id }), 100)
 
 	createEffect(() => {
 		if (airportRequest() && airportRequest().getAirport) {
-			setAirportStore(reconcile({airport: airportRequest().getAirport}))
+			setAirportStore(reconcile({ airport: airportRequest().getAirport }))
+		}
+
+		if (airport() && airport().getAirport) {
+			setAirportStore({airport: airport().getAirport})
 		}
 	})
 
 	const [now, setNow] = createSignal<Date>(new Date())
 
-	const metarObservationTime = () => new Date(airportStore.airport?.station.metars?.edges[0]?.node.observationTime) ?? undefined
+	const metarObservationTime = () =>
+		new Date(airportStore.airport?.station.metars?.edges[0]?.node.observationTime) ?? undefined
 	const lastObservationDuration = (): Duration => Duration.fromDates(metarObservationTime(), now())
 
 	const nextImportPrediction = () =>
@@ -64,13 +88,15 @@ const AirportSearchDetail: Component = () => {
 
 		return `Loading ${params.airportIdentifier}...`
 	})
-	const description = createMemo(() =>{
+	const description = createMemo(() => {
 		return airportStore.airport
 			? `Latest METAR information for ${airportStore.airport.name} (${airportStore.airport.identifier}${
 					airportStore.airport.iataCode ? ' / ' + airportStore.airport.iataCode : ''
-			  }) located in ${airportStore.airport.municipality ? airportStore.airport.municipality + ',' : ''} ${airportStore.airport.country.name}.`
-			: ''}
-	)
+			  }) located in ${airportStore.airport.municipality ? airportStore.airport.municipality + ',' : ''} ${
+					airportStore.airport.country.name
+			  }.`
+			: ''
+	})
 
 	const nowInterval = setInterval(() => {
 		setNow(new Date())
@@ -134,17 +160,19 @@ const AirportSearchDetail: Component = () => {
 							<ImSpinner5 class="m-auto w-16 animate-spin" size={36} />
 						</div>
 					}>
-					
 					<div class="mx-auto flex flex-col py-16 text-center dark:text-white-dark">
 						<h2>
-							{airportStore.airport.icaoCode} <Show when={airportStore.airport.iataCode}>/ {airportStore.airport.iataCode}</Show>
+							{airportStore.airport.icaoCode}{' '}
+							<Show when={airportStore.airport.iataCode}>/ {airportStore.airport.iataCode}</Show>
 						</h2>
 						<span class="mt-1 text-lg">{airportStore.airport.name}</span>
 
 						<div class="flex max-w-md flex-wrap justify-center gap-2 pt-4">
 							<Tag>
 								<IoLocationSharp class="my-auto mr-1"></IoLocationSharp>
-								<Show when={airportStore.airport.municipality}>{airportStore.airport.municipality},</Show>{' '}
+								<Show when={airportStore.airport.municipality}>
+									{airportStore.airport.municipality},
+								</Show>{' '}
 								{airportStore.airport.country.name}
 							</Tag>
 							<Show when={airportStore.airport.elevation}>
