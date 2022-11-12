@@ -21,12 +21,14 @@ import { CgWebsite } from 'solid-icons/cg'
 import { TbMountain } from 'solid-icons/tb'
 import { FiExternalLink } from 'solid-icons/fi'
 import { LinkTag, Tag } from '../components/Tag'
-import PageTitle from '../components/PageTitle'
+import { createStore, reconcile } from "solid-js/store"
 
 const AirportSearchDetail: Component = () => {
 	const params = useParams()
 	const navigate = useNavigate()
 	const newQuery = useGraphQL()
+
+	const [airportStore, setAirportStore] = createStore<{airport: AirportSearchFragment | undefined}>(undefined)
 
 	const [lastRefreshed, setLastRefreshed] = createSignal<Date>(new Date())
 	const [airportIdentifier, setAirportIdentifier] = createSignal<GetSingleAirportQueryVariables | false>(false)
@@ -37,39 +39,37 @@ const AirportSearchDetail: Component = () => {
 
 	const throttledLoading = debounce((id: string) => setAirportIdentifier({ identifier: id }), 100)
 
-	const airport = createMemo((): AirportSearchFragment | undefined => {
+	createEffect(() => {
 		if (airportRequest() && airportRequest().getAirport) {
-			return airportRequest().getAirport
+			setAirportStore(reconcile({airport: airportRequest().getAirport}))
 		}
-
-		return undefined
 	})
 
 	const [now, setNow] = createSignal<Date>(new Date())
 
-	const metarObservationTime = () => new Date(airport()?.station.metars?.edges[0]?.node.observationTime) ?? undefined
+	const metarObservationTime = () => new Date(airportStore.airport?.station.metars?.edges[0]?.node.observationTime) ?? undefined
 	const lastObservationDuration = (): Duration => Duration.fromDates(metarObservationTime(), now())
 
 	const nextImportPrediction = () =>
-		new Date(airport()?.station.metars?.edges[0]?.node.nextImportTimePrediction) ?? undefined
+		new Date(airportStore.airport?.station.metars?.edges[0]?.node.nextImportTimePrediction) ?? undefined
 	const nextImportPredictionDuration = (): Duration => Duration.fromDates(nextImportPrediction(), now())
 
-	const importTime = () => new Date(airport()?.station.metars?.edges[0]?.node.importTime) ?? undefined
+	const importTime = () => new Date(airportStore.airport?.station.metars?.edges[0]?.node.importTime) ?? undefined
 	const importTimeDuration = (): Duration => Duration.fromDates(importTime(), now())
 
 	const title = createMemo(() => {
-		if (airport()) {
-			return `${airport().icaoCode} / ${airport().iataCode} - ${airport().name} weather`
+		if (airportStore.airport) {
+			return `${airportStore.airport.icaoCode} / ${airportStore.airport.iataCode} - ${airportStore.airport.name} weather`
 		}
 
 		return `Loading ${params.airportIdentifier}...`
 	})
-	const description = createMemo(() =>
-		airport()
-			? `Latest METAR information for ${airport().name} (${airport().identifier}${
-					airport().iataCode ? ' / ' + airport().iataCode : ''
-			  }) located in ${airport().municipality ? airport().municipality + ',' : ''} ${airport().country.name}.`
-			: ''
+	const description = createMemo(() =>{
+		return airportStore.airport
+			? `Latest METAR information for ${airportStore.airport.name} (${airportStore.airport.identifier}${
+					airportStore.airport.iataCode ? ' / ' + airportStore.airport.iataCode : ''
+			  }) located in ${airportStore.airport.municipality ? airportStore.airport.municipality + ',' : ''} ${airportStore.airport.country.name}.`
+			: ''}
 	)
 
 	const nowInterval = setInterval(() => {
@@ -126,8 +126,8 @@ const AirportSearchDetail: Component = () => {
 			<ErrorBoundary fallback={err => <span class="m-auto">This airport could not be found</span>}>
 				<Show
 					when={
-						airport() !== undefined ||
-						(airport() !== undefined && !airportRequest.loading && !airportRequest.error)
+						airportStore.airport !== undefined ||
+						(airportStore.airport !== undefined && !airportRequest.loading && !airportRequest.error)
 					}
 					fallback={
 						<div class="flex h-full justify-center text-gray-700 dark:text-white-dark">
@@ -137,35 +137,35 @@ const AirportSearchDetail: Component = () => {
 					
 					<div class="mx-auto flex flex-col py-16 text-center dark:text-white-dark">
 						<h2>
-							{airport().icaoCode} <Show when={airport().iataCode}>/ {airport().iataCode}</Show>
+							{airportStore.airport.icaoCode} <Show when={airportStore.airport.iataCode}>/ {airportStore.airport.iataCode}</Show>
 						</h2>
-						<span class="mt-1 text-lg">{airport().name}</span>
+						<span class="mt-1 text-lg">{airportStore.airport.name}</span>
 
 						<div class="flex max-w-md flex-wrap justify-center gap-2 pt-4">
 							<Tag>
 								<IoLocationSharp class="my-auto mr-1"></IoLocationSharp>
-								<Show when={airport().municipality}>{airport().municipality},</Show>{' '}
-								{airport().country.name}
+								<Show when={airportStore.airport.municipality}>{airportStore.airport.municipality},</Show>{' '}
+								{airportStore.airport.country.name}
 							</Tag>
-							<Show when={airport().elevation}>
+							<Show when={airportStore.airport.elevation}>
 								<Tag>
 									<TbMountain class="my-auto mr-1" />
-									Elevation {airport().elevation} ft
+									Elevation {airportStore.airport.elevation} ft
 								</Tag>
 							</Show>
-							<Show when={airport().timezone}>
+							<Show when={airportStore.airport.timezone}>
 								<Tag>
 									<HiSolidClock class="my-auto mr-1"></HiSolidClock>
 									Local time{' '}
 									{now().toLocaleTimeString([], {
 										hour: 'numeric',
 										minute: '2-digit',
-										timeZone: airport().timezone,
+										timeZone: airportStore.airport.timezone,
 									})}
 								</Tag>
 							</Show>
-							<Show when={airport().website}>
-								<LinkTag href={airport().website}>
+							<Show when={airportStore.airport.website}>
+								<LinkTag href={airportStore.airport.website}>
 									<CgWebsite class="my-auto mr-1" />
 									Website
 									<FiExternalLink class="my-auto ml-1" />
@@ -174,7 +174,7 @@ const AirportSearchDetail: Component = () => {
 						</div>
 					</div>
 					<div class="flex flex-col justify-between md:flex-row">
-						<Show when={airport().station.metars.edges.length > 0}>
+						<Show when={airportStore.airport.station.metars.edges.length > 0}>
 							<div class="flex flex-col">
 								<h3 class="text-xl dark:text-white-dark">Current weather</h3>
 								<div class="flex flex-row flex-wrap justify-start gap-2 pt-2">
@@ -246,11 +246,11 @@ const AirportSearchDetail: Component = () => {
 							</span>
 						</Show>
 					</div>
-					<WeatherElements class="mt-4" airport={airport()}></WeatherElements>
+					<WeatherElements class="mt-4" airport={airportStore.airport}></WeatherElements>
 					<div class="flex flex-col gap-4 py-16">
-						<Show when={airport() && airport().station.metars.edges[0]}>
+						<Show when={airportStore.airport && airportStore.airport.station.metars.edges[0]}>
 							<p aria-label="METAR" class="text-center text-xl dark:text-white-dark">
-								{airport().station.metars.edges[0].node.rawText}
+								{airportStore.airport.station.metars.edges[0].node.rawText}
 							</p>
 						</Show>
 					</div>

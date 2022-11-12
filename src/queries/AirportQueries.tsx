@@ -21,7 +21,7 @@ export const AIRPORT_SEARCH = gql`
 	}
 `
 
-export const AIRPORT_SINGLE = gql`
+const WEATHER_FRAGMENT = gql`
 	fragment Metar on Metar {
 		observationTime
 		importTime
@@ -42,6 +42,28 @@ export const AIRPORT_SINGLE = gql`
 		}
 	}
 
+	fragment AirportWeather on Airport {
+		station {
+			metars(first: 1) {
+				edges {
+					node {
+						...Metar
+					}
+				}
+			}
+		}
+	}
+`
+
+export const AIRPORT_WEATHER = WEATHER_FRAGMENT + gql`
+	query AirportWeather($icao: String!) {
+		getAirport(icao: $icao) {
+			...AirportWeather
+		}
+	}
+`
+
+export const AIRPORT_SINGLE = WEATHER_FRAGMENT + gql`
 	fragment AirportSearch on Airport {
 		identifier
 		icaoCode
@@ -67,15 +89,7 @@ export const AIRPORT_SINGLE = gql`
 		country {
 			name
 		}
-		station {
-			metars(first: 1) {
-				edges {
-					node {
-						...Metar
-					}
-				}
-			}
-		}
+		...AirportWeather
 	}
 
 	query GetSingleAirport($identifier: String!) {
