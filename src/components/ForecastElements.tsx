@@ -1,7 +1,7 @@
 import { Toggle } from 'solid-headless'
 import { HiOutlineSwitchHorizontal } from 'solid-icons/hi'
-import { Component, createEffect, createMemo, createSignal, For, onCleanup, Show } from 'solid-js'
-import { createSlider } from 'solid-slider'
+import { Component, createEffect, createMemo, createSignal, For, Show, useContext } from 'solid-js'
+import { Slider, SliderContext, SliderProvider } from 'solid-slider'
 import { useTimeStore } from '../context/TimeStore'
 import WeatherElementLayout from '../layouts/WeatherElementLayout'
 import Duration from '../models/duration'
@@ -31,6 +31,41 @@ const changeIndicatorToSortingIndex = (changeIndicator: string): number => {
 		default:
 			return 4
 	}
+}
+
+interface DotsProps {
+	items: any[]
+}
+
+const Dots: Component<DotsProps> = props => {
+	const [helpers] = useContext(SliderContext)
+
+	createEffect(() => {
+		if (props.items && helpers().slider()) {
+			helpers().slider().update()
+		}
+	})
+
+	return (
+		<Show when={props.items.length > 1}>
+			<div class="mt-4 flex w-full justify-center gap-3">
+				<For each={props.items}>
+					{(_, index) => (
+						<button
+							role="button"
+							class="h-2.5 w-2.5 rounded-full bg-gray-300 transition-all dark:bg-gray-700"
+							aria-label={`Select forecast ${index() + 1}`}
+							classList={{
+								'bg-gray-500 dark:bg-gray-400': helpers().current() === index(),
+								'hover:bg-gray-400 dark:hover:bg-gray-500': helpers().current() !== index(),
+							}}
+							disabled={helpers().current() === index()}
+							onClick={() => helpers().moveTo(index())}></button>
+					)}
+				</For>
+			</div>
+		</Show>
+	)
 }
 
 const ForecastElements: Component<ForecastElementsProps> = props => {
@@ -72,39 +107,10 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 
 	const forecasts = () => forecastsSorted().filter(x => new Date(x.toTime).getTime() > now().getTime())
 
-	// Slider containing all forecasts
-	const [slider, { current, next, prev, moveTo, slider: sliderInstance }] = createSlider({
-		slides: { perView: 1, spacing: 40 },
-		breakpoints: {
-			'(min-width: 500px)': {
-				slides: { perView: 'auto', spacing: 40 },
-			},
-		},
-		mode: 'snap',
-	})
-
-	const recalculateSlider = () => {
-		if (sliderInstance()) {
-			moveTo(0)
-			sliderInstance().update()
-		}
-	}
-
-	addEventListener('resize', recalculateSlider)
-
-	// Rerun the slider when it's items change
-	createEffect(() => {
-		if ((props.airport.icaoCode || props.taf.rawText) && sliderInstance()) {
-			recalculateSlider()
-		}
-	})
-
 	const timeFormat: Intl.DateTimeFormatOptions = {
 		hour: 'numeric',
 		minute: 'numeric',
 	}
-
-	onCleanup(() => removeEventListener('resize', recalculateSlider))
 
 	return (
 		<div class="flex w-full flex-col">
@@ -177,100 +183,99 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 							</div>
 						</Show>
 					</div>
-					<div class={`mt-4 max-w-full overflow-x-hidden md:overflow-x-visible`}>
-						<div use:slider>
-							<For each={forecasts()}>
-								{forecast => (
-									<div class="flex flex-col gap-2">
-										<div class="inline-block">
-											<span class="text-left dark:text-white-dark">
-												{new Date(forecast.fromTime).toLocaleString('default', {
-													weekday: 'long',
-													...timeFormat,
-													timeZone: isLocalTime() ? props.airport.timezone : browserTimezone,
-												})}
-											</span>
-											<span class="text-left dark:text-white-dark">
-												{' '}
-												-{' '}
-												{new Date(forecast.toTime).toLocaleString('default', {
-													weekday:
-														new Date(forecast.fromTime).toLocaleDateString('default', {
-															weekday: 'long',
-														}) !==
-														new Date(forecast.toTime).toLocaleDateString('default', {
-															weekday: 'long',
-														})
-															? 'long'
-															: undefined,
-													...timeFormat,
-													timeZone: isLocalTime() ? props.airport.timezone : browserTimezone,
-												})}
-											</span>
-										</div>
-										<Show when={forecast.changeIndicator}>
-											<WeatherElementLayout
-												name="Change indicator"
-												icon={<HiOutlineSwitchHorizontal />}
-												class="mb-2 !flex-grow-0">
-												<span class="mx-auto">{forecast.changeIndicator}</span>
-											</WeatherElementLayout>
-										</Show>
-										<div class="flex w-full max-w-full flex-col flex-wrap gap-4 md:w-[30rem] md:flex-row">
-											<Show when={forecast.visibilityHorizontal}>
-												<VisibilityElement
-													visibility={forecast.visibilityHorizontal}></VisibilityElement>
-											</Show>
-											<Show when={forecast.changeProbability}>
-												<WeatherElementLayout name="Probability" icon={<></>}>
-													<span class="mx-auto text-lg dark:text-white-darker">
-														{forecast.changeProbability}%
-													</span>
+					<div class={`mt-4 flex max-w-full flex-col overflow-x-hidden md:overflow-x-visible`}>
+						<SliderProvider>
+							<Slider
+								options={{
+									slides: { perView: 1, spacing: 40 },
+									breakpoints: {
+										'(min-width: 500px)': {
+											slides: { perView: 'auto', spacing: 40 },
+										},
+									},
+									mode: 'snap',
+								}}>
+								<For each={forecasts()}>
+									{forecast => (
+										<div class="flex flex-col gap-2">
+											<div class="inline-block">
+												<span class="text-left dark:text-white-dark">
+													{new Date(forecast.fromTime).toLocaleString('default', {
+														weekday: 'long',
+														...timeFormat,
+														timeZone: isLocalTime()
+															? props.airport.timezone
+															: browserTimezone,
+													})}
+												</span>
+												<span class="text-left dark:text-white-dark">
+													{' '}
+													-{' '}
+													{new Date(forecast.toTime).toLocaleString('default', {
+														weekday:
+															new Date(forecast.fromTime).toLocaleDateString('default', {
+																weekday: 'long',
+															}) !==
+															new Date(forecast.toTime).toLocaleDateString('default', {
+																weekday: 'long',
+															})
+																? 'long'
+																: undefined,
+														...timeFormat,
+														timeZone: isLocalTime()
+															? props.airport.timezone
+															: browserTimezone,
+													})}
+												</span>
+											</div>
+											<Show when={forecast.changeIndicator}>
+												<WeatherElementLayout
+													name="Change indicator"
+													icon={<HiOutlineSwitchHorizontal />}
+													class="mb-2 !flex-grow-0">
+													<span class="mx-auto">{forecast.changeIndicator}</span>
 												</WeatherElementLayout>
 											</Show>
-											<Show when={forecast.skyConditions.length > 0}>
-												<SkyConditionsElement
-													skyConditions={forecast.skyConditions}
-													airport={props.airport}></SkyConditionsElement>
-											</Show>
-											<Show when={forecast.weather.length > 1}>
-												<PrecipitationElement weather={forecast.weather}></PrecipitationElement>
-											</Show>
-											<Show when={forecast.altimeter && forecast.altimeter > 0}>
-												<AltimeterElement altimeter={forecast.altimeter}></AltimeterElement>
-											</Show>
-											<Show when={forecast.windSpeed}>
-												<WindElement
-													airport={props.airport}
-													windDirection={forecast.windDirection}
-													windSpeed={forecast.windSpeed}
-													windGust={forecast.windGust}
-													size="small"
-												/>
-											</Show>
+											<div class="flex w-full max-w-full flex-col flex-wrap gap-4 md:w-[30rem] md:flex-row">
+												<Show when={forecast.visibilityHorizontal}>
+													<VisibilityElement
+														visibility={forecast.visibilityHorizontal}></VisibilityElement>
+												</Show>
+												<Show when={forecast.changeProbability}>
+													<WeatherElementLayout name="Probability" icon={<></>}>
+														<span class="mx-auto text-lg dark:text-white-darker">
+															{forecast.changeProbability}%
+														</span>
+													</WeatherElementLayout>
+												</Show>
+												<Show when={forecast.skyConditions.length > 0}>
+													<SkyConditionsElement
+														skyConditions={forecast.skyConditions}
+														airport={props.airport}></SkyConditionsElement>
+												</Show>
+												<Show when={forecast.weather.length > 1}>
+													<PrecipitationElement
+														weather={forecast.weather}></PrecipitationElement>
+												</Show>
+												<Show when={forecast.altimeter && forecast.altimeter > 0}>
+													<AltimeterElement altimeter={forecast.altimeter}></AltimeterElement>
+												</Show>
+												<Show when={forecast.windSpeed}>
+													<WindElement
+														airport={props.airport}
+														windDirection={forecast.windDirection}
+														windSpeed={forecast.windSpeed}
+														windGust={forecast.windGust}
+														size="small"
+													/>
+												</Show>
+											</div>
 										</div>
-									</div>
-								)}
-							</For>
-						</div>
-						<Show when={forecasts().length > 1}>
-							<div class="mt-4 flex w-full justify-center gap-3">
-								<For each={forecasts()}>
-									{(dot, index) => (
-										<button
-											role="button"
-											class="h-2.5 w-2.5 rounded-full bg-gray-300 transition-all dark:bg-gray-700"
-											aria-label={`Select forecast ${index() + 1}`}
-											classList={{
-												'bg-gray-500 dark:bg-gray-400': current() === index(),
-												'hover:bg-gray-400 dark:hover:bg-gray-500': current() !== index(),
-											}}
-											disabled={current() === index()}
-											onClick={() => moveTo(index())}></button>
 									)}
 								</For>
-							</div>
-						</Show>
+							</Slider>
+							<Dots items={forecasts()}></Dots>
+						</SliderProvider>
 					</div>
 					<p aria-label="TAF" class="mx-auto w-full py-16 text-center font-mono text-xl dark:text-white-dark">
 						{props.taf.rawText}

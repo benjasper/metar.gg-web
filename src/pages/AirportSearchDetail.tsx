@@ -1,5 +1,5 @@
 import { debounce } from '@solid-primitives/scheduled'
-import { useNavigate, useParams } from '@solidjs/router'
+import { useIsRouting, useNavigate, useParams } from '@solidjs/router'
 import { CgWebsite } from 'solid-icons/cg'
 import { FiExternalLink } from 'solid-icons/fi'
 import { HiSolidClock } from 'solid-icons/hi'
@@ -23,6 +23,7 @@ import {
 
 const AirportSearchDetail: Component = () => {
 	const params = useParams()
+	const isNavigating = useIsRouting()
 	const navigate = useNavigate()
 	const newQuery = useGraphQL()
 
@@ -65,6 +66,7 @@ const AirportSearchDetail: Component = () => {
 	}, 1000 * 30)
 
 	const doSearch = (airportIdentifier: string) => {
+		setAirportStore('airport', undefined)
 		mutate(undefined)
 		if (airportIdentifier.length === 0) {
 			setAirportIdentifier(false)
