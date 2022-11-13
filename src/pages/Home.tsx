@@ -1,10 +1,8 @@
-import SearchBar from '../components/SearchBar'
 import { useNavigate } from '@solidjs/router'
 import { Component } from 'solid-js'
-import { Meta, Title } from '@solidjs/meta'
 import Logo from '../components/Logo'
+import SearchBar from '../components/SearchBar'
 import PageLanding from '../layouts/PageLanding'
-import PageTitle from '../components/PageTitle'
 
 const Home: Component = () => {
 	const navigate = useNavigate()
