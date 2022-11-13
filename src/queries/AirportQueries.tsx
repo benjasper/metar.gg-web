@@ -87,7 +87,7 @@ const WEATHER_FRAGMENT = gql`
 	}
 
 	fragment Taf on Taf {
-		bulletinTime
+		issueTime
 		rawText
 		remarks
 		validFromTime
