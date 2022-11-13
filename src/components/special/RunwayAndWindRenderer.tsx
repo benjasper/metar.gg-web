@@ -1,7 +1,6 @@
-import { createEffect, createSignal, For, Show, untrack } from 'solid-js'
 import * as merc from 'mercator-projection'
+import { createEffect, createSignal, For, Show } from 'solid-js'
 import { AirportSearchFragment, MetarFragment } from '../../queries/generated/graphql'
-import { FaSolidArrowUpWideShort, FaSolidChevronDown } from 'solid-icons/fa'
 import { VariableWind } from '../weather-elements/WindElement'
 
 const cartesianCoordinates = (lat, lon) => {
@@ -39,7 +38,8 @@ interface RunwayDirection {
 
 const RunwayAndWindRenderer = (props: {
 	airport: AirportSearchFragment
-	latestMetar: MetarFragment
+	windSpeed: number
+	windDirection: number
 	variableWind: VariableWind | undefined
 }) => {
 	const [runways, setRunways] = createSignal<Runway[]>([])
@@ -88,7 +88,7 @@ const RunwayAndWindRenderer = (props: {
 					y: direction1.y,
 					favourableLevel: 0,
 					windAngle:
-						180 - Math.abs(Math.abs(runway.lowRunwayHeading - props.latestMetar.windDirection) - 180),
+						180 - Math.abs(Math.abs(runway.lowRunwayHeading - props.windDirection) - 180),
 				},
 				direction2: {
 					runway: runway.highRunwayIdentifier,
@@ -97,13 +97,13 @@ const RunwayAndWindRenderer = (props: {
 					y: direction2.y,
 					favourableLevel: 0,
 					windAngle:
-						180 - Math.abs(Math.abs(runway.highRunwayHeading - props.latestMetar.windDirection) - 180),
+						180 - Math.abs(Math.abs(runway.highRunwayHeading - props.windDirection) - 180),
 				},
 			})
 		})
 
 		// Calculate the best runway heading
-		if (props.latestMetar.windSpeed > 2 && props.latestMetar.windDirection != 0) {
+		if (props.windSpeed > 2 && props.windDirection != 0) {
 			const bestRunways = preparingRunways.filter(runway => {
 				return runway.direction1.windAngle < 90 || runway.direction2.windAngle < 90
 			})
@@ -150,11 +150,11 @@ const RunwayAndWindRenderer = (props: {
 	const windArrows = (): { angle: number; x: number; y: number; isVariable: boolean }[] => {
 		const arrows: { angle: number; x: number; y: number; isVariable: boolean }[] = []
 
-		if (props.latestMetar.windSpeed > 2 && props.latestMetar.windDirection != 0) {
+		if (props.windSpeed > 2 && props.windDirection != 0) {
 			arrows.push({
-				angle: props.latestMetar.windDirection,
-				x: realCenterX() + radius() * Math.cos(((props.latestMetar.windDirection - 90) * Math.PI) / 180),
-				y: realCenterY() + radius() * Math.sin(((props.latestMetar.windDirection - 90) * Math.PI) / 180),
+				angle: props.windDirection,
+				x: realCenterX() + radius() * Math.cos(((props.windDirection - 90) * Math.PI) / 180),
+				y: realCenterY() + radius() * Math.sin(((props.windDirection - 90) * Math.PI) / 180),
 				isVariable: false,
 			})
 		}
@@ -195,7 +195,7 @@ const RunwayAndWindRenderer = (props: {
 						r={realDiagonal() * 0.85}></circle>
 
 					{/* Wind arrow */}
-					<Show when={props.latestMetar.windSpeed > 0 && props.latestMetar.windDirection != 0}>
+					<Show when={props.windSpeed > 0 && props.windDirection != 0}>
 						<For each={windArrows()}>
 							{arrow => (
 								<svg

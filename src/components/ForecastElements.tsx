@@ -1,7 +1,5 @@
 import { Toggle } from 'solid-headless'
 import { HiOutlineSwitchHorizontal } from 'solid-icons/hi'
-import { IoChevronUp } from 'solid-icons/io'
-import { RiWeatherWindyLine } from 'solid-icons/ri'
 import { Component, createEffect, createMemo, createSignal, For, onCleanup, Show } from 'solid-js'
 import { createSlider } from 'solid-slider'
 import { useTimeStore } from '../context/TimeStore'
@@ -13,6 +11,7 @@ import AltimeterElement from './weather-elements/AltimeterElement'
 import { PrecipitationElement } from './weather-elements/PrecipitationElement'
 import SkyConditionsElement from './weather-elements/SkyConditionsElement'
 import VisibilityElement from './weather-elements/VisibilityElement'
+import WindElement from './weather-elements/WindElement'
 
 export interface ForecastElementsProps {
 	taf?: TafFragment
@@ -91,7 +90,7 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 		}
 	}
 
-	addEventListener('resize', recalculateSlider);
+	addEventListener('resize', recalculateSlider)
 
 	// Rerun the slider when it's items change
 	createEffect(() => {
@@ -241,24 +240,13 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 												<AltimeterElement altimeter={forecast.altimeter}></AltimeterElement>
 											</Show>
 											<Show when={forecast.windSpeed}>
-												<WeatherElementLayout
-													name="Wind"
-													icon={<RiWeatherWindyLine></RiWeatherWindyLine>}>
-													<Show when={forecast.windDirection > 0}>
-														<IoChevronUp
-															class="mx-auto origin-center transform"
-															size={24}
-															style={{
-																rotate: `${(forecast.windDirection + 180) % 360}deg`,
-															}}></IoChevronUp>
-													</Show>
-													<span class="mx-auto text-base dark:text-white-darker">
-														<Show when={forecast.windDirection > 0} fallback="Variable">
-															{forecast.windDirection}°
-														</Show>{' '}
-														at {forecast.windSpeed} kt
-													</span>
-												</WeatherElementLayout>
+												<WindElement
+													airport={props.airport}
+													windDirection={forecast.windDirection}
+													windSpeed={forecast.windSpeed}
+													windGust={forecast.windGust}
+													size="small"
+												/>
 											</Show>
 										</div>
 									</div>

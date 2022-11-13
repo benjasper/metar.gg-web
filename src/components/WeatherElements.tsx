@@ -1,5 +1,4 @@
 import { HiOutlineRefresh } from 'solid-icons/hi'
-import { IoCloudy } from 'solid-icons/io'
 import { TbTemperature } from 'solid-icons/tb'
 import { Component, createMemo, Show } from 'solid-js'
 import { useTimeStore } from '../context/TimeStore'
@@ -113,7 +112,14 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 			<div class={`mt-4 flex h-full flex-col justify-center gap-8 md:flex-row`}>
 				<Show when={latestMetar()} fallback={<span class="m-auto text-lg">No recent weather available.</span>}>
 					<div class="flex flex-shrink-0 flex-col">
-						<WindElement airport={props.airport} latestMetar={latestMetar()} />
+						<WindElement
+							airport={props.airport}
+							windDirection={latestMetar().windDirection}
+							windSpeed={latestMetar().windSpeed}
+							windGust={latestMetar().windGust}
+							variableWindDirection={latestMetar().presentWeather}
+							size="large"
+						/>
 					</div>
 					<div class="flex flex-row flex-wrap justify-center gap-8 md:justify-start">
 						<VisibilityElement visibility={latestMetar().visibility}></VisibilityElement>
