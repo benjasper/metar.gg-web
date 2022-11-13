@@ -1,5 +1,9 @@
 @import 'fonts.css';
 
+.container {
+	max-width: 100vw;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,7 +15,7 @@
 }
 
 body {
-	@apply relative overflow-x-hidden;
+	@apply relative overflow-x-hidden scroll-smooth;
 }
 
 h1 {
@@ -63,4 +67,7 @@ svg.cartesian > svg text {
 /* Slider */
 .keen-slider {
 	display: flex;
+	position: relative;
+	user-select: none;
+	width: 100%;
 }

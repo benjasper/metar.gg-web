@@ -61,6 +61,7 @@ enum Other {
 	SandOrDustWhirls = 'FC',
 	Tornado = '+FC',
 	FunnelCloud = 'FC',
+	NoSignificantWeather = 'NSW',
 }
 
 const PrecipitationConditionElement: Component<{ condition: string }> = props => {
@@ -198,6 +199,7 @@ const PrecipitationConditionElement: Component<{ condition: string }> = props =>
 						<Match when={other() === Other.SandOrDustWhirls}>Sand or dust whirls</Match>
 						<Match when={other() === Other.Tornado}>Tornado</Match>
 						<Match when={other() === Other.FunnelCloud}>Funnel cloud</Match>
+						<Match when={other() === Other.NoSignificantWeather}>No significant weather</Match>
 					</Switch>
 				</span>
 			</Show>

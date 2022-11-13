@@ -1,27 +1,25 @@
 import { debounce } from '@solid-primitives/scheduled'
 import { useNavigate, useParams } from '@solidjs/router'
-import { Component, createEffect, createMemo, createSignal, ErrorBoundary, onCleanup, Show, untrack } from 'solid-js'
-import WeatherElements from '../components/WeatherElements'
-import { useGraphQL } from '../context/GraphQLClient'
-import { AIRPORT_SINGLE } from '../queries/AirportQueries'
+import { CgWebsite } from 'solid-icons/cg'
+import { FiExternalLink } from 'solid-icons/fi'
 import { HiSolidClock } from 'solid-icons/hi'
 import { ImSpinner5 } from 'solid-icons/im'
-import {
-	GetSingleAirportQueryVariables,
-	GetSingleAirportQuery,
-	AirportSearchFragment,
-} from '../queries/generated/graphql'
-import SearchBar from '../components/SearchBar'
-import Logo from '../components/Logo'
-import PageContent from '../layouts/PageContent'
 import { IoLocationSharp } from 'solid-icons/io'
-import { CgWebsite } from 'solid-icons/cg'
 import { TbMountain } from 'solid-icons/tb'
-import { FiExternalLink } from 'solid-icons/fi'
-import { LinkTag, Tag } from '../components/Tag'
+import { Component, createEffect, createMemo, createSignal, onCleanup, Show } from 'solid-js'
 import { createStore, reconcile } from "solid-js/store"
-import { useTimeStore } from '../context/TimeStore'
 import ForecastElements from '../components/ForecastElements'
+import Logo from '../components/Logo'
+import SearchBar from '../components/SearchBar'
+import { LinkTag, Tag } from '../components/Tag'
+import WeatherElements from '../components/WeatherElements'
+import { useGraphQL } from '../context/GraphQLClient'
+import { useTimeStore } from '../context/TimeStore'
+import PageContent from '../layouts/PageContent'
+import { AIRPORT_SINGLE } from '../queries/AirportQueries'
+import {
+	AirportSearchFragment, GetSingleAirportQuery, GetSingleAirportQueryVariables
+} from '../queries/generated/graphql'
 
 const AirportSearchDetail: Component = () => {
 	const params = useParams()
@@ -108,7 +106,6 @@ const AirportSearchDetail: Component = () => {
 					placeholder="Search for another airport"></SearchBar>
 				<div class="md:w-1/4"></div>
 			</div>
-			<ErrorBoundary fallback={err => <span class="m-auto">This airport could not be found</span>}>
 				<Show
 					when={
 						airportStore.airport !== undefined ||
@@ -161,7 +158,6 @@ const AirportSearchDetail: Component = () => {
 					<WeatherElements airport={airportStore.airport} lastRefreshed={lastRefreshed()}></WeatherElements>
 					<ForecastElements airport={airportStore.airport} taf={airportStore.airport.station.tafs.edges[0]?.node}></ForecastElements>
 				</Show>
-			</ErrorBoundary>
 		</PageContent>
 	)
 }

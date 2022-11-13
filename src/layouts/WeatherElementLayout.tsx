@@ -1,9 +1,9 @@
-import { JSX, ParentComponent } from 'solid-js'
+import { JSX, ParentComponent, Show } from 'solid-js'
 
 interface ParsedWeatherElementLayoutProps {
 	name: string
 	class?: string
-	icon: JSX.Element
+	icon?: JSX.Element
 }
 
 const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = props => {
@@ -13,7 +13,9 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 				props.class ?? ''
 			}`}>
 			<label class="mx-auto flex gap-1 text-xs font-semibold uppercase text-gray-500 transition-colors dark:text-white-darker">
-				<div class="my-auto">{props.icon}</div>
+				<Show when={props.icon}>
+					<div class="my-auto">{props.icon}</div>
+				</Show>
 				<span class="my-auto">{props.name}</span>
 			</label>
 			{props.children}
