@@ -1,18 +1,16 @@
 import { debounce } from '@solid-primitives/scheduled'
-import { Meta, Title } from '@solidjs/meta'
-import { useIsRouting, useNavigate, useParams } from '@solidjs/router'
+import { useNavigate, useParams } from '@solidjs/router'
 import { Component, createEffect, createMemo, createSignal, ErrorBoundary, onCleanup, Show, untrack } from 'solid-js'
 import WeatherElements from '../components/WeatherElements'
 import { useGraphQL } from '../context/GraphQLClient'
 import { AIRPORT_SINGLE } from '../queries/AirportQueries'
-import { HiOutlineRefresh, HiSolidClock } from 'solid-icons/hi'
+import { HiSolidClock } from 'solid-icons/hi'
 import { ImSpinner5 } from 'solid-icons/im'
 import {
 	GetSingleAirportQueryVariables,
 	GetSingleAirportQuery,
 	AirportSearchFragment,
 } from '../queries/generated/graphql'
-import Duration from '../models/duration'
 import SearchBar from '../components/SearchBar'
 import Logo from '../components/Logo'
 import PageContent from '../layouts/PageContent'
@@ -22,11 +20,15 @@ import { TbMountain } from 'solid-icons/tb'
 import { FiExternalLink } from 'solid-icons/fi'
 import { LinkTag, Tag } from '../components/Tag'
 import { createStore, reconcile } from "solid-js/store"
+import { useTimeStore } from '../context/TimeStore'
+import ForecastElements from '../components/ForecastElements'
 
 const AirportSearchDetail: Component = () => {
 	const params = useParams()
 	const navigate = useNavigate()
 	const newQuery = useGraphQL()
+
+	const now = useTimeStore()
 
 	const [airportStore, setAirportStore] = createStore<{airport: AirportSearchFragment | undefined}>(undefined)
 
@@ -45,18 +47,6 @@ const AirportSearchDetail: Component = () => {
 		}
 	})
 
-	const [now, setNow] = createSignal<Date>(new Date())
-
-	const metarObservationTime = () => new Date(airportStore.airport?.station.metars?.edges[0]?.node.observationTime) ?? undefined
-	const lastObservationDuration = (): Duration => Duration.fromDates(metarObservationTime(), now())
-
-	const nextImportPrediction = () =>
-		new Date(airportStore.airport?.station.metars?.edges[0]?.node.nextImportTimePrediction) ?? undefined
-	const nextImportPredictionDuration = (): Duration => Duration.fromDates(nextImportPrediction(), now())
-
-	const importTime = () => new Date(airportStore.airport?.station.metars?.edges[0]?.node.importTime) ?? undefined
-	const importTimeDuration = (): Duration => Duration.fromDates(importTime(), now())
-
 	const title = createMemo(() => {
 		if (airportStore.airport) {
 			return `${airportStore.airport.icaoCode} / ${airportStore.airport.iataCode} - ${airportStore.airport.name} weather`
@@ -71,10 +61,6 @@ const AirportSearchDetail: Component = () => {
 			  }) located in ${airportStore.airport.municipality ? airportStore.airport.municipality + ',' : ''} ${airportStore.airport.country.name}.`
 			: ''}
 	)
-
-	const nowInterval = setInterval(() => {
-		setNow(new Date())
-	}, 3000)
 
 	const refetchInterval = setInterval(() => {
 		refreshAirport()
@@ -109,7 +95,6 @@ const AirportSearchDetail: Component = () => {
 	})
 
 	onCleanup(() => {
-		clearInterval(nowInterval)
 		clearTimeout(refetchInterval)
 	})
 
@@ -173,87 +158,8 @@ const AirportSearchDetail: Component = () => {
 							</Show>
 						</div>
 					</div>
-					<div class="flex flex-col justify-between md:flex-row">
-						<Show when={airportStore.airport.station.metars.edges.length > 0}>
-							<div class="flex flex-col">
-								<h3 class="text-xl dark:text-white-dark">Current weather</h3>
-								<div class="flex flex-row flex-wrap justify-start gap-2 pt-2">
-									<span
-										class="cursor-default rounded-full px-3 py-1 text-xs text-white dark:text-white-light"
-										classList={{
-											'bg-green-600 dark:bg-green-800': lastObservationDuration().asHours() <= 2,
-											'bg-red-600 dark:bg-red-800': lastObservationDuration().asHours() > 2,
-										}}
-										title={metarObservationTime().toLocaleTimeString([], {
-											hour: 'numeric',
-											minute: '2-digit',
-											day: 'numeric',
-											month: 'long',
-											year: 'numeric',
-										})}>
-										Observed {lastObservationDuration().humanImprecise()}
-									</span>
-									<span
-										class="cursor-default rounded-full bg-white px-3 py-1 text-xs text-black dark:bg-black-200 dark:text-white-light"
-										title={importTime().toLocaleTimeString([], {
-											hour: 'numeric',
-											minute: '2-digit',
-											day: 'numeric',
-											month: 'long',
-											year: 'numeric',
-										})}>
-										Published {importTimeDuration().humanImprecise()}
-									</span>
-									<Show
-										when={
-											!(
-												nextImportPredictionDuration().isPast() &&
-												nextImportPredictionDuration().asHours() > 2
-											)
-										}>
-										<span
-											class="cursor-default rounded-full px-3 py-1 text-xs text-white dark:text-white-light"
-											classList={{
-												'bg-orange-500 dark:bg-orange-800':
-													nextImportPredictionDuration().isPast() &&
-													nextImportPredictionDuration().asMinutes() > 5,
-												'bg-green-600 dark:bg-green-800':
-													nextImportPredictionDuration().isFuture() ||
-													(nextImportPredictionDuration().asMinutes() <= 5 &&
-														nextImportPredictionDuration().isPast()),
-											}}
-											title={nextImportPrediction().toLocaleTimeString([], {
-												hour: 'numeric',
-												minute: '2-digit',
-												day: 'numeric',
-												month: 'long',
-												year: 'numeric',
-											})}>
-											<Show
-												when={nextImportPredictionDuration().isFuture()}
-												fallback={`Next update expected any moment now`}>
-												Next update expected {nextImportPredictionDuration().humanImprecise()}
-											</Show>
-										</span>
-									</Show>
-								</div>
-							</div>
-							<span
-								class="mt-4 flex text-gray-700 dark:text-white-dark md:mt-auto"
-								title={`Refreshed ${Duration.fromDates(lastRefreshed(), now()).humanPrecise()}`}>
-								<HiOutlineRefresh class="my-auto mr-2" />
-								Constantly checking for updates
-							</span>
-						</Show>
-					</div>
-					<WeatherElements class="mt-4" airport={airportStore.airport}></WeatherElements>
-					<div class="flex flex-col gap-4 py-16">
-						<Show when={airportStore.airport && airportStore.airport.station.metars.edges[0]}>
-							<p aria-label="METAR" class="text-center text-xl dark:text-white-dark">
-								{airportStore.airport.station.metars.edges[0].node.rawText}
-							</p>
-						</Show>
-					</div>
+					<WeatherElements airport={airportStore.airport} lastRefreshed={lastRefreshed()}></WeatherElements>
+					<ForecastElements airport={airportStore.airport} taf={airportStore.airport.station.tafs.edges[0]?.node}></ForecastElements>
 				</Show>
 			</ErrorBoundary>
 		</PageContent>

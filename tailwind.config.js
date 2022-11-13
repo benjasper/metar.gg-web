@@ -8,6 +8,7 @@ module.exports = {
   theme: {
     fontFamily: {
       display: ['Varela Round', 'sans-serif'],
+      mono: ['Fragment Mono', 'monospace'],
     },
     extend: {
       colors: {

@@ -25,7 +25,7 @@ const PageContent: ParentComponent<PageContentProps> = props => {
 			<Meta name="twitter:image" content={metarGGLogo}></Meta>
 
 			<div class="grid min-h-full grid-rows-layout bg-gray-light pt-6 transition-colors dark:bg-black">
-				<div class="container flex min-h-screen flex-col transition-colors md:min-h-0">{props.children}</div>
+				<div class="container flex min-h-screen flex-col transition-colors">{props.children}</div>
 				<Footer></Footer>
 			</div>
 		</>

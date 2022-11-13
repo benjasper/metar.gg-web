@@ -1,13 +1,17 @@
-@import "fonts.css";
+@import 'fonts.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  html {
-    font-family: Inter, system-ui, sans-serif;
-  }
+	html {
+		font-family: Inter, system-ui, sans-serif;
+	}
+}
+
+body {
+	@apply relative overflow-x-hidden;
 }
 
 h1 {
@@ -35,19 +39,28 @@ p {
 }
 
 p a {
-  @apply text-primary dark:text-blue-300 hover:underline;
+	@apply text-primary hover:underline dark:text-blue-300;
+}
+
+label {
+	@apply flex gap-1 text-xs font-semibold uppercase text-gray-500 transition-colors dark:text-white-darker;
 }
 
 svg.cartesian {
-	display:flex;
-  }
-  
-  /* Flip the vertical axis in <g> to emulate cartesian. */
-  svg.cartesian > svg {
+	display: flex;
+}
+
+/* Flip the vertical axis in <g> to emulate cartesian. */
+svg.cartesian > svg {
 	transform: scaleY(-1);
-  }
-  
-  /* Re-flip all <text> element descendants to their original side up. */
-  svg.cartesian > svg text {
+}
+
+/* Re-flip all <text> element descendants to their original side up. */
+svg.cartesian > svg text {
 	transform: scaleY(-1);
-  }
+}
+
+/* Slider */
+.keen-slider {
+	display: flex;
+}
