@@ -23,7 +23,6 @@ import {
 
 const AirportSearchDetail: Component = () => {
 	const params = useParams()
-	const isNavigating = useIsRouting()
 	const navigate = useNavigate()
 	const newQuery = useGraphQL()
 
