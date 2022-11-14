@@ -72,6 +72,9 @@ export const AIRPORT_SINGLE = WEATHER_FRAGMENT + gql`
 		timezone
 		elevation
 		website
+		wikipedia
+		latitude
+		longitude
 		runways(closed: false) {
 			closed
 			surface

@@ -1,4 +1,4 @@
-import { JSX, mergeProps, ParentComponent } from 'solid-js'
+import { mergeProps, ParentComponent } from 'solid-js'
 
 interface TagProps {
 	colorClasses?: string
@@ -27,7 +27,7 @@ const LinkTag: ParentComponent<LinkTagProps> = props => {
 	)
 
 	return (
-		<a href={props.href} class={`${classes} ${props.colorClasses} ${props.class}`}>
+		<a href={props.href} class={`${classes} ${props.colorClasses} ${props.class}`} target="_blank">
 			{props.children}
 		</a>
 	)
