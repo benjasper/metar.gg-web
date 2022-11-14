@@ -9,6 +9,7 @@ specifiers:
   '@solid-primitives/graphql': ^1.4.2
   '@solid-primitives/keyboard': ^1.0.5
   '@solid-primitives/scheduled': ^1.2.0
+  '@solid-primitives/script-loader': ^1.1.2
   '@solidjs/meta': ^0.28.2
   '@solidjs/router': ^0.5.0
   autoprefixer: ^10.4.13
@@ -31,6 +32,7 @@ dependencies:
   '@solid-primitives/graphql': 1.4.2_solid-js@1.6.1
   '@solid-primitives/keyboard': 1.0.5_solid-js@1.6.1
   '@solid-primitives/scheduled': 1.2.0_solid-js@1.6.1
+  '@solid-primitives/script-loader': 1.1.2_solid-js@1.6.1
   '@solidjs/meta': 0.28.2_solid-js@1.6.1
   '@solidjs/router': 0.5.0_solid-js@1.6.1
   graphql: 16.6.0
@@ -1372,6 +1374,14 @@ packages:
 
   /@solid-primitives/timer/1.3.4_solid-js@1.6.1:
     resolution: {integrity: sha512-hJbW93n9uY2vqeeS8W5a+vfY7EHQP4ru2vzCCOhuVFxPISk5d5H+3zMWx9KBq8IMYxuRRr3W8wPjIC9snfqIzw==}
+    peerDependencies:
+      solid-js: ^1.5.0
+    dependencies:
+      solid-js: 1.6.1
+    dev: false
+
+  /@solid-primitives/script-loader/1.1.2_solid-js@1.6.1:
+    resolution: {integrity: sha512-gOIsRMI6u/9WsetHK3fQKYVyadQzr4qPU3+WXmsotqggYcea2XAT9UCGEUSBTD0WFPchZiibXFxH2hg9eExaSg==}
     peerDependencies:
       solid-js: ^1.5.0
     dependencies:

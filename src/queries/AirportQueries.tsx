@@ -138,6 +138,9 @@ export const AIRPORT_SINGLE =
 			timezone
 			elevation
 			website
+			wikipedia
+			latitude
+			longitude
 			runways(closed: false) {
 				closed
 				surface
