@@ -67,7 +67,7 @@ const Dots: Component<DotsProps> = props => {
 	)
 }
 
-const ReloadSliderOnChange: Component<{forecast: TafFragment}> = (props) => {
+const ReloadSliderOnChange: Component<{ forecast: TafFragment }> = props => {
 	const [helpers] = useContext(SliderContext)
 
 	createEffect(() => {
@@ -77,6 +77,62 @@ const ReloadSliderOnChange: Component<{forecast: TafFragment}> = (props) => {
 	})
 
 	return undefined
+}
+
+const WheelControls = slider => {
+	var touchTimeout
+	var position
+	var wheelActive
+
+	function dispatch(e, name) {
+		position.x -= e.deltaX
+		position.y -= e.deltaY
+		slider.container.dispatchEvent(
+			new CustomEvent(name, {
+				detail: {
+					x: position.x,
+					y: position.y,
+				},
+			})
+		)
+	}
+
+	function wheelStart(e) {
+		position = {
+			x: e.pageX,
+			y: e.pageY,
+		}
+		dispatch(e, 'ksDragStart')
+	}
+
+	function wheel(e) {
+		dispatch(e, 'ksDrag')
+	}
+
+	function wheelEnd(e) {
+		dispatch(e, 'ksDragEnd')
+	}
+
+	function eventWheel(e: WheelEvent) {
+		if (e.deltaX !== 0) e.preventDefault()
+		
+		if (!wheelActive) {
+			wheelStart(e)
+			wheelActive = true
+		}
+		wheel(e)
+		clearTimeout(touchTimeout)
+		touchTimeout = setTimeout(() => {
+			wheelActive = false
+			wheelEnd(e)
+		}, 50)
+	}
+
+	slider.on('created', () => {
+		slider.container.addEventListener('wheel', eventWheel, {
+			passive: false,
+		})
+	})
 }
 
 const ForecastElements: Component<ForecastElementsProps> = props => {
@@ -123,7 +179,11 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 		return forecasts
 	})
 
-	const forecasts = createMemo(() => forecastsSorted().filter(x => new Date(x.toTime).getTime() > now().getTime()), [], { equals: (x, y) => x.length === y.length })
+	const forecasts = createMemo(
+		() => forecastsSorted().filter(x => new Date(x.toTime).getTime() > now().getTime()),
+		[],
+		{ equals: (x, y) => x.length === y.length }
+	)
 
 	const timeFormat: Intl.DateTimeFormatOptions = {
 		hour: 'numeric',
@@ -213,7 +273,8 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 										},
 									},
 									mode: 'snap',
-								}}>
+								}}
+								plugins={[WheelControls]}>
 								<For each={forecasts()}>
 									{forecast => (
 										<div class="flex flex-col gap-2">
