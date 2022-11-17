@@ -1,6 +1,6 @@
 import * as merc from 'mercator-projection'
 import { createEffect, createSignal, For, Show } from 'solid-js'
-import { AirportSearchFragment, MetarFragment } from '../../queries/generated/graphql'
+import { AirportSearchFragment } from '../../queries/generated/graphql'
 import { VariableWind } from '../weather-elements/WindElement'
 
 const cartesianCoordinates = (lat, lon) => {

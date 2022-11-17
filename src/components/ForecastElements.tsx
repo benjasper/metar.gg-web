@@ -5,7 +5,12 @@ import { Slider, SliderContext, SliderProvider } from 'solid-slider'
 import { useTimeStore } from '../context/TimeStore'
 import WeatherElementLayout from '../layouts/WeatherElementLayout'
 import Duration from '../models/duration'
-import { AirportSearchFragment, ForecastFragment, TafFragment } from '../queries/generated/graphql'
+import {
+	AirportSearchFragment,
+	ForecastChangeIndicator,
+	ForecastFragment,
+	TafFragment
+} from '../queries/generated/graphql'
 import { Tag } from './Tag'
 import AltimeterElement from './weather-elements/AltimeterElement'
 import { PrecipitationElement } from './weather-elements/PrecipitationElement'
@@ -40,12 +45,6 @@ interface DotsProps {
 const Dots: Component<DotsProps> = props => {
 	const [helpers] = useContext(SliderContext)
 
-	createEffect(() => {
-		if (props.items && helpers().slider()) {
-			helpers().slider().update()
-		}
-	})
-
 	return (
 		<Show when={props.items.length > 1}>
 			<div class="mt-4 flex w-full justify-center gap-3">
@@ -68,6 +67,18 @@ const Dots: Component<DotsProps> = props => {
 	)
 }
 
+const ReloadSliderOnChange: Component<{forecast: TafFragment}> = (props) => {
+	const [helpers] = useContext(SliderContext)
+
+	createEffect(() => {
+		if (props.forecast.rawText && helpers().slider()) {
+			helpers().slider().update()
+		}
+	})
+
+	return undefined
+}
+
 const ForecastElements: Component<ForecastElementsProps> = props => {
 	const now = useTimeStore()
 
@@ -87,14 +98,19 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 			new Date(props.taf.issueTime).toLocaleString('en-US', { timeZone: props.airport.timezone })
 	)
 
+	let omitNull = obj => {
+		Object.keys(obj)
+			.filter(k => obj[k] === null)
+			.forEach(k => delete obj[k])
+		return obj
+	}
+
 	const forecastsSorted = createMemo(() => {
-		const forecasts: ForecastFragment[] = []
+		let forecasts: ForecastFragment[] = []
 
-		props.taf.forecast.forEach(forecast => {
-			forecasts.push(forecast)
-		})
+		forecasts = props.taf.forecast.map(forecast => forecast)
 
-		return forecasts.sort((x, y) => {
+		forecasts = forecasts.sort((x, y) => {
 			const xChangeIndicator = changeIndicatorToSortingIndex(x.changeIndicator ?? '')
 			const yChangeIndicator = changeIndicatorToSortingIndex(y.changeIndicator ?? '')
 
@@ -103,9 +119,11 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 
 			return xIndex - yIndex
 		})
+
+		return forecasts
 	})
 
-	const forecasts = () => forecastsSorted().filter(x => new Date(x.toTime).getTime() > now().getTime())
+	const forecasts = createMemo(() => forecastsSorted().filter(x => new Date(x.toTime).getTime() > now().getTime()), [], { equals: (x, y) => x.length === y.length })
 
 	const timeFormat: Intl.DateTimeFormatOptions = {
 		hour: 'numeric',
@@ -183,14 +201,15 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 							</div>
 						</Show>
 					</div>
-					<div class={`mt-4 flex max-w-full flex-col overflow-x-hidden md:overflow-x-visible`}>
+					<div class={`mt-6 flex max-w-full flex-col overflow-x-hidden md:overflow-x-visible`}>
 						<SliderProvider>
+							<ReloadSliderOnChange forecast={props.taf} />
 							<Slider
 								options={{
-									slides: { perView: 1, spacing: 40 },
+									slides: { perView: 1, spacing: 32 },
 									breakpoints: {
 										'(min-width: 500px)': {
-											slides: { perView: 'auto', spacing: 40 },
+											slides: { perView: 'auto', spacing: 32 },
 										},
 									},
 									mode: 'snap',
@@ -198,44 +217,56 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 								<For each={forecasts()}>
 									{forecast => (
 										<div class="flex flex-col gap-2">
-											<div class="inline-block">
-												<span class="text-left dark:text-white-dark">
-													{new Date(forecast.fromTime).toLocaleString('default', {
-														weekday: 'long',
-														...timeFormat,
-														timeZone: isLocalTime()
-															? props.airport.timezone
-															: browserTimezone,
-													})}
-												</span>
-												<span class="text-left dark:text-white-dark">
-													{' '}
-													-{' '}
-													{new Date(forecast.toTime).toLocaleString('default', {
-														weekday:
-															new Date(forecast.fromTime).toLocaleDateString('default', {
-																weekday: 'long',
-															}) !==
-															new Date(forecast.toTime).toLocaleDateString('default', {
-																weekday: 'long',
-															})
-																? 'long'
-																: undefined,
-														...timeFormat,
-														timeZone: isLocalTime()
-															? props.airport.timezone
-															: browserTimezone,
-													})}
-												</span>
+											<div class="flex flex-row flex-wrap gap-2">
+												<div class="inline-block">
+													<span class="text-left dark:text-white-dark">
+														{new Date(forecast.fromTime).toLocaleString('default', {
+															weekday: 'long',
+															...timeFormat,
+															timeZone: isLocalTime()
+																? props.airport.timezone
+																: browserTimezone,
+														})}
+													</span>
+													<span class="text-left dark:text-white-dark">
+														{' '}
+														-{' '}
+														{new Date(forecast.toTime).toLocaleString('default', {
+															weekday:
+																new Date(forecast.fromTime).toLocaleDateString(
+																	'default',
+																	{
+																		weekday: 'long',
+																	}
+																) !==
+																new Date(forecast.toTime).toLocaleDateString(
+																	'default',
+																	{
+																		weekday: 'long',
+																	}
+																)
+																	? 'long'
+																	: undefined,
+															...timeFormat,
+															timeZone: isLocalTime()
+																? props.airport.timezone
+																: browserTimezone,
+														})}
+													</span>
+												</div>
+												<Show when={forecast.changeIndicator}>
+													<Tag
+														class="gap-1"
+														classList={{
+															'!bg-yellow-600 dark:bg-yellow-800 text-white':
+																forecast.changeIndicator ===
+																ForecastChangeIndicator.Tempo,
+														}}>
+														<HiOutlineSwitchHorizontal class="my-auto" />
+														<span>{forecast.changeIndicator}</span>
+													</Tag>
+												</Show>
 											</div>
-											<Show when={forecast.changeIndicator}>
-												<WeatherElementLayout
-													name="Change indicator"
-													icon={<HiOutlineSwitchHorizontal />}
-													class="mb-2 !flex-grow-0">
-													<span class="mx-auto">{forecast.changeIndicator}</span>
-												</WeatherElementLayout>
-											</Show>
 											<div class="flex w-full max-w-full flex-col flex-wrap gap-4 md:w-[30rem] md:flex-row">
 												<Show when={forecast.visibilityHorizontal}>
 													<VisibilityElement
