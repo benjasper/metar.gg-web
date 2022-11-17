@@ -115,7 +115,7 @@ const WheelControls = slider => {
 
 	function eventWheel(e: WheelEvent) {
 		if (e.deltaX !== 0) e.preventDefault()
-		
+
 		if (!wheelActive) {
 			wheelStart(e)
 			wheelActive = true
@@ -174,6 +174,22 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 			const yIndex = new Date(y.fromTime).getTime() + yChangeIndicator
 
 			return xIndex - yIndex
+		})
+
+		// If it is a TEMPO we want to merge it with the previous forecast
+		forecasts = forecasts.map((forecast, index) => {
+			if (forecast.changeIndicator === 'TEMPO') {
+				const previousForecast = forecasts[index - 1]
+
+				if (previousForecast) {
+					return {
+						...previousForecast,
+						...omitNull({ ...forecast }),
+					}
+				}
+			}
+
+			return forecast
 		})
 
 		return forecasts
