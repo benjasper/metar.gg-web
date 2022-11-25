@@ -1,9 +1,10 @@
 import { Toggle } from 'solid-headless'
+import { BsClockHistory } from 'solid-icons/bs'
 import { HiOutlineSwitchHorizontal } from 'solid-icons/hi'
+import { TbChevronLeft } from 'solid-icons/tb'
 import { Component, createEffect, createMemo, createSignal, For, Show, useContext } from 'solid-js'
 import { Slider, SliderContext, SliderProvider } from 'solid-slider'
 import { useTimeStore } from '../context/TimeStore'
-import WeatherElementLayout from '../layouts/WeatherElementLayout'
 import Duration from '../models/duration'
 import {
 	AirportSearchFragment,
@@ -17,6 +18,7 @@ import { PrecipitationElement } from './weather-elements/PrecipitationElement'
 import SkyConditionsElement from './weather-elements/SkyConditionsElement'
 import VisibilityElement from './weather-elements/VisibilityElement'
 import WindElement from './weather-elements/WindElement'
+import WindShearElement from './weather-elements/WindShearElement'
 
 export interface ForecastElementsProps {
 	taf?: TafFragment
@@ -42,12 +44,21 @@ interface DotsProps {
 	items: any[]
 }
 
-const Dots: Component<DotsProps> = props => {
+const SliderNavigation: Component<DotsProps> = props => {
 	const [helpers] = useContext(SliderContext)
 
 	return (
 		<Show when={props.items.length > 1}>
-			<div class="mt-4 flex w-full justify-center gap-3">
+			<Show when={helpers().current() > 0}>
+				<button
+					onClick={() => helpers().prev()}
+					role="button"
+					class="absolute -bottom-6 left-0 hidden h-8 w-8 -translate-y-1/2 transform rounded-full bg-white text-black shadow-sm dark:bg-black-100 dark:text-white-dark md:flex">
+					<TbChevronLeft class="m-auto" size={24} />
+				</button>
+			</Show>
+
+			<div class="relative mx-auto mt-8 flex justify-center gap-3">
 				<For each={props.items}>
 					{(_, index) => (
 						<button
@@ -63,6 +74,15 @@ const Dots: Component<DotsProps> = props => {
 					)}
 				</For>
 			</div>
+
+			<Show when={helpers().current() < props.items.length - 2}>
+				<button
+					onClick={() => helpers().next()}
+					role="button"
+					class="absolute -bottom-6 right-0 hidden h-8 w-8 -translate-y-1/2 transform rounded-full bg-white text-black shadow-sm dark:bg-black-100 dark:text-white-dark md:flex">
+					<TbChevronLeft class="m-auto rotate-180" size={24} />
+				</button>
+			</Show>
 		</Show>
 	)
 }
@@ -135,6 +155,21 @@ const WheelControls = slider => {
 	})
 }
 
+const changeIndicatorCodeToText = (changeIndicator: string): string => {
+	switch (changeIndicator) {
+		case 'BECMG':
+			return 'Becoming'
+		case 'TEMPO':
+			return 'Temporarily'
+		case 'PROB':
+			return 'Probable'
+		case 'FM':
+			return 'From'
+		default:
+			return ''
+	}
+}
+
 const ForecastElements: Component<ForecastElementsProps> = props => {
 	const now = useTimeStore()
 
@@ -156,7 +191,7 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 
 	let omitNull = obj => {
 		Object.keys(obj)
-			.filter(k => obj[k] === null)
+			.filter(k => obj[k] === null || (typeof obj[k][Symbol.iterator] === 'function' && obj[k].length === 0))
 			.forEach(k => delete obj[k])
 		return obj
 	}
@@ -179,7 +214,11 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 		// If it is a TEMPO we want to merge it with the previous forecast
 		forecasts = forecasts.map((forecast, index) => {
 			if (forecast.changeIndicator === 'TEMPO') {
-				const previousForecast = forecasts[index - 1]
+				// Look for the first previous forecast that is not a TEMPO
+				const previousForecast = forecasts
+					.slice(0, index)
+					.reverse()
+					.find(f => f.changeIndicator !== 'TEMPO')
 
 				if (previousForecast) {
 					return {
@@ -277,113 +316,131 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 							</div>
 						</Show>
 					</div>
-					<div class={`mt-6 flex max-w-full flex-col overflow-x-hidden md:overflow-x-visible`}>
-						<SliderProvider>
-							<ReloadSliderOnChange forecast={props.taf} />
-							<Slider
-								options={{
-									slides: { perView: 1, spacing: 32 },
-									breakpoints: {
-										'(min-width: 500px)': {
-											slides: { perView: 'auto', spacing: 32 },
+					<div class={`relative mt-6 flex max-w-full flex-col overflow-x-hidden md:overflow-x-visible`}>
+						<Show
+							when={forecasts().length > 0}
+							fallback={
+								<span class="mx-auto py-16 text-xl text-black dark:text-white-dark">
+									No future forecasts available.
+								</span>
+							}>
+							<SliderProvider>
+								<ReloadSliderOnChange forecast={props.taf} />
+								<Slider
+									options={{
+										slides: { perView: 1, spacing: 32 },
+										breakpoints: {
+											'(min-width: 500px)': {
+												slides: { perView: 'auto', spacing: 32 },
+											},
 										},
-									},
-									mode: 'snap',
-								}}
-								plugins={[WheelControls]}>
-								<For each={forecasts()}>
-									{forecast => (
-										<div class="flex flex-col gap-2">
-											<div class="flex flex-row flex-wrap gap-2">
-												<div class="inline-block">
-													<span class="text-left dark:text-white-dark">
-														{new Date(forecast.fromTime).toLocaleString('default', {
-															weekday: 'long',
-															...timeFormat,
-															timeZone: isLocalTime()
-																? props.airport.timezone
-																: browserTimezone,
-														})}
-													</span>
-													<span class="text-left dark:text-white-dark">
-														{' '}
-														-{' '}
-														{new Date(forecast.toTime).toLocaleString('default', {
-															weekday:
-																new Date(forecast.fromTime).toLocaleDateString(
-																	'default',
-																	{
-																		weekday: 'long',
-																	}
-																) !==
-																new Date(forecast.toTime).toLocaleDateString(
-																	'default',
-																	{
-																		weekday: 'long',
-																	}
-																)
-																	? 'long'
-																	: undefined,
-															...timeFormat,
-															timeZone: isLocalTime()
-																? props.airport.timezone
-																: browserTimezone,
-														})}
-													</span>
-												</div>
-												<Show when={forecast.changeIndicator}>
-													<Tag
-														class="gap-1"
-														classList={{
-															'!bg-yellow-600 dark:bg-yellow-800 text-white':
-																forecast.changeIndicator ===
-																ForecastChangeIndicator.Tempo,
-														}}>
-														<HiOutlineSwitchHorizontal class="my-auto" />
-														<span>{forecast.changeIndicator}</span>
-													</Tag>
-												</Show>
-											</div>
-											<div class="flex w-full max-w-full flex-col flex-wrap gap-4 md:w-[30rem] md:flex-row">
-												<Show when={forecast.visibilityHorizontal}>
-													<VisibilityElement
-														visibility={forecast.visibilityHorizontal}></VisibilityElement>
-												</Show>
-												<Show when={forecast.changeProbability}>
-													<WeatherElementLayout name="Probability" icon={<></>}>
-														<span class="mx-auto text-lg dark:text-white-darker">
-															{forecast.changeProbability}%
+										mode: 'snap',
+									}}
+									plugins={[WheelControls]}>
+									<For each={forecasts()}>
+										{forecast => (
+											<div class="flex flex-col gap-2">
+												<div class="flex flex-row flex-wrap gap-2">
+													<div class="inline-block">
+														<span class="text-left dark:text-white-dark">
+															{new Date(forecast.fromTime).toLocaleString('default', {
+																weekday: 'long',
+																...timeFormat,
+																timeZone: isLocalTime()
+																	? props.airport.timezone
+																	: browserTimezone,
+															})}
 														</span>
-													</WeatherElementLayout>
-												</Show>
-												<Show when={forecast.skyConditions.length > 0}>
-													<SkyConditionsElement
-														skyConditions={forecast.skyConditions}
-														airport={props.airport}></SkyConditionsElement>
-												</Show>
-												<Show when={forecast.weather.length > 1}>
-													<PrecipitationElement
-														weather={forecast.weather}></PrecipitationElement>
-												</Show>
-												<Show when={forecast.altimeter && forecast.altimeter > 0}>
-													<AltimeterElement altimeter={forecast.altimeter}></AltimeterElement>
-												</Show>
-												<Show when={forecast.windSpeed}>
-													<WindElement
-														airport={props.airport}
-														windDirection={forecast.windDirection}
-														windSpeed={forecast.windSpeed}
-														windGust={forecast.windGust}
-														size="small"
-													/>
-												</Show>
+														<span class="text-left dark:text-white-dark">
+															{' '}
+															-{' '}
+															{new Date(forecast.toTime).toLocaleString('default', {
+																weekday:
+																	new Date(forecast.fromTime).toLocaleDateString(
+																		'default',
+																		{
+																			weekday: 'long',
+																		}
+																	) !==
+																	new Date(forecast.toTime).toLocaleDateString(
+																		'default',
+																		{
+																			weekday: 'long',
+																		}
+																	)
+																		? 'long'
+																		: undefined,
+																...timeFormat,
+																timeZone: isLocalTime()
+																	? props.airport.timezone
+																	: browserTimezone,
+															})}
+														</span>
+													</div>
+													<Show when={forecast.changeIndicator}>
+														<Tag class="gap-1" title={`Change indicator: ${changeIndicatorCodeToText(forecast.changeIndicator)}`}>
+															<Show
+																when={
+																	forecast.changeIndicator ===
+																	ForecastChangeIndicator.Tempo
+																}
+																fallback={
+																	<HiOutlineSwitchHorizontal class="my-auto" />
+																}>
+																<BsClockHistory class="my-auto" />
+															</Show>
+															<span>{forecast.changeIndicator}</span>
+														</Tag>
+													</Show>
+													<Show when={forecast.changeProbability}>
+														<Tag class="gap-1" title="Probability">
+															<span>{forecast.changeProbability}%</span>
+														</Tag>
+													</Show>
+												</div>
+												<div class="flex w-full max-w-full flex-col flex-wrap gap-4 md:w-[30rem] md:flex-row">
+													<Show when={forecast.visibilityHorizontal}>
+														<VisibilityElement
+															visibility={
+																forecast.visibilityHorizontal
+															}></VisibilityElement>
+													</Show>
+													<Show when={forecast.skyConditions.length > 0}>
+														<SkyConditionsElement
+															skyConditions={forecast.skyConditions}
+															airport={props.airport}></SkyConditionsElement>
+													</Show>
+													<Show when={forecast.weather.length > 1}>
+														<PrecipitationElement
+															weather={forecast.weather}></PrecipitationElement>
+													</Show>
+													<Show when={forecast.altimeter && forecast.altimeter > 0}>
+														<AltimeterElement
+															altimeter={forecast.altimeter}></AltimeterElement>
+													</Show>
+													<Show when={forecast.windSpeed}>
+														<WindElement
+															airport={props.airport}
+															windDirection={forecast.windDirection}
+															windSpeed={forecast.windSpeed}
+															windGust={forecast.windGust}
+															size="small"
+														/>
+													</Show>
+													<Show when={forecast.windShearSpeed}>
+														<WindShearElement
+															direction={forecast.windShearDirection}
+															speed={forecast.windShearSpeed}
+															height={forecast.windShearHeight}></WindShearElement>
+													</Show>
+												</div>
 											</div>
-										</div>
-									)}
-								</For>
-							</Slider>
-							<Dots items={forecasts()}></Dots>
-						</SliderProvider>
+										)}
+									</For>
+								</Slider>
+								<SliderNavigation items={forecasts()}></SliderNavigation>
+							</SliderProvider>
+						</Show>
 					</div>
 					<p aria-label="TAF" class="mx-auto w-full py-16 text-center font-mono text-xl dark:text-white-dark">
 						{props.taf.rawText}

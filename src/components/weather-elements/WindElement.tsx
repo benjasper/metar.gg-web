@@ -1,5 +1,5 @@
 import { BsArrowUp } from 'solid-icons/bs'
-import { RiWeatherWindyLine } from 'solid-icons/ri'
+import { TbWindsock } from 'solid-icons/tb'
 import { Component, createMemo, Show } from 'solid-js'
 import WeatherElementLayout from '../../layouts/WeatherElementLayout'
 import { AirportSearchFragment, MetarFragment } from '../../queries/generated/graphql'
@@ -39,7 +39,7 @@ const WindElement: Component<WindElementProps> = props => {
 	})
 
 	return (
-		<WeatherElementLayout name="Wind" class="flex-shrink-0" icon={<RiWeatherWindyLine></RiWeatherWindyLine>}>
+		<WeatherElementLayout name="Wind" class="flex-shrink-0" icon={<TbWindsock></TbWindsock>}>
 			<Show when={props.size === 'large'}>
 				<RunwayAndWindRenderer
 					airport={props.airport}

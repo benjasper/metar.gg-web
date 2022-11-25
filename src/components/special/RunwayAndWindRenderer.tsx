@@ -87,8 +87,7 @@ const RunwayAndWindRenderer = (props: {
 					x: direction1.x,
 					y: direction1.y,
 					favourableLevel: 0,
-					windAngle:
-						180 - Math.abs(Math.abs(runway.lowRunwayHeading - props.windDirection) - 180),
+					windAngle: 180 - Math.abs(Math.abs(runway.lowRunwayHeading - props.windDirection) - 180),
 				},
 				direction2: {
 					runway: runway.highRunwayIdentifier,
@@ -96,8 +95,7 @@ const RunwayAndWindRenderer = (props: {
 					x: direction2.x,
 					y: direction2.y,
 					favourableLevel: 0,
-					windAngle:
-						180 - Math.abs(Math.abs(runway.highRunwayHeading - props.windDirection) - 180),
+					windAngle: 180 - Math.abs(Math.abs(runway.highRunwayHeading - props.windDirection) - 180),
 				},
 			})
 		})
@@ -180,15 +178,15 @@ const RunwayAndWindRenderer = (props: {
 
 	return (
 		<Show when={runways().length > 0}>
-			<div class="relative w-full rounded-full mx-auto md:mx-0">
+			<div class="relative mx-auto w-full rounded-full md:mx-0">
 				<svg
-					class="cartesian md:w-[22rem] h-full"
+					class="cartesian h-full md:w-[22rem]"
 					viewBox={`${-centerX()} ${-centerY()}  ${realDiagonal() * 2} ${realDiagonal() * 2}`}
 					xmlns="http://www.w3.org/2000/svg">
 					{/* Compass circle */}
 					<circle
 						transform-origin="center"
-						class="fill-gray-100 dark:fill-[#212637] transition-colors"
+						class="fill-gray-100 transition-colors dark:fill-[#212637]"
 						stroke-width="0.2"
 						cx={realCenterX()}
 						cy={realCenterY()}
@@ -206,12 +204,12 @@ const RunwayAndWindRenderer = (props: {
 									transform-origin="center"
 									x={arrow.x - 4}
 									y={arrow.y - 4}>
-									<title>{arrow.isVariable ? "Variable wind direction" : "Wind direction"}</title>
+									<title>{arrow.isVariable ? 'Variable wind direction' : 'Wind direction'}</title>
 									<path
 										transform-origin="center"
 										transform={`rotate(${arrow.angle})`}
 										stroke="currentColor"
-										class="stroke-gray-600 dark:stroke-white-dark transition-colors"
+										class="stroke-gray-600 transition-colors dark:stroke-white-dark"
 										classList={{ 'opacity-50': arrow.isVariable }}
 										stroke-linecap="round"
 										stroke-linejoin="round"
@@ -240,9 +238,9 @@ const RunwayAndWindRenderer = (props: {
 									y1={r.direction1.y}
 									x2={r.direction2.x}
 									y2={r.direction2.y}
-									class="stroke-white"
-									stroke-width="0.2"
-									stroke-dasharray="1.2,0.6"
+									class="stroke-white-dark"
+									stroke-width="0.1"
+									stroke-dasharray="0.6,0.4"
 								/>
 							</>
 						)}
@@ -315,7 +313,7 @@ const RunwayAndWindRenderer = (props: {
 						{(r, i) => (
 							<>
 								<text
-									class="text-[1.1px] fill-white"
+									class="fill-white text-[1.1px]"
 									x={r.direction1.x}
 									y={r.direction1.y}
 									dominant-baseline="middle"
@@ -323,7 +321,7 @@ const RunwayAndWindRenderer = (props: {
 									{r.direction1.runway}
 								</text>
 								<text
-									class="text-[1.1px] fill-white"
+									class="fill-white text-[1.1px]"
 									x={r.direction2.x}
 									y={r.direction2.y}
 									dominant-baseline="middle"
