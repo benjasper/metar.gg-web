@@ -11,6 +11,7 @@ import AirportSearchDetail from './pages/AirportSearchDetail'
 import About from './pages/About'
 import TermsOfUse from './pages/TermsOfUse'
 import Legal from './pages/Legal'
+import { TimeStoreProvider } from './context/TimeStore'
 
 const App: Component = () => {
 	const client = createGraphQLClient('https://api.metar.gg/graphql')
@@ -18,16 +19,21 @@ const App: Component = () => {
 	return (
 		<MetaProvider>
 			<Router>
-				<GraphQLProvider client={client}>
-					<Routes>
-						<Route path="/" component={Home} />
-						<Route path="/about" component={About} />
-						<Route path="/legal" component={Legal} />
-						<Route path="/terms" component={TermsOfUse} />
-						<Route path="/airport/:airportIdentifier" component={AirportSearchDetail} />
-						<Route path="/:airportIdentifier" element={<Navigate href={(() => '/airport/' + useParams().airportIdentifier)}/>} />
-					</Routes>
-				</GraphQLProvider>
+				<TimeStoreProvider>
+					<GraphQLProvider client={client}>
+						<Routes>
+							<Route path="/" component={Home} />
+							<Route path="/about" component={About} />
+							<Route path="/legal" component={Legal} />
+							<Route path="/terms" component={TermsOfUse} />
+							<Route path="/airport/:airportIdentifier" component={AirportSearchDetail} />
+							<Route
+								path="/:airportIdentifier"
+								element={<Navigate href={() => '/airport/' + useParams().airportIdentifier} />}
+							/>
+						</Routes>
+					</GraphQLProvider>
+				</TimeStoreProvider>
 			</Router>
 		</MetaProvider>
 	)

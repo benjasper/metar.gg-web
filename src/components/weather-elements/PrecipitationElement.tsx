@@ -1,6 +1,3 @@
-import { Component, createEffect, For, Match, Show, Switch } from 'solid-js'
-import WeatherElementLayout from '../../layouts/WeatherElementLayout'
-import { MetarFragment } from '../../queries/generated/graphql'
 import {
 	RiWeatherDrizzleLine,
 	RiWeatherFoggyLine,
@@ -11,13 +8,11 @@ import {
 	RiWeatherSnowyLine,
 	RiWeatherThunderstormsLine,
 	RiWeatherTornadoLine,
-	RiWeatherWindyLine,
+	RiWeatherWindyLine
 } from 'solid-icons/ri'
 import { TbGrain } from 'solid-icons/tb'
-
-interface PrecipitationElementProps {
-	latestMetar: MetarFragment
-}
+import { Component, For, Match, Show, Switch } from 'solid-js'
+import WeatherElementLayout from '../../layouts/WeatherElementLayout'
 
 enum IntensityOrProximity {
 	Light = '-',
@@ -66,9 +61,10 @@ enum Other {
 	SandOrDustWhirls = 'FC',
 	Tornado = '+FC',
 	FunnelCloud = 'FC',
+	NoSignificantWeather = 'NSW',
 }
 
-const ConditionElement = (props: { condition: string }) => {
+const PrecipitationConditionElement: Component<{ condition: string }> = props => {
 	const intensityOrProximity = (): IntensityOrProximity | undefined =>
 		Object.values(IntensityOrProximity).find(key => props.condition.startsWith(key))
 
@@ -84,36 +80,36 @@ const ConditionElement = (props: { condition: string }) => {
 	const other = (): Other | undefined => Object.values(Other).find(key => props.condition.includes(key))
 
 	return (
-		<div class="flex flex-row gap-1 justify-center text-xl">
-			<div class='text-gray-600 dark:text-white-dark'>
+		<div class="flex flex-row justify-center gap-1 text-xl">
+			<div class="text-gray-600 dark:text-white-dark my-auto">
 				<Switch>
 					<Match when={precipitationType() === PrecipitationType.Drizzle}>
-						<RiWeatherDrizzleLine size={24} />
+						<RiWeatherDrizzleLine />
 					</Match>
 					<Match when={descriptor() === Descriptor.Showers || precipitationType() === PrecipitationType.Rain}>
-						<RiWeatherShowersLine size={24} />
+						<RiWeatherShowersLine />
 					</Match>
 					<Match when={descriptor() === Descriptor.Thunderstorm}>
-						<RiWeatherThunderstormsLine size={24} />
+						<RiWeatherThunderstormsLine />
 					</Match>
 					<Match when={precipitationType() === PrecipitationType.Snow}>
-						<RiWeatherSnowyLine size={24} />
+						<RiWeatherSnowyLine />
 					</Match>
 					<Match
 						when={
 							precipitationType() === PrecipitationType.Hail ||
 							precipitationType() === PrecipitationType.SmallHail
 						}>
-						<RiWeatherHailLine size={24} />
+						<RiWeatherHailLine />
 					</Match>
 					<Match when={obscuration() === Obscuration.Fog}>
-						<RiWeatherFoggyLine size={24} />
+						<RiWeatherFoggyLine />
 					</Match>
 					<Match when={obscuration() === Obscuration.Mist}>
-						<RiWeatherMistLine size={24} />
+						<RiWeatherMistLine />
 					</Match>
 					<Match when={obscuration() === Obscuration.Haze}>
-						<RiWeatherHazeLine size={24} />
+						<RiWeatherHazeLine />
 					</Match>
 					<Match
 						when={
@@ -123,10 +119,10 @@ const ConditionElement = (props: { condition: string }) => {
 							other() === Other.SandOrDustWhirls ||
 							other() === Other.DustWhirls
 						}>
-						<RiWeatherWindyLine size={24} />
+						<RiWeatherWindyLine />
 					</Match>
 					<Match when={other() === Other.Tornado || other() === Other.FunnelCloud}>
-						<RiWeatherTornadoLine size={24} />
+						<RiWeatherTornadoLine />
 					</Match>
 				</Switch>
 			</div>
@@ -203,6 +199,7 @@ const ConditionElement = (props: { condition: string }) => {
 						<Match when={other() === Other.SandOrDustWhirls}>Sand or dust whirls</Match>
 						<Match when={other() === Other.Tornado}>Tornado</Match>
 						<Match when={other() === Other.FunnelCloud}>Funnel cloud</Match>
+						<Match when={other() === Other.NoSignificantWeather}>No significant weather</Match>
 					</Switch>
 				</span>
 			</Show>
@@ -210,17 +207,21 @@ const ConditionElement = (props: { condition: string }) => {
 	)
 }
 
+interface PrecipitationElementProps {
+	weather: string
+}
+
 const PrecipitationElement: Component<PrecipitationElementProps> = props => {
-	const conditions = () => props.latestMetar.presentWeather.split(' ')
+	const conditions = () => props.weather.split(' ')
 
 	return (
 		<WeatherElementLayout name="Precipitation" icon={<TbGrain></TbGrain>}>
 			<div class="flex flex-col gap-1 dark:text-white-dark">
-				<For each={conditions()}>{condition => <ConditionElement condition={condition} />}</For>
+				<For each={conditions()}>{condition => <PrecipitationConditionElement condition={condition} />}</For>
 			</div>
-			<span class="mx-auto dark:text-white-dark">{props.latestMetar.presentWeather}</span>
+			<span class="mx-auto dark:text-white-dark">{props.weather}</span>
 		</WeatherElementLayout>
 	)
 }
 
-export default PrecipitationElement
+export { PrecipitationElement }

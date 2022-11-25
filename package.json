@@ -37,6 +37,7 @@
     "mercator-projection": "^0.0.2",
     "solid-headless": "^0.13.0",
     "solid-icons": "^1.0.4",
-    "solid-js": "^1.6.1"
+    "solid-js": "^1.6.1",
+    "solid-slider": "^1.3.11"
   }
 }

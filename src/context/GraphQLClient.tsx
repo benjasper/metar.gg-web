@@ -1,5 +1,5 @@
 import { createContext, createSignal, useContext } from "solid-js";
-import { createGraphQLClient, gql, GraphQLClientQuery } from "@solid-primitives/graphql";
+import { GraphQLClientQuery } from "@solid-primitives/graphql";
 
 const GraphQLContext = createContext<GraphQLClientQuery>()
 

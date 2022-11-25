@@ -21,6 +21,7 @@ specifiers:
   solid-headless: ^0.13.0
   solid-icons: ^1.0.4
   solid-js: ^1.6.1
+  solid-slider: ^1.3.11
   tailwindcss: ^3.2.2
   typescript: ^4.8.4
   vite: ^3.2.2
@@ -39,6 +40,7 @@ dependencies:
   solid-headless: 0.13.0_solid-js@1.6.1
   solid-icons: 1.0.4_solid-js@1.6.1
   solid-js: 1.6.1
+  solid-slider: 1.3.11
 
 devDependencies:
   '@graphql-codegen/cli': 2.12.0_5r3mmcyz2qxsj6cwjz753kl35e
@@ -1366,6 +1368,14 @@ packages:
     resolution: {integrity: sha512-59QbtGACZD8RIkD0jNQVUHRBF6uW7dKzDVFYSgogRdfxRO9kgXc6aGkLrCjd4k4g3kYe+XiBLcvYKyut4F7BHg==}
     peerDependencies:
       solid-js: ^1.6.0
+    dependencies:
+      solid-js: 1.6.1
+    dev: false
+
+  /@solid-primitives/timer/1.3.4_solid-js@1.6.1:
+    resolution: {integrity: sha512-hJbW93n9uY2vqeeS8W5a+vfY7EHQP4ru2vzCCOhuVFxPISk5d5H+3zMWx9KBq8IMYxuRRr3W8wPjIC9snfqIzw==}
+    peerDependencies:
+      solid-js: ^1.5.0
     dependencies:
       solid-js: 1.6.1
     dev: false
@@ -2997,6 +3007,10 @@ packages:
       safe-buffer: 5.2.1
     dev: true
 
+  /keen-slider/6.8.3:
+    resolution: {integrity: sha512-tJFokyUiHAtbGGQHnNMm3MLCpOm+z1JZsaOOMVnzTYAfAqLDT/zI/cE1mf82Bxmp1uHSIeUUkH+EZGzRQrSO/w==}
+    dev: false
+
   /lilconfig/2.0.6:
     resolution: {integrity: sha512-9JROoBW7pobfsx+Sq2JsASvCo6Pfo6WWoUW79HuB1BCoBXD4PLWJPqDF6fNj67pqBYTbAHkE57M1kS/+L1neOg==}
     engines: {node: '>=10'}
@@ -3776,6 +3790,14 @@ packages:
       '@babel/types': 7.20.2
       solid-js: 1.6.1
     dev: true
+
+  /solid-slider/1.3.11:
+    resolution: {integrity: sha512-lMZChINzoyFC6gRnLqm+Jw+7rv8nr+9AYIXpvDvsAvuKjC7qISZlwXV+Iy3qsqIKI2xYx58iC0T867CgRCXzbA==}
+    dependencies:
+      '@solid-primitives/timer': 1.3.4_solid-js@1.6.1
+      keen-slider: 6.8.3
+      solid-js: 1.6.1
+    dev: false
 
   /solid-use/0.5.0_solid-js@1.6.1:
     resolution: {integrity: sha512-z1AaS99SL3gNP70K4+XIVKGXDRI56m3Q6Q4X63bfgw0kaN6cwT4SAyFZAmIRjHcvf5rOMRQfNgUV4YVDha+LcQ==}

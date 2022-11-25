@@ -1,8 +1,8 @@
 import { A } from '@solidjs/router'
-import { Component, ParentComponent, ParentProps } from 'solid-js'
-import Logo from './Logo'
 import { AiOutlineGithub } from 'solid-icons/ai'
+import { Component } from 'solid-js'
 import DarkModeToggle from './DarkModeToggle'
+import Logo from './Logo'
 
 const Footer: Component = () => {
 	return (

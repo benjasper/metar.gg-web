@@ -22,6 +22,51 @@ export const AIRPORT_SEARCH = gql`
 `
 
 const WEATHER_FRAGMENT = gql`
+	fragment SkyCondition on SkyCondition {
+		skyCover
+		cloudType
+		cloudBase
+	}
+
+	fragment Forecast on Forecast {
+		fromTime
+		toTime
+		changeIndicator
+		changeTime
+		changeProbability
+		windDirection
+		windShearDirection
+		weather
+		skyConditions {
+			skyCover
+			cloudType
+			cloudBase(unit: FOOT)
+		}
+		turbulenceConditions {
+			intensity
+			minAltitude(unit: FOOT)
+			maxAltitude(unit: FOOT)
+		}
+		icingConditions {
+			intensity
+			minAltitude(unit: FOOT)
+			maxAltitude(unit: FOOT)
+		}
+		temperatureData {
+			validTime
+			temperature(unit: CELSIUS)
+			minTemperature(unit: CELSIUS)
+			maxTemperature(unit: CELSIUS)
+		}
+		altimeter(unit: HECTOPASCAL)
+		windSpeed(unit: KNOT)
+		windGust(unit: KNOT)
+		visibilityHorizontal(unit: KILOMETER)
+		visibilityVertical(unit: FOOT)
+		windShearHeight(unit: FOOT)
+		windShearSpeed(unit: KNOT)
+	}
+
 	fragment Metar on Metar {
 		observationTime
 		importTime
@@ -37,8 +82,18 @@ const WEATHER_FRAGMENT = gql`
 		flightCategory
 		presentWeather
 		skyConditions {
-			skyCover
-			cloudBase
+			...SkyCondition
+		}
+	}
+
+	fragment Taf on Taf {
+		issueTime
+		rawText
+		remarks
+		validFromTime
+		validToTime
+		forecast {
+			...Forecast
 		}
 	}
 
@@ -51,53 +106,64 @@ const WEATHER_FRAGMENT = gql`
 					}
 				}
 			}
+			tafs(first: 1) {
+				edges {
+					node {
+						...Taf
+					}
+				}
+			}
 		}
 	}
 `
 
-export const AIRPORT_WEATHER = WEATHER_FRAGMENT + gql`
-	query AirportWeather($icao: String!) {
-		getAirport(icao: $icao) {
+export const AIRPORT_WEATHER =
+	WEATHER_FRAGMENT +
+	gql`
+		query AirportWeather($icao: String!) {
+			getAirport(icao: $icao) {
+				...AirportWeather
+			}
+		}
+	`
+
+export const AIRPORT_SINGLE =
+	WEATHER_FRAGMENT +
+	gql`
+		fragment AirportSearch on Airport {
+			identifier
+			icaoCode
+			iataCode
+			name
+			timezone
+			elevation
+			website
+			wikipedia
+			latitude
+			longitude
+			runways(closed: false) {
+				closed
+				surface
+				lowRunwayHeading
+				lowRunwayIdentifier
+				lowRunwayLatitude
+				lowRunwayLongitude
+
+				highRunwayHeading
+				highRunwayIdentifier
+				highRunwayLatitude
+				highRunwayLongitude
+			}
+			municipality
+			country {
+				name
+			}
 			...AirportWeather
 		}
-	}
-`
 
-export const AIRPORT_SINGLE = WEATHER_FRAGMENT + gql`
-	fragment AirportSearch on Airport {
-		identifier
-		icaoCode
-		iataCode
-		name
-		timezone
-		elevation
-		website
-		wikipedia
-		latitude
-		longitude
-		runways(closed: false) {
-			closed
-			surface
-			lowRunwayHeading
-			lowRunwayIdentifier
-			lowRunwayLatitude
-			lowRunwayLongitude
-
-			highRunwayHeading
-			highRunwayIdentifier
-			highRunwayLatitude
-			highRunwayLongitude
+		query GetSingleAirport($identifier: String!) {
+			getAirport(identifier: $identifier) {
+				...AirportSearch
+			}
 		}
-		municipality
-		country {
-			name
-		}
-		...AirportWeather
-	}
-
-	query GetSingleAirport($identifier: String!) {
-		getAirport(identifier: $identifier) {
-			...AirportSearch
-		}
-	}
-`
+	`
