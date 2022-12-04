@@ -44,7 +44,7 @@ const DarkModeToggle: Component<TabGroupProps> = props => {
 	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onSystemChange)
 
 	onCleanup(() => {
-		window.removeEventListener('change', onSystemChange)
+		window.removeEventListener('change', onSystemChange as any)
 	})
 
 	return (

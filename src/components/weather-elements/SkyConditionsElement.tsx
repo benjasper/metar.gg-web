@@ -89,13 +89,13 @@ interface SkyConditionsElementProps {
 
 const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 	const sortedSkyConditions = createMemo(() =>
-		props.skyConditions.map(x => x).sort((a, b) => a.cloudBase - b.cloudBase)
+		props.skyConditions.map(x => x).sort((a, b) => (a.cloudBase ?? 0) - (b.cloudBase ?? 0))
 	)
 
 	const localHour = createMemo(() =>
 		parseInt(
 			new Date()
-				.toLocaleTimeString('en', { hour: '2-digit', hourCycle: 'h24', timeZone: props.airport.timezone })
+				.toLocaleTimeString('en', { hour: '2-digit', hourCycle: 'h24', timeZone: props.airport.timezone ?? '' })
 				.substring(0, 2)
 		)
 	)
@@ -118,7 +118,7 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 									<SkyConditionText skyCover={condition.skyCover}></SkyConditionText>
 								</span>
 								<Show when={condition.cloudBase}>
-									<span class="my-auto text-base">at {Math.round(condition.cloudBase)} ft</span>
+									<span class="my-auto text-base">at {Math.round(condition.cloudBase!)} ft</span>
 								</Show>
 							</div>
 						)}
@@ -135,7 +135,7 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 					<span class="text-base">
 						<SkyConditionText skyCover={props.skyConditions[0].skyCover}></SkyConditionText>
 						<Show when={props.skyConditions[0].cloudBase}>
-							&nbsp;at {Math.round(props.skyConditions[0].cloudBase)} ft
+							&nbsp;at {Math.round(props.skyConditions[0].cloudBase!)} ft
 						</Show>
 					</span>
 				</Show>

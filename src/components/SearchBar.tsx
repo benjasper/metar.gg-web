@@ -1,6 +1,6 @@
 import { useKeyDownList } from '@solid-primitives/keyboard'
 import { Transition } from 'solid-headless'
-import { Component, createEffect, createSignal, For, mergeProps, onCleanup, Show, untrack } from 'solid-js'
+import { Component, createEffect, createMemo, createSignal, For, mergeProps, onCleanup, Show, untrack } from 'solid-js'
 import { useGraphQL } from '../context/GraphQLClient'
 import { AirportSearchQuery, AirportSearchQueryVariables } from '../queries/generated/graphql'
 import { AIRPORT_SEARCH } from '../queries/AirportQueries'
@@ -29,10 +29,12 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 
 	const newQuery = useGraphQL()
 
-	const [airportResults, refetch] = newQuery<AirportSearchQuery, AirportSearchQueryVariables>(
+	const [airportRequest, refetch] = newQuery<AirportSearchQuery, AirportSearchQueryVariables>(
 		AIRPORT_SEARCH,
 		queryVars
 	)
+
+	const airportResults = createMemo(() => airportRequest()?.getAirports.edges ?? [])
 
 	const throttledSearch = debounce((queryVars: AirportSearchQueryVariables | false) => setQueryVars(queryVars), 200)
 
@@ -77,15 +79,15 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 		}
 
 		if (keys().includes('ARROWDOWN')) {
-			untrackedEvent.preventDefault()
+			untrackedEvent!.preventDefault()
 			setSelectedAirportId(prev =>
-				prev === undefined || prev < airportResults().getAirports.edges.length - 1 ? (prev ?? -1) + 1 : prev
+				prev === undefined || prev < airportResults().length - 1 ? (prev ?? -1) + 1 : prev
 			)
 			return
 		}
 
 		if (keys().includes('ARROWUP')) {
-			untrackedEvent.preventDefault()
+			untrackedEvent!.preventDefault()
 			setSelectedAirportId(prev => (prev === undefined || prev > 0 ? (prev ?? 1) - 1 : prev))
 			return
 		}
@@ -94,20 +96,20 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 			if (
 				id === undefined ||
 				airportResults() === undefined ||
-				airportResults.loading ||
-				!airportResults().getAirports.edges[id] ||
-				airportResults().getAirports.totalCount === 0
+				airportRequest.loading ||
+				!airportResults()[id] ||
+				airportRequest()?.getAirports.totalCount === 0
 			) {
 				return
 			}
 
-			onSubmit(airportResults().getAirports.edges[id].node.identifier)
+			onSubmit(airportResults()[id].node.identifier)
 		}
 
 		// If it doesn't have focus we want to give it focus when we detect letters and numbers
 		if (
 			document.activeElement !== input &&
-			((untrackedEvent.key.length === 1 && untrackedEvent.key.match(/[a-z0-9]/i)) || keys().includes('BACKSPACE'))
+			((untrackedEvent!.key.length === 1 && untrackedEvent!.key.match(/[a-z0-9]/i)) || keys().includes('BACKSPACE'))
 		) {
 			input.focus()
 			return
@@ -125,7 +127,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 						spellcheck={false}
 						tabIndex={0}
 						role="combobox"
-						aria-expanded={isFocused() && airportResults.latest !== undefined && airportResults().getAirports.totalCount > 0}
+						aria-expanded={isFocused() && airportRequest.latest !== undefined && (airportRequest()?.getAirports.totalCount ?? 0) > 0}
 						aria-owns="owned_listbox" aria-haspopup="listbox"
 						autocomplete="off"
 						placeholder={props.placeholder}
@@ -138,7 +140,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 						class="absolute left-3 top-1/2 -translate-y-1/2 transform fill-gray-700 dark:fill-white-dark"
 						size={20}></AiOutlineSearch>
 					<Transition
-						show={airportResults.loading}
+						show={airportRequest.loading}
 						enter="transition duration-[25ms]"
 						enterFrom="opacity-0"
 						enterTo="opacity-100"
@@ -168,7 +170,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 				</div>
 				<Transition
 					class="my-auto flex flex-col gap-32"
-					show={isFocused() && currentInput() !== '' && airportResults.latest !== undefined}
+					show={isFocused() && currentInput() !== '' && airportRequest.latest !== undefined}
 					enter="transform transition duration-[200ms]"
 					role='listbox'
 					id='owned_listbox'
@@ -181,8 +183,8 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 						role="listbox"
 						aria-orientation="vertical"
 						tabindex="-1">
-							<Show when={airportResults.latest && airportResults().getAirports.totalCount > 0}>
-								<For each={airportResults().getAirports.edges}>
+							<Show when={airportRequest.latest && (airportRequest()?.getAirports.totalCount ?? 0) > 0}>
+								<For each={airportResults()}>
 									{(airportNode, i) => (
 										<li
 											class="block w-full px-6 py-2 text-sm text-gray-700 dark:text-white-dark cursor-pointer"
@@ -197,7 +199,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 									)}
 								</For>
 							</Show>
-							<Show when={airportResults() && airportResults().getAirports.totalCount === 0}>
+							<Show when={airportRequest() && airportRequest()?.getAirports.totalCount === 0}>
 								<a
 									href="#"
 									class="pointer-events-none block w-full px-6 py-2 text-sm text-gray-700 dark:text-white-dark"

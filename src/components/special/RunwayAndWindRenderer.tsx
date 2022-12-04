@@ -3,7 +3,7 @@ import { createEffect, createSignal, For, Show } from 'solid-js'
 import { AirportSearchFragment } from '../../queries/generated/graphql'
 import { VariableWind } from '../weather-elements/WindElement'
 
-const cartesianCoordinates = (lat, lon) => {
+const cartesianCoordinates = (lat: number, lon: number) => {
 	const x = merc.fromLatLngToPoint({ lat: lat, lng: lon }).x
 	const y = merc.fromLatLngToPoint({ lat: lat, lng: lon }).y
 
@@ -83,19 +83,19 @@ const RunwayAndWindRenderer = (props: {
 			preparingRunways.push({
 				direction1: {
 					runway: runway.lowRunwayIdentifier,
-					heading: runway.lowRunwayHeading,
+					heading: runway.lowRunwayHeading ?? 0,
 					x: direction1.x,
 					y: direction1.y,
 					favourableLevel: 0,
-					windAngle: 180 - Math.abs(Math.abs(runway.lowRunwayHeading - props.windDirection) - 180),
+					windAngle: 180 - Math.abs(Math.abs((runway.lowRunwayHeading ?? 0) - props.windDirection) - 180),
 				},
 				direction2: {
 					runway: runway.highRunwayIdentifier,
-					heading: runway.highRunwayHeading,
+					heading: runway.highRunwayHeading ?? 0,
 					x: direction2.x,
 					y: direction2.y,
 					favourableLevel: 0,
-					windAngle: 180 - Math.abs(Math.abs(runway.highRunwayHeading - props.windDirection) - 180),
+					windAngle: 180 - Math.abs(Math.abs((runway.highRunwayHeading ?? 0) - props.windDirection) - 180),
 				},
 			})
 		})

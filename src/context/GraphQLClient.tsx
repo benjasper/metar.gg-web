@@ -1,18 +1,21 @@
-import { createContext, createSignal, useContext } from "solid-js";
-import { GraphQLClientQuery } from "@solid-primitives/graphql";
+import { createGraphQLClient, GraphQLClientQuery } from "@solid-primitives/graphql";
+import { createContext, ParentComponent, useContext } from "solid-js";
 
-const GraphQLContext = createContext<GraphQLClientQuery>()
+const client = createGraphQLClient('https://api.metar.gg/graphql')
 
-export function GraphQLProvider(props: { children: any, client: GraphQLClientQuery }) {
-	const [client, setClient] = createSignal(props.client || undefined)
+const GraphQLContext = createContext<GraphQLClientQuery>(client)
+
+const GraphQLProvider: ParentComponent = (props) => {
 
 	return (
-		<GraphQLContext.Provider value={client()}>
+		<GraphQLContext.Provider value={client}>
 			{props.children}
 		</GraphQLContext.Provider>
 	)
 }
 
-export function useGraphQL() {
+function useGraphQL() {
 	return useContext<GraphQLClientQuery>(GraphQLContext)
 }
+
+export { GraphQLProvider, useGraphQL };

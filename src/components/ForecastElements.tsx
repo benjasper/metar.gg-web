@@ -10,7 +10,7 @@ import {
 	AirportSearchFragment,
 	ForecastChangeIndicator,
 	ForecastFragment,
-	TafFragment
+	TafFragment,
 } from '../queries/generated/graphql'
 import { Tag } from './Tag'
 import AltimeterElement from './weather-elements/AltimeterElement'
@@ -99,12 +99,12 @@ const ReloadSliderOnChange: Component<{ forecast: TafFragment }> = props => {
 	return undefined
 }
 
-const WheelControls = slider => {
-	var touchTimeout
-	var position
-	var wheelActive
+const WheelControls = (slider: any) => {
+	let touchTimeout: NodeJS.Timeout
+	let position = { x: 0, y: 0 }
+	let wheelActive = false
 
-	function dispatch(e, name) {
+	function dispatch(e: any, name: string) {
 		position.x -= e.deltaX
 		position.y -= e.deltaY
 		slider.container.dispatchEvent(
@@ -117,7 +117,7 @@ const WheelControls = slider => {
 		)
 	}
 
-	function wheelStart(e) {
+	function wheelStart(e: any) {
 		position = {
 			x: e.pageX,
 			y: e.pageY,
@@ -125,11 +125,11 @@ const WheelControls = slider => {
 		dispatch(e, 'ksDragStart')
 	}
 
-	function wheel(e) {
+	function wheel(e: any) {
 		dispatch(e, 'ksDrag')
 	}
 
-	function wheelEnd(e) {
+	function wheelEnd(e: any) {
 		dispatch(e, 'ksDragEnd')
 	}
 
@@ -173,11 +173,11 @@ const changeIndicatorCodeToText = (changeIndicator: string): string => {
 const ForecastElements: Component<ForecastElementsProps> = props => {
 	const now = useTimeStore()
 
-	const issueTime = () => new Date(props.taf.issueTime)
+	const issueTime = () => new Date(props.taf?.issueTime)
 	const issueTimeDuration = (): Duration => Duration.fromDates(issueTime(), now())
 
-	const validFrom = createMemo(() => new Date(props.taf.validFromTime))
-	const validTo = createMemo(() => new Date(props.taf.validToTime))
+	const validFrom = createMemo(() => new Date(props.taf?.validFromTime))
+	const validTo = createMemo(() => new Date(props.taf?.validToTime))
 
 	const isValid = () => validFrom().getTime() <= now().getTime() && validTo().getTime() >= now().getTime()
 
@@ -185,11 +185,11 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 	const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
 	const timeZoneIsSameAsAirport = createMemo(
 		() =>
-			new Date(props.taf.issueTime).toLocaleString('en-US', { timeZone: browserTimezone }) ===
-			new Date(props.taf.issueTime).toLocaleString('en-US', { timeZone: props.airport.timezone })
+			new Date(props.taf?.issueTime).toLocaleString('en-US', { timeZone: browserTimezone }) ===
+			new Date(props.taf?.issueTime).toLocaleString('en-US', { timeZone: props.airport.timezone ?? '' })
 	)
 
-	let omitNull = obj => {
+	let omitNull = (obj: any) => {
 		Object.keys(obj)
 			.filter(k => obj[k] === null || (typeof obj[k][Symbol.iterator] === 'function' && obj[k].length === 0))
 			.forEach(k => delete obj[k])
@@ -199,7 +199,7 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 	const forecastsSorted = createMemo(() => {
 		let forecasts: ForecastFragment[] = []
 
-		forecasts = props.taf.forecast.map(forecast => forecast)
+		forecasts = props.taf?.forecast?.map(forecast => forecast) ?? []
 
 		forecasts = forecasts.sort((x, y) => {
 			const xChangeIndicator = changeIndicatorToSortingIndex(x.changeIndicator ?? '')
@@ -264,7 +264,7 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 									day: 'numeric',
 									month: 'long',
 									year: 'numeric',
-									timeZone: isLocalTime() ? props.airport.timezone : browserTimezone,
+									timeZone: isLocalTime() ? props.airport.timezone ?? '' : browserTimezone,
 								})}>
 								Issued {issueTimeDuration().humanImprecise()}
 							</Tag>
@@ -278,13 +278,13 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 								{validFrom().toLocaleDateString([], {
 									hour: 'numeric',
 									minute: '2-digit',
-									timeZone: isLocalTime() ? props.airport.timezone : browserTimezone,
+									timeZone: isLocalTime() ? props.airport.timezone ?? '' : browserTimezone,
 								})}{' '}
 								to{' '}
 								{validTo().toLocaleDateString([], {
 									hour: 'numeric',
 									minute: '2-digit',
-									timeZone: isLocalTime() ? props.airport.timezone : browserTimezone,
+									timeZone: isLocalTime() ? props.airport.timezone ?? '' : browserTimezone,
 								})}
 							</Tag>
 						</div>
@@ -325,7 +325,7 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 								</span>
 							}>
 							<SliderProvider>
-								<ReloadSliderOnChange forecast={props.taf} />
+								<ReloadSliderOnChange forecast={props.taf!} />
 								<Slider
 									options={{
 										slides: { perView: 1, spacing: 32 },
@@ -347,7 +347,7 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 																weekday: 'long',
 																...timeFormat,
 																timeZone: isLocalTime()
-																	? props.airport.timezone
+																	? props.airport.timezone ?? ''
 																	: browserTimezone,
 															})}
 														</span>
@@ -372,13 +372,17 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 																		: undefined,
 																...timeFormat,
 																timeZone: isLocalTime()
-																	? props.airport.timezone
+																	? props.airport.timezone ?? ''
 																	: browserTimezone,
 															})}
 														</span>
 													</div>
 													<Show when={forecast.changeIndicator}>
-														<Tag class="gap-1" title={`Change indicator: ${changeIndicatorCodeToText(forecast.changeIndicator)}`}>
+														<Tag
+															class="gap-1"
+															title={`Change indicator: ${changeIndicatorCodeToText(
+																forecast.changeIndicator!
+															)}`}>
 															<Show
 																when={
 																	forecast.changeIndicator ===
@@ -402,36 +406,39 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 													<Show when={forecast.visibilityHorizontal}>
 														<VisibilityElement
 															visibility={
-																forecast.visibilityHorizontal
+																forecast.visibilityHorizontal!
 															}></VisibilityElement>
 													</Show>
-													<Show when={forecast.skyConditions.length > 0}>
+													<Show
+														when={
+															forecast.skyConditions && forecast.skyConditions.length > 0
+														}>
 														<SkyConditionsElement
-															skyConditions={forecast.skyConditions}
+															skyConditions={forecast.skyConditions!}
 															airport={props.airport}></SkyConditionsElement>
 													</Show>
-													<Show when={forecast.weather.length > 1}>
+													<Show when={forecast.weather && forecast.weather.length > 1}>
 														<PrecipitationElement
-															weather={forecast.weather}></PrecipitationElement>
+															weather={forecast.weather!}></PrecipitationElement>
 													</Show>
 													<Show when={forecast.altimeter && forecast.altimeter > 0}>
 														<AltimeterElement
-															altimeter={forecast.altimeter}></AltimeterElement>
+															altimeter={forecast.altimeter!}></AltimeterElement>
 													</Show>
-													<Show when={forecast.windSpeed}>
+													<Show when={forecast.windSpeed && forecast.windDirection}>
 														<WindElement
 															airport={props.airport}
-															windDirection={forecast.windDirection}
-															windSpeed={forecast.windSpeed}
-															windGust={forecast.windGust}
+															windDirection={forecast.windDirection!}
+															windSpeed={forecast.windSpeed!}
+															windGust={forecast.windGust ?? 0}
 															size="small"
 														/>
 													</Show>
-													<Show when={forecast.windShearSpeed}>
+													<Show when={forecast.windShearSpeed && forecast.windShearDirection}>
 														<WindShearElement
-															direction={forecast.windShearDirection}
-															speed={forecast.windShearSpeed}
-															height={forecast.windShearHeight}></WindShearElement>
+															direction={forecast.windShearDirection!}
+															speed={forecast.windShearSpeed!}
+															height={forecast.windShearHeight ?? 0}></WindShearElement>
 													</Show>
 												</div>
 											</div>
@@ -443,7 +450,7 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 						</Show>
 					</div>
 					<p aria-label="TAF" class="mx-auto w-full py-16 text-center font-mono text-xl dark:text-white-dark">
-						{props.taf.rawText}
+						{props.taf!.rawText}
 					</p>
 				</>
 			</Show>

@@ -19,25 +19,25 @@ interface ParsedWeatherElementsProps {
 }
 
 const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
-	const latestMetar = createMemo(() => props.airport?.station.metars?.edges[0]?.node)
+	const latestMetar = createMemo(() => props.airport?.station?.metars?.edges[0]?.node)
 
 	const now = useTimeStore()
 
 	const metarObservationTime = () =>
-		new Date(props.airport?.station.metars?.edges[0]?.node.observationTime) ?? undefined
+		new Date(props.airport?.station?.metars?.edges[0]?.node.observationTime) ?? undefined
 	const lastObservationDuration = (): Duration => Duration.fromDates(metarObservationTime(), now())
 
 	const nextImportPrediction = () =>
-		new Date(props.airport?.station.metars?.edges[0]?.node.nextImportTimePrediction) ?? undefined
+		new Date(props.airport?.station?.metars?.edges[0]?.node.nextImportTimePrediction) ?? undefined
 	const nextImportPredictionDuration = (): Duration => Duration.fromDates(nextImportPrediction(), now())
 
-	const importTime = () => new Date(props.airport?.station.metars?.edges[0]?.node.importTime) ?? undefined
+	const importTime = () => new Date(props.airport?.station?.metars?.edges[0]?.node.importTime) ?? undefined
 	const importTimeDuration = (): Duration => Duration.fromDates(importTime(), now())
 
 	return (
 		<>
 			<div class="flex flex-col justify-between md:flex-row">
-				<Show when={props.airport.station.metars.edges.length > 0}>
+				<Show when={(props.airport?.station?.metars.edges.length ?? 0) > 0}>
 					<div class="flex flex-col">
 						<h3 class="text-2xl dark:text-white-dark">Current weather</h3>
 						<div class="flex flex-row flex-wrap justify-start gap-2 pt-2">
@@ -117,7 +117,7 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 							windDirection={latestMetar().windDirection}
 							windSpeed={latestMetar().windSpeed}
 							windGust={latestMetar().windGust}
-							variableWindDirection={latestMetar().presentWeather}
+							variableWindDirection={latestMetar().presentWeather ?? ''}
 							size="large"
 						/>
 					</div>

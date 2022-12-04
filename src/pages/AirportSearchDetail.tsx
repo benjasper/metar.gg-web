@@ -31,7 +31,7 @@ const AirportSearchDetail: Component = () => {
 
 	const now = useTimeStore()
 
-	const [airportStore, setAirportStore] = createStore<{ airport: AirportSearchFragment | undefined }>(undefined)
+	const [airportStore, setAirportStore] = createStore<{ airport: AirportSearchFragment | undefined }>({airport: undefined})
 
 	const [lastRefreshed, setLastRefreshed] = createSignal<Date>(new Date())
 	const [airportIdentifier, setAirportIdentifier] = createSignal<GetSingleAirportQueryVariables | false>(false)
@@ -43,8 +43,8 @@ const AirportSearchDetail: Component = () => {
 	const throttledLoading = debounce((id: string) => setAirportIdentifier({ identifier: id }), 100)
 
 	createEffect(() => {
-		if (airportRequest() && airportRequest().getAirport) {
-			setAirportStore(reconcile({ airport: airportRequest().getAirport }))
+		if (airportRequest() && airportRequest()!.getAirport) {
+			setAirportStore(reconcile({ airport: airportRequest()!.getAirport! }))
 		}
 	})
 
@@ -61,7 +61,7 @@ const AirportSearchDetail: Component = () => {
 					airportStore.airport.identifier
 			  }${airportStore.airport.iataCode ? ' / ' + airportStore.airport.iataCode : ''}) located in ${
 					airportStore.airport.municipality ? airportStore.airport.municipality + ',' : ''
-			  } ${airportStore.airport.country.name}.`
+			  } ${(airportStore.airport.country?.name ?? '')}.`
 			: ''
 	})
 
@@ -107,8 +107,8 @@ const AirportSearchDetail: Component = () => {
 			name: airportStore.airport?.name,
 			address: {
 				'@type': 'PostalAddress',
-				addressCountry: airportStore.airport?.country.name,
-				addressLocality: airportStore.airport?.municipality,
+				addressCountry: airportStore.airport?.country?.name ?? '',
+				addressLocality: airportStore.airport?.municipality ?? '',
 			},
 			geo: {
 				'@type': 'GeoCoordinates',
@@ -155,38 +155,38 @@ const AirportSearchDetail: Component = () => {
 				}>
 				<div class="mx-auto flex flex-col py-16 text-center dark:text-white-dark">
 					<h2>
-						{airportStore.airport.icaoCode}{' '}
-						<Show when={airportStore.airport.iataCode}>/ {airportStore.airport.iataCode}</Show>
+						{airportStore.airport!.icaoCode}{' '}
+						<Show when={airportStore.airport!.iataCode}>/ {airportStore.airport!.iataCode}</Show>
 					</h2>
-					<span class="mt-1 text-lg">{airportStore.airport.name}</span>
+					<span class="mt-1 text-lg">{airportStore.airport!.name}</span>
 
 					<div class="flex max-w-md flex-wrap justify-center gap-2 pt-4">
 						<Tag>
 							<IoLocationSharp class="my-auto mr-1"></IoLocationSharp>
-							<Show when={airportStore.airport.municipality}>
-								{airportStore.airport.municipality},
+							<Show when={airportStore.airport!.municipality}>
+								{airportStore.airport!.municipality},
 							</Show>{' '}
-							{airportStore.airport.country.name}
+							{airportStore.airport!.country!.name}
 						</Tag>
-						<Show when={airportStore.airport.elevation}>
+						<Show when={airportStore.airport!.elevation}>
 							<Tag>
 								<TbMountain class="my-auto mr-1" />
-								Elevation {airportStore.airport.elevation} ft
+								Elevation {airportStore.airport!.elevation} ft
 							</Tag>
 						</Show>
-						<Show when={airportStore.airport.timezone}>
+						<Show when={airportStore.airport!.timezone}>
 							<Tag>
 								<HiSolidClock class="my-auto mr-1"></HiSolidClock>
 								Local time{' '}
 								{now().toLocaleTimeString([], {
 									hour: 'numeric',
 									minute: '2-digit',
-									timeZone: airportStore.airport.timezone,
+									timeZone: airportStore.airport!.timezone ?? 'UTC',
 								})}
 							</Tag>
 						</Show>
-						<Show when={airportStore.airport.website}>
-							<LinkTag href={airportStore.airport.website}>
+						<Show when={airportStore.airport!.website}>
+							<LinkTag href={airportStore.airport!.website!}>
 								<CgWebsite class="my-auto mr-1" />
 								Website
 								<FiExternalLink class="my-auto ml-1" />
@@ -194,10 +194,10 @@ const AirportSearchDetail: Component = () => {
 						</Show>
 					</div>
 				</div>
-				<WeatherElements airport={airportStore.airport} lastRefreshed={lastRefreshed()}></WeatherElements>
+				<WeatherElements airport={airportStore.airport!} lastRefreshed={lastRefreshed()}></WeatherElements>
 				<ForecastElements
-					airport={airportStore.airport}
-					taf={airportStore.airport.station.tafs.edges[0]?.node}></ForecastElements>
+					airport={airportStore.airport!}
+					taf={airportStore.airport!.station?.tafs.edges[0]?.node}></ForecastElements>
 			</Show>
 		</PageContent>
 	)

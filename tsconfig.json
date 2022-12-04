@@ -6,6 +6,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "jsx": "preserve",
+    "strict": true,
     "jsxImportSource": "solid-js",
     "types": ["vite/client"],
     "noEmit": true,

@@ -71,7 +71,7 @@ const PrecipitationConditionElement: Component<{ condition: string }> = props =>
 	const descriptor = (): Descriptor | undefined =>
 		Object.values(Descriptor).find(key => props.condition.includes(key))
 
-	const precipitationType = (): PrecipitationType =>
+	const precipitationType = (): PrecipitationType | undefined =>
 		Object.values(PrecipitationType).find(key => props.condition.includes(key))
 
 	const obscuration = (): Obscuration | undefined =>

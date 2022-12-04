@@ -15,7 +15,6 @@ interface WindElementProps {
 
 	size: 'large' | 'small'
 }
-
 export interface VariableWind {
 	from: number
 	to: number
@@ -68,7 +67,7 @@ const WindElement: Component<WindElementProps> = props => {
 				</span>
 				<Show when={variableWind()}>
 					<span>
-						variable from {variableWind().from}° to {variableWind().to}°
+						variable from {variableWind()!.from}° to {variableWind()!.to}°
 					</span>
 				</Show>
 				<Show when={props.windGust}>

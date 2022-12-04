@@ -1,7 +1,6 @@
 import { Accessor, createContext, createSignal, onCleanup, useContext } from 'solid-js'
-import { createStore } from 'solid-js/store'
 
-const TimeStoreContext = createContext<Accessor<Date>>()
+const TimeStoreContext = createContext<Accessor<Date>>(() => new Date())
 
 export function TimeStoreProvider(props: { children: any }) {
 	const [store, setStore] = createSignal<Date>(new Date())
