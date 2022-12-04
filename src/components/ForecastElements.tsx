@@ -1,4 +1,3 @@
-import { Toggle } from 'solid-headless'
 import { BsClockHistory } from 'solid-icons/bs'
 import { HiOutlineSwitchHorizontal } from 'solid-icons/hi'
 import { TbChevronLeft } from 'solid-icons/tb'
@@ -10,9 +9,10 @@ import {
 	AirportSearchFragment,
 	ForecastChangeIndicator,
 	ForecastFragment,
-	TafFragment
+	TafFragment,
 } from '../queries/generated/graphql'
 import { Tag } from './Tag'
+import Toggle from './Toggle'
 import AltimeterElement from './weather-elements/AltimeterElement'
 import { PrecipitationElement } from './weather-elements/PrecipitationElement'
 import SkyConditionsElement from './weather-elements/SkyConditionsElement'
@@ -289,31 +289,13 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 							</Tag>
 						</div>
 						<Show when={!timeZoneIsSameAsAirport()}>
-							<div class="flex gap-2">
-								<label for="localTime" class="my-auto normal-case">
-									My time
-								</label>
-								<Toggle
-									id="local-time"
-									pressed={isLocalTime()}
-									onChange={setIsLocalTime}
-									class="relative inline-flex h-[1.5rem] w-[3rem] shrink-0 cursor-pointer rounded-full transition-all"
-									classList={{
-										'bg-blue-600 dark:bg-blue-700': isLocalTime(),
-										'bg-gray-200 dark:bg-black-100': !isLocalTime(),
-									}}>
-									<span class="sr-only">Timezone setting</span>
-									<span
-										aria-hidden="true"
-										class={`${
-											isLocalTime() ? 'translate-x-[1.6rem]' : 'translate-x-[0.1rem]'
-										} pointer-events-none my-auto inline-block h-[1.3rem] w-[1.3rem] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out dark:bg-white-dark`}
-									/>
-								</Toggle>
-								<label for="localTime" class="my-auto normal-case">
-									Local time
-								</label>
-							</div>
+							<Toggle
+								checked={isLocalTime()}
+								onChange={value => setIsLocalTime(value)}
+								label="Timezone setting"
+								offLabel="My time"
+								onLabel="Local time"
+							/>
 						</Show>
 					</div>
 					<div class={`relative mt-6 flex max-w-full flex-col overflow-x-hidden md:overflow-x-visible`}>
