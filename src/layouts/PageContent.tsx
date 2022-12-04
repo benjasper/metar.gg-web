@@ -7,6 +7,7 @@ import metarGGLogo from '../images/metargg-logo.webp'
 interface PageContentProps {
 	title: string
 	description: string
+	contentFullHeight?: boolean
 }
 
 const PageContent: ParentComponent<PageContentProps> = props => {
@@ -25,7 +26,7 @@ const PageContent: ParentComponent<PageContentProps> = props => {
 			<Meta name="twitter:image" content={metarGGLogo}></Meta>
 
 			<div class="grid min-h-full grid-rows-layout bg-gray-light pt-6 transition-colors dark:bg-black">
-				<div class="container flex min-h-screen flex-col transition-colors">{props.children}</div>
+				<div class="container flex flex-col transition-colors" classList={{'min-h-screen': props.contentFullHeight ?? false}}>{props.children}</div>
 				<Footer></Footer>
 			</div>
 		</>

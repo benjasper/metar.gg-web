@@ -10,7 +10,7 @@ import {
 	AirportSearchFragment,
 	ForecastChangeIndicator,
 	ForecastFragment,
-	TafFragment,
+	TafFragment
 } from '../queries/generated/graphql'
 import { Tag } from './Tag'
 import AltimeterElement from './weather-elements/AltimeterElement'
@@ -247,7 +247,7 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 
 	return (
 		<div class="flex w-full flex-col">
-			<Show when={props.taf} fallback={<span class="mx-auto mt-8">No forecast available.</span>}>
+			<Show when={props.taf} fallback={<span class="mx-auto py-32 text-xl">No forecast available.</span>}>
 				<>
 					<h3 class="text-2xl dark:text-white-dark">Current forecast</h3>
 					<div class="flex w-full flex-row flex-wrap justify-between gap-2 pt-2">

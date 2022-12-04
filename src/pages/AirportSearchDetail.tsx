@@ -134,7 +134,7 @@ const AirportSearchDetail: Component = () => {
 	})
 
 	return (
-		<PageContent title={title()} description={description()}>
+		<PageContent title={title()} description={description()} contentFullHeight={true}>
 			<div class="flex flex-col justify-between gap-6 md:flex-row">
 				<Logo class="mx-auto md:mx-0 md:w-1/4"></Logo>
 				<SearchBar
