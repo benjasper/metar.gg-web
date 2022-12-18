@@ -10,6 +10,7 @@ import {
 	RiWeatherSunFill
 } from 'solid-icons/ri'
 import { Component, createMemo, For, Match, Show, Switch } from 'solid-js'
+import { useUnitStore } from '../../context/UnitStore'
 import WeatherElementLayout from '../../layouts/WeatherElementLayout'
 import { AirportSearchFragment, SkyConditionFragment, SkyConditionSkyCover } from '../../queries/generated/graphql'
 
@@ -88,6 +89,13 @@ interface SkyConditionsElementProps {
 }
 
 const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
+	const [unitStore] = useUnitStore()
+
+	const selected = createMemo(() => unitStore.height.units[unitStore.height.selected])
+	const convert = (value: number) => selected().conversionFunction(value)
+
+	const hasCloudBase = () => props.skyConditions.some(x => x.cloudBase !== null)
+
 	const sortedSkyConditions = createMemo(() =>
 		props.skyConditions.map(x => x).sort((a, b) => (a.cloudBase ?? 0) - (b.cloudBase ?? 0))
 	)
@@ -103,7 +111,7 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 	const isDayTime = () => localHour() >= 6 && localHour() <= 18
 
 	return (
-		<WeatherElementLayout name="Sky conditions" icon={<IoCloudy></IoCloudy>}>
+		<WeatherElementLayout name="Sky conditions" icon={<IoCloudy></IoCloudy>} unitType={hasCloudBase() ? 'height' : undefined}>
 			<div class="flex flex-col gap-2 text-center text-xl dark:text-white-dark">
 				<Show when={props.skyConditions.length > 1}>
 					<For each={sortedSkyConditions()}>
@@ -118,7 +126,7 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 									<SkyConditionText skyCover={condition.skyCover}></SkyConditionText>
 								</span>
 								<Show when={condition.cloudBase}>
-									<span class="my-auto text-base">at {Math.round(condition.cloudBase!)} ft</span>
+									<span class="my-auto text-base">at {Math.round(convert(condition.cloudBase!)) > 1 ? Math.round(convert(condition.cloudBase!)) : convert(condition.cloudBase!).toFixed(1)} {selected().symbol}</span>
 								</Show>
 							</div>
 						)}
@@ -135,7 +143,7 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 					<span class="text-base">
 						<SkyConditionText skyCover={props.skyConditions[0].skyCover}></SkyConditionText>
 						<Show when={props.skyConditions[0].cloudBase}>
-							&nbsp;at {Math.round(props.skyConditions[0].cloudBase!)} ft
+							&nbsp;at {Math.round(convert(props.skyConditions[0].cloudBase!)) > 1 ? Math.round(convert(props.skyConditions[0].cloudBase!)) : convert(props.skyConditions[0].cloudBase!).toFixed(1)} {selected().symbol}
 						</Show>
 					</span>
 				</Show>
