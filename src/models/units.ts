@@ -19,6 +19,7 @@ enum LengthUnit {
 enum HeightUnit {
 	Feet = 'ft',
 	Meters = 'm',
+	Kilometers = 'km',
 }
 
 // Temperature

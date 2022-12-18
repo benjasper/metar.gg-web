@@ -72,7 +72,7 @@ const createUnitStore = () => {
 	}
 
 	const kilometersHeight: Unit = {
-		symbol: HeightUnit.Meters,
+		symbol: HeightUnit.Kilometers,
 		name: 'Kilometers',
 		conversionFunction: (value: number) => value / 3280.84,
 	}
