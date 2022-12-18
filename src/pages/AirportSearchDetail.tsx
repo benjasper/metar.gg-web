@@ -16,6 +16,7 @@ import { LinkTag, Tag } from '../components/Tag'
 import WeatherElements from '../components/WeatherElements'
 import { useGraphQL } from '../context/GraphQLClient'
 import { useTimeStore } from '../context/TimeStore'
+import { useUnitStore } from '../context/UnitStore'
 import PageContent from '../layouts/PageContent'
 import { AIRPORT_SINGLE } from '../queries/AirportQueries'
 import {
@@ -28,6 +29,8 @@ const AirportSearchDetail: Component = () => {
 	const params = useParams()
 	const navigate = useNavigate()
 	const newQuery = useGraphQL()
+
+	const [unitStore, {selectUnit}] = useUnitStore()
 
 	const now = useTimeStore()
 
@@ -95,6 +98,37 @@ const AirportSearchDetail: Component = () => {
 	createEffect(() => {
 		if (params.airportIdentifier) {
 			doSearch(params.airportIdentifier)
+		}
+	})
+
+	createEffect(() => {
+		// Check raw METAR for different units
+		if (!airportStore.airport || airportStore.airport.station!.metars.edges.length === 0) {
+			return
+		}
+
+		const rawMetar = airportStore.airport.station!.metars.edges[0].node.rawText
+
+		// Check for visibility unit
+		if (rawMetar.includes('SM')) {
+			selectUnit('length', 'mi')
+		} else {
+			selectUnit('length', 'km')
+		}
+
+		// Check for wind speed unit
+		if (rawMetar.includes('MPS')) {
+			selectUnit('speed', 'm/s')
+		} else {
+			selectUnit('speed', 'kt')
+		}
+
+		// Check if altimeter is in inches
+		const regexAltimeter = new RegExp(/A\d{4}/)
+		if (regexAltimeter.test(rawMetar)) {
+			selectUnit('pressure', 'inHg')
+		} else {
+			selectUnit('pressure', 'hPa')
 		}
 	})
 

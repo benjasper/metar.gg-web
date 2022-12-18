@@ -116,7 +116,7 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 				<Show when={props.skyConditions.length > 1}>
 					<For each={sortedSkyConditions()}>
 						{(condition, i) => (
-							<div class="mx-auto flex flex-row gap-1 text-center">
+							<div class="mx-auto flex whitespace-nowrap flex-row gap-1 text-center">
 								<SkyConditionIcon
 									skyCover={condition.skyCover}
 									class="my-auto w-5"

@@ -1,20 +1,6 @@
 import { createContext, ParentComponent, useContext } from 'solid-js'
 import { createStore } from 'solid-js/store'
-
-interface Unit {
-	symbol: string
-	name: string
-
-	/**
-	 * The function that converts the value to the specified unit from the base unit
-	 */
-	conversionFunction: (value: number) => number
-}
-
-interface UnitConfiguration {
-	selected: number
-	units: Unit[]
-}
+import { UnitConfiguration, Unit, SpeedUnit, LengthUnit, HeightUnit, TemperatureUnit, PressureUnit } from '../models/units'
 
 interface UnitStore {
 	speed: UnitConfiguration
@@ -26,91 +12,91 @@ interface UnitStore {
 
 const createUnitStore = () => {
 	const knots: Unit = {
-		symbol: 'kt',
+		symbol: SpeedUnit.Knots,
 		name: 'Knots',
 		conversionFunction: (value: number) => value,
 	}
 
 	const milesPerHour: Unit = {
-		symbol: 'mph',
+		symbol: SpeedUnit.MilesPerHour,
 		name: 'Miles per hour',
 		conversionFunction: (value: number) => value * 1.15078,
 	}
 
 	const kilometersPerHour: Unit = {
-		symbol: 'km/h',
+		symbol: SpeedUnit.KilometersPerHour,
 		name: 'Kilometers per hour',
 		conversionFunction: (value: number) => value * 1.852,
 	}
 
 	const metersPerSecond: Unit = {
-		symbol: 'm/s',
+		symbol: SpeedUnit.MetersPerSecond,
 		name: 'Meters per second',
 		conversionFunction: (value: number) => value * 0.514444,
 	}
 
 	const kilometers: Unit = {
-		symbol: 'km',
+		symbol: LengthUnit.Kilometers,
 		name: 'Kilometers',
 		conversionFunction: (value: number) => value,
 	}
 
 	const meters: Unit = {
-		symbol: 'm',
+		symbol: LengthUnit.Meters,
 		name: 'Meters',
 		conversionFunction: (value: number) => value * 1000,
 	}
 
 	const miles: Unit = {
-		symbol: 'mi',
+		symbol: LengthUnit.Miles,
 		name: 'Miles',
 		conversionFunction: (value: number) => value * 0.621371,
 	}
 
 	const nauticalMiles: Unit = {
-		symbol: 'NM',
+		symbol: LengthUnit.NauticalMiles,
 		name: 'Nautical Miles',
 		conversionFunction: (value: number) => value * 0.539957,
 	}
 
 	const feet: Unit = {
-		symbol: 'ft',
+		symbol: HeightUnit.Feet,
 		name: 'Feet',
 		conversionFunction: (value: number) => value,
 	}
 
 	const metersHeight: Unit = {
-		symbol: 'm',
+		symbol: HeightUnit.Meters,
 		name: 'Meters',
-		conversionFunction: (value: number) => value * 3.28084,
+		conversionFunction: (value: number) => value / 3.28084,
 	}
 
 	const kilometersHeight: Unit = {
-		symbol: 'km',
+		symbol: HeightUnit.Meters,
 		name: 'Kilometers',
-		conversionFunction: (value: number) => value * 0.0003048,
+		conversionFunction: (value: number) => value / 3280.84,
 	}
 
 	const celsius: Unit = {
-		symbol: '°C',
+		symbol: TemperatureUnit.Celsius,
 		name: 'Celsius',
 		conversionFunction: (value: number) => value,
 	}
 
 	const fahrenheit: Unit = {
-		symbol: '°F',
+		symbol: TemperatureUnit.Fahrenheit,
 		name: 'Fahrenheit',
 		conversionFunction: (value: number) => value * 1.8 + 32,
 	}
 
 	const hectopascal: Unit = {
-		symbol: 'hpa',
+		symbol: PressureUnit.Hectopascals,
 		name: 'Hectopascal',
 		conversionFunction: (value: number) => value,
 	}
 
 	const inchesOfMercury: Unit = {
-		symbol: 'inHg',
+		symbol: PressureUnit.InchesOfMercury,
 		name: 'Inches of Mercury',
 		conversionFunction: (value: number) => value * 0.029529983071445,
 	}
@@ -173,4 +159,3 @@ function useUnitStore() {
 
 export { UnitStoreProvider, useUnitStore }
 export type { UnitConfiguration, Unit, UnitStore }
-

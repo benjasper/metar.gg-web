@@ -1,7 +1,9 @@
 import { Menu, MenuItem, Popover, PopoverButton, PopoverPanel, Transition } from 'solid-headless'
 import { BsThreeDotsVertical } from 'solid-icons/bs'
 import { CgArrowsExchange } from 'solid-icons/cg'
-import { For, JSX, ParentComponent, Show } from 'solid-js'
+import { createSignal, For, JSX, ParentComponent, Show } from 'solid-js'
+import { Portal } from 'solid-js/web'
+import usePopper from 'solid-popper'
 import { UnitStore, useUnitStore } from '../context/UnitStore'
 
 interface ParsedWeatherElementLayoutProps {
@@ -15,6 +17,13 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 	const [unitStore, { selectUnit }] = useUnitStore()
 
 	const unitConfiguration = () => (props.unitType ? unitStore[props.unitType] : undefined)
+
+	const [anchor, setAnchor] = createSignal<HTMLElement>()
+	const [popper, setPopper] = createSignal<HTMLElement>()
+
+	usePopper(anchor, popper, {
+		placement: 'auto',
+	})
 
 	return (
 		<div
@@ -32,44 +41,48 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 					{({ isOpen }) => (
 						<>
 							<PopoverButton
-								classList={{ 'text-opacity-90': isOpen() }}
+								ref={setAnchor}
 								class="group inline-flex items-center rounded-md p-2 text-base font-medium text-black dark:text-white-darker">
 								<BsThreeDotsVertical></BsThreeDotsVertical>
 							</PopoverButton>
-							<PopoverPanel
-								unmount={true}
-								class="absolute right-0 md:right-auto md:left-1/2 z-50 mt-2 md:-translate-x-1/2 transform px-4">
-								<Transition
-									show={isOpen()}
-									enter="transition duration-100"
-									enterFrom="opacity-0 scale-50"
-									enterTo="opacity-100 scale-100"
-									leave="transition duration-100"
-									leaveFrom="opacity-100 scale-100"
-									leaveTo="opacity-0 scale-50">
-									<Menu class="flex flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white dark:bg-black-200 shadow-md dark:shadow-xl">
-										<span class='text-xs font-semibold px-4 pt-2'>Unit conversion</span>
-										<For each={unitConfiguration()!.units}>
-											{unit => (
-												<Show
-													when={
-														unitStore[props.unitType!].units[
-															unitStore[props.unitType!].selected
-														].symbol !== unit.symbol
-													}>
-													<MenuItem
-														as="button"
-														onClick={() => selectUnit(props.unitType!, unit.symbol)}
-														class="flex gap-1 whitespace-nowrap rounded px-4 py-2 text-left text-sm text-black dark:text-white-darker transition-all hover:bg-gray-light hover:dark:bg-black-100">
-														<CgArrowsExchange class='my-auto' />
-														<span>Display in {unit.name} ({unit.symbol})</span>
-													</MenuItem>
-												</Show>
-											)}
-										</For>
-									</Menu>
-								</Transition>
-							</PopoverPanel>
+							<Portal mount={document.getElementById('modal')!}>
+								<PopoverPanel ref={setPopper} unmount={true} class="relative z-30 px-4">
+									<Transition
+										show={isOpen()}
+										enter="transition ease-out duration-100"
+										enterFrom="transform opacity-0 scale-95"
+										enterTo="transform opacity-100 scale-100"
+										leave="transition ease-in duration-75"
+										leaveFrom="transform opacity-100 scale-100"
+										leaveTo="transform opacity-0 scale-75">
+										<Menu class="flex flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-black-150 dark:shadow-xl">
+											<span class="px-4 pt-2 text-xs font-semibold text-black dark:text-white-darker">
+												Unit conversion
+											</span>
+											<For each={unitConfiguration()!.units}>
+												{unit => (
+													<Show
+														when={
+															unitStore[props.unitType!].units[
+																unitStore[props.unitType!].selected
+															].symbol !== unit.symbol
+														}>
+														<MenuItem
+															as="button"
+															onClick={() => selectUnit(props.unitType!, unit.symbol)}
+															class="flex gap-1 whitespace-nowrap rounded px-4 py-2 text-left text-sm text-black transition-all hover:bg-gray-light dark:text-white-darker hover:dark:bg-black-100">
+															<CgArrowsExchange class="my-auto" />
+															<span>
+																Display in {unit.name} ({unit.symbol})
+															</span>
+														</MenuItem>
+													</Show>
+												)}
+											</For>
+										</Menu>
+									</Transition>
+								</PopoverPanel>
+							</Portal>
 						</>
 					)}
 				</Popover>

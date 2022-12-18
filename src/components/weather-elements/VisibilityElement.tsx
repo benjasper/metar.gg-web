@@ -2,7 +2,7 @@ import { RiMapPinDistanceFill } from 'solid-icons/ri'
 import { Component, Show } from 'solid-js'
 import { useUnitStore } from '../../context/UnitStore'
 import WeatherElementLayout from '../../layouts/WeatherElementLayout'
-import { MetarFragment } from '../../queries/generated/graphql'
+import { MetarFragment, PressureUnit } from '../../queries/generated/graphql'
 
 interface VisibilityElementProps {
 	visibility: MetarFragment['visibility']
