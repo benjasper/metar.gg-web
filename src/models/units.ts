@@ -46,10 +46,10 @@ interface Unit {
 
 interface UnitConfiguration {
 	selected: number
+	locked: string
 	units: Unit[]
 }
 
-
-
 export { SpeedUnit, LengthUnit, HeightUnit, TemperatureUnit, PressureUnit }
 export type { Unit, UnitConfiguration }
+

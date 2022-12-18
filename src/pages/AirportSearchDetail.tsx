@@ -30,11 +30,13 @@ const AirportSearchDetail: Component = () => {
 	const navigate = useNavigate()
 	const newQuery = useGraphQL()
 
-	const [unitStore, {selectUnit}] = useUnitStore()
+	const [unitStore, { selectUnit }] = useUnitStore()
 
 	const now = useTimeStore()
 
-	const [airportStore, setAirportStore] = createStore<{ airport: AirportSearchFragment | undefined }>({airport: undefined})
+	const [airportStore, setAirportStore] = createStore<{ airport: AirportSearchFragment | undefined }>({
+		airport: undefined,
+	})
 
 	const [lastRefreshed, setLastRefreshed] = createSignal<Date>(new Date())
 	const [airportIdentifier, setAirportIdentifier] = createSignal<GetSingleAirportQueryVariables | false>(false)
@@ -64,7 +66,7 @@ const AirportSearchDetail: Component = () => {
 					airportStore.airport.identifier
 			  }${airportStore.airport.iataCode ? ' / ' + airportStore.airport.iataCode : ''}) located in ${
 					airportStore.airport.municipality ? airportStore.airport.municipality + ',' : ''
-			  } ${(airportStore.airport.country?.name ?? '')}.`
+			  } ${airportStore.airport.country?.name ?? ''}.`
 			: ''
 	})
 
@@ -110,25 +112,31 @@ const AirportSearchDetail: Component = () => {
 		const rawMetar = airportStore.airport.station!.metars.edges[0].node.rawText
 
 		// Check for visibility unit
-		if (rawMetar.includes('SM')) {
-			selectUnit('length', 'mi')
-		} else {
-			selectUnit('length', 'km')
+		if (unitStore['length'].locked === '') {
+			if (rawMetar.includes('SM')) {
+				selectUnit('length', 'mi')
+			} else {
+				selectUnit('length', 'km')
+			}
 		}
 
 		// Check for wind speed unit
-		if (rawMetar.includes('MPS')) {
-			selectUnit('speed', 'm/s')
-		} else {
-			selectUnit('speed', 'kt')
+		if (unitStore['speed'].locked === '') {
+			if (rawMetar.includes('MPS')) {
+				selectUnit('speed', 'm/s')
+			} else {
+				selectUnit('speed', 'kt')
+			}
 		}
 
 		// Check if altimeter is in inches
-		const regexAltimeter = new RegExp(/A\d{4}/)
-		if (regexAltimeter.test(rawMetar)) {
-			selectUnit('pressure', 'inHg')
-		} else {
-			selectUnit('pressure', 'hPa')
+		if (unitStore['pressure'].locked === '') {
+			const regexAltimeter = new RegExp(/A\d{4}/)
+			if (regexAltimeter.test(rawMetar)) {
+				selectUnit('pressure', 'inHg')
+			} else {
+				selectUnit('pressure', 'hPa')
+			}
 		}
 	})
 

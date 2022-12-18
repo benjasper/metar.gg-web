@@ -1,6 +1,8 @@
-import { createContext, ParentComponent, useContext } from 'solid-js'
+import { createContext, createEffect, ParentComponent, useContext } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { UnitConfiguration, Unit, SpeedUnit, LengthUnit, HeightUnit, TemperatureUnit, PressureUnit } from '../models/units'
+import {
+	HeightUnit, LengthUnit, PressureUnit, SpeedUnit, TemperatureUnit, Unit, UnitConfiguration
+} from '../models/units'
 
 interface UnitStore {
 	speed: UnitConfiguration
@@ -105,21 +107,26 @@ const createUnitStore = () => {
 		speed: {
 			selected: 0,
 			units: [knots, metersPerSecond, kilometersPerHour, milesPerHour],
+			locked: '',
 		},
 		length: {
 			selected: 0,
 			units: [kilometers, meters, miles, nauticalMiles],
+			locked: '',
 		},
 		height: {
 			selected: 0,
 			units: [feet, metersHeight, kilometersHeight],
+			locked: '',
 		},
 		temperature: {
 			selected: 0,
 			units: [celsius, fahrenheit],
+			locked: '',
 		},
 		pressure: {
 			selected: 0,
+			locked: '',
 			units: [hectopascal, inchesOfMercury],
 		},
 	})
@@ -134,6 +141,8 @@ type UnitStoreContext = [
 	UnitStore,
 	{
 		selectUnit: (type: keyof UnitStore, identifier: string) => void
+		lockUnit: (type: keyof UnitStore, identifier: string) => void
+		unlockUnit: (type: keyof UnitStore) => void
 	}
 ]
 
@@ -150,7 +159,31 @@ const UnitStoreProvider: ParentComponent = props => {
 		)
 	}
 
-	return <UnitStoreContext.Provider value={[store, { selectUnit }]}>{props.children}</UnitStoreContext.Provider>
+	const lockUnit = (type: keyof UnitStore, identifier: string) => {
+		setStore(type, 'locked', identifier)
+		localStorage.setItem(type, identifier)
+	}
+
+	const unlockUnit = (type: keyof UnitStore) => {
+		localStorage.removeItem(type)
+		setStore(type, 'locked', '')
+	}
+
+	// Initialize locked units from local storage
+	Object.keys(store).forEach(key => {
+		const unit = localStorage.getItem(key)
+		if (unit) {
+			// Check if key is valid
+			if (!store[key as keyof UnitStore]) {
+				return
+			}
+			
+			setStore(key as keyof UnitStore, 'locked', unit)
+			selectUnit(key as keyof UnitStore, unit)
+		}
+	})
+
+	return <UnitStoreContext.Provider value={[store, { selectUnit, lockUnit, unlockUnit }]}>{props.children}</UnitStoreContext.Provider>
 }
 
 function useUnitStore() {
@@ -159,3 +192,4 @@ function useUnitStore() {
 
 export { UnitStoreProvider, useUnitStore }
 export type { UnitConfiguration, Unit, UnitStore }
+

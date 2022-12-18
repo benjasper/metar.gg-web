@@ -97,7 +97,7 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 	const hasCloudBase = () => props.skyConditions.some(x => x.cloudBase !== null)
 
 	const sortedSkyConditions = createMemo(() =>
-		props.skyConditions.map(x => x).sort((a, b) => (a.cloudBase ?? 0) - (b.cloudBase ?? 0))
+		props.skyConditions.map(x => x).sort((a, b) => (b.cloudBase ?? 0) - (a.cloudBase ?? 0))
 	)
 
 	const localHour = createMemo(() =>
