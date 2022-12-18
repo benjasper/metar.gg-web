@@ -114,50 +114,50 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 					<div class="flex flex-shrink-0 flex-col">
 						<WindElement
 							airport={props.airport}
-							windDirection={latestMetar().windDirection}
-							windSpeed={latestMetar().windSpeed}
-							windGust={latestMetar().windGust}
-							variableWindDirection={latestMetar().presentWeather ?? ''}
+							windDirection={latestMetar()!.windDirection}
+							windSpeed={latestMetar()!.windSpeed}
+							windGust={latestMetar()!.windGust}
+							variableWindDirection={latestMetar()!.presentWeather ?? ''}
 							size="large"
 						/>
 					</div>
 					<div class="flex flex-row flex-wrap justify-center gap-8 md:justify-start">
-						<VisibilityElement visibility={latestMetar().visibility}></VisibilityElement>
+						<VisibilityElement visibility={latestMetar()!.visibility}></VisibilityElement>
 
-						<Show when={latestMetar().skyConditions.length > 0}>
-							<SkyConditionsElement skyConditions={latestMetar().skyConditions} airport={props.airport} />
+						<Show when={latestMetar()!.skyConditions!.length > 0}>
+							<SkyConditionsElement skyConditions={latestMetar()!.skyConditions!} airport={props.airport} />
 						</Show>
 
 						<WeatherElementLayout name="Temperature" icon={<TbTemperature></TbTemperature>}>
 							<p class="text-center text-xl dark:text-white-dark">
-								{Math.round(latestMetar().temperature)} °C
+								{Math.round(latestMetar()!.temperature)} °C
 							</p>
 						</WeatherElementLayout>
 
 						<WeatherElementLayout name="Dewpoint" icon={<TbTemperature></TbTemperature>}>
 							<p class="text-center text-xl dark:text-white-dark">
-								{Math.round(latestMetar().dewpoint)} °C
+								{Math.round(latestMetar()!.dewpoint)} °C
 							</p>
 						</WeatherElementLayout>
 
-						<Show when={latestMetar().altimeter !== 0}>
-							<AltimeterElement altimeter={latestMetar().altimeter}></AltimeterElement>
+						<Show when={latestMetar()!.altimeter !== 0}>
+							<AltimeterElement altimeter={latestMetar()!.altimeter}></AltimeterElement>
 						</Show>
 
-						<Show when={latestMetar().presentWeather && latestMetar().presentWeather.length > 0}>
-							<PrecipitationElement weather={latestMetar().presentWeather}></PrecipitationElement>
+						<Show when={latestMetar()!.presentWeather && (latestMetar()!.presentWeather ?? '').length > 0}>
+							<PrecipitationElement weather={latestMetar()!.presentWeather ?? ''}></PrecipitationElement>
 						</Show>
 
-						<Show when={latestMetar().flightCategory}>
-							<FlightCategoryElement latestMetar={latestMetar()}></FlightCategoryElement>
+						<Show when={latestMetar()!.flightCategory}>
+							<FlightCategoryElement latestMetar={latestMetar()!}></FlightCategoryElement>
 						</Show>
 					</div>
 				</Show>
 			</div>
 			<div class="flex flex-col gap-4 py-16">
-				<Show when={props.airport && props.airport.station.metars.edges[0]}>
+				<Show when={props.airport && props.airport!.station!.metars.edges[0]}>
 					<p aria-label="METAR" class="text-center font-mono text-xl dark:text-white-dark">
-						{props.airport.station.metars.edges[0].node.rawText}
+						{props.airport!.station!.metars.edges[0].node.rawText}
 					</p>
 				</Show>
 			</div>
