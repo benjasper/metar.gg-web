@@ -1,5 +1,6 @@
 {
-	"rewrites":  [
-	  {"source": "/(.*)", "destination": "/"}
+	"rewrites": [
+		{ "source": "/sitemap.xml", "destination": "https://api.metar.gg/sitemap.xml" },
+		{ "source": "/(.*)", "destination": "/" }
 	]
-  }
+}
