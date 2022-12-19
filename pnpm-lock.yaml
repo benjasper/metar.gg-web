@@ -1,12 +1,12 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@floating-ui/dom': ^1.0.12
   '@graphql-codegen/cli': 2.12.0
   '@graphql-codegen/fragment-matcher': 3.3.1
   '@graphql-codegen/introspection': 2.2.1
   '@graphql-codegen/typescript': 2.7.3
   '@graphql-codegen/typescript-operations': 2.5.3
-  '@popperjs/core': ^2.11.6
   '@solid-primitives/graphql': ^1.5.0
   '@solid-primitives/keyboard': ^1.0.5
   '@solid-primitives/scheduled': ^1.2.0
@@ -19,10 +19,10 @@ specifiers:
   postcss: ^8.4.20
   prettier: ^2.8.1
   prettier-plugin-tailwindcss: ^0.1.13
+  solid-floating-ui: ^0.2.0
   solid-headless: ^0.13.0
   solid-icons: ^1.0.4
   solid-js: ^1.6.5
-  solid-popper: ^0.2.1
   solid-slider: ^1.3.12
   tailwindcss: ^3.2.4
   typescript: ^4.9.4
@@ -31,7 +31,7 @@ specifiers:
   vite-plugin-solid-svg: ^0.5.0
 
 dependencies:
-  '@popperjs/core': 2.11.6
+  '@floating-ui/dom': 1.0.12
   '@solid-primitives/graphql': 1.5.0_solid-js@1.6.5
   '@solid-primitives/keyboard': 1.0.5_solid-js@1.6.5
   '@solid-primitives/scheduled': 1.2.0_solid-js@1.6.5
@@ -40,10 +40,10 @@ dependencies:
   '@solidjs/router': 0.5.1_solid-js@1.6.5
   graphql: 16.6.0
   mercator-projection: 0.0.2
+  solid-floating-ui: 0.2.0_zjpcrkh5le3g5ybsmjl5hd4t6q
   solid-headless: 0.13.0_solid-js@1.6.5
   solid-icons: 1.0.4_solid-js@1.6.5
   solid-js: 1.6.5
-  solid-popper: 0.2.1_orwj5ybftgi7fp23t5dgyabkfa
   solid-slider: 1.3.12
 
 devDependencies:
@@ -853,6 +853,16 @@ packages:
     dev: true
     optional: true
 
+  /@floating-ui/core/1.0.4:
+    resolution: {integrity: sha512-FPFLbg2b06MIw1dqk2SOEMAMX3xlrreGjcui5OTxfBDtaKTmh0kioOVjT8gcfl58juawL/yF+S+gnq8aUYQx/Q==}
+    dev: false
+
+  /@floating-ui/dom/1.0.12:
+    resolution: {integrity: sha512-HeG/wHoa2laUHlDX3xkzqlUqliAfa+zqV04LaKIwNCmCNaW2p0fQi4/Kd0LB4GdFoJ2UllLFq5gWnXAd67lg7w==}
+    dependencies:
+      '@floating-ui/core': 1.0.4
+    dev: false
+
   /@graphql-codegen/cli/2.12.0_mv5whnpzci6kjy52rl2xppwwim:
     resolution: {integrity: sha512-esaMiiuypAtJNiZUhGdFmG0gTMEF5dYkqP/7I04egxSragwbIETU8gOl6/gHdLSAV5su7dgfIEZNdWmGCOWAbg==}
     hasBin: true
@@ -1442,10 +1452,6 @@ packages:
       tslib: 2.4.1
       webcrypto-core: 1.7.5
     dev: true
-
-  /@popperjs/core/2.11.6:
-    resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
-    dev: false
 
   /@repeaterjs/repeater/3.0.4:
     resolution: {integrity: sha512-AW8PKd6iX3vAZ0vA43nOUOnbq/X5ihgU+mSXXqunMkeQADGiqw/PY0JNeYtD5sr0PAy51YPgAPbDoeapv9r8WA==}
@@ -3892,6 +3898,17 @@ packages:
       tslib: 2.4.1
     dev: true
 
+  /solid-floating-ui/0.2.0_zjpcrkh5le3g5ybsmjl5hd4t6q:
+    resolution: {integrity: sha512-c1iXyQ8AU62bzZtPVggpp+rzTAuE1PkGs2HI9jIoaJV/RfOjGiM4HTOcAVGwkg/Gm0XFqj8w4bTptAM3rqbrRA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      '@floating-ui/dom': ^1.0
+      solid-js: ^1.3
+    dependencies:
+      '@floating-ui/dom': 1.0.12
+      solid-js: 1.6.5
+    dev: false
+
   /solid-headless/0.13.0_solid-js@1.6.5:
     resolution: {integrity: sha512-N118iPl7W5lyug4K+4c0cwM8YR2yEVJ/3H4wq6tVijATHfXfLnB1ACFI5GGHSXlwu70PUzaGSKwcVqLlloUMyA==}
     engines: {node: '>=10'}
@@ -3915,17 +3932,6 @@ packages:
     resolution: {integrity: sha512-q1/wIIRmrWltNnP3PW/e29eRWCC24hX5amBiOXomw2kDiM6JZZ10l+chK/Oi/6ipwUxeabYl5YD2lJOObY9heA==}
     dependencies:
       csstype: 3.1.1
-
-  /solid-popper/0.2.1_orwj5ybftgi7fp23t5dgyabkfa:
-    resolution: {integrity: sha512-SRsEbsOPy4yGr6BE7xHlrbHtPRf/t/DHLoJWbxXkmbjxqFAFwUbGAE616B+5OKc1cJeF3UprRDfbQdW5y7o5Ag==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      '@popperjs/core': ^2.10.2
-      solid-js: ^1.2.0
-    dependencies:
-      '@popperjs/core': 2.11.6
-      solid-js: 1.6.5
-    dev: false
 
   /solid-refresh/0.4.1_solid-js@1.6.5:
     resolution: {integrity: sha512-v3tD/OXQcUyXLrWjPW1dXZyeWwP7/+GQNs8YTL09GBq+5FguA6IejJWUvJDrLIA4M0ho9/5zK2e9n+uy+4488g==}
