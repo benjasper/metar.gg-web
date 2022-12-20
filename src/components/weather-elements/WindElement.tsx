@@ -1,6 +1,7 @@
 import { BsArrowUp } from 'solid-icons/bs'
 import { TbWindsock } from 'solid-icons/tb'
 import { Component, createMemo, Show } from 'solid-js'
+import { useUnitStore } from '../../context/UnitStore'
 import WeatherElementLayout from '../../layouts/WeatherElementLayout'
 import { AirportSearchFragment, MetarFragment } from '../../queries/generated/graphql'
 import RunwayAndWindRenderer from '../special/RunwayAndWindRenderer'
@@ -21,6 +22,8 @@ export interface VariableWind {
 }
 
 const WindElement: Component<WindElementProps> = props => {
+	const [unitStore] = useUnitStore()
+
 	const variableWind = createMemo((): VariableWind | undefined => {
 		const result = props.variableWindDirection?.match(/\d{3}V\d{3}/g)
 		const vWindString = result ? result[0] : undefined
@@ -37,8 +40,12 @@ const WindElement: Component<WindElementProps> = props => {
 		}
 	})
 
+	const selected = () => unitStore.speed.units[unitStore.speed.selected]
+	const windSpeed = () => Math.round(selected().conversionFunction(props.windSpeed))
+	const windGust = () => Math.round(selected().conversionFunction(props.windGust))
+
 	return (
-		<WeatherElementLayout name="Wind" class="flex-shrink-0" icon={<TbWindsock></TbWindsock>}>
+		<WeatherElementLayout name="Wind" class="flex-shrink-0" icon={<TbWindsock></TbWindsock>} unitType={props.windSpeed || props.windGust ? 'speed' : undefined }>
 			<Show when={props.size === 'large'}>
 				<RunwayAndWindRenderer
 					airport={props.airport}
@@ -62,7 +69,7 @@ const WindElement: Component<WindElementProps> = props => {
 						<Show when={props.windDirection !== 0} fallback="Variable">
 							{props.windDirection}°
 						</Show>{' '}
-						at {props.windSpeed} kt
+						at {windSpeed()} {selected().symbol}
 					</Show>
 				</span>
 				<Show when={variableWind()}>
@@ -71,7 +78,7 @@ const WindElement: Component<WindElementProps> = props => {
 					</span>
 				</Show>
 				<Show when={props.windGust}>
-					<span>with gusts up to {props.windGust} kt</span>
+					<span>with gusts up to {windGust()} {selected().symbol}</span>
 				</Show>
 			</div>
 		</WeatherElementLayout>

@@ -1,8 +1,6 @@
 import { HiOutlineRefresh } from 'solid-icons/hi'
-import { TbTemperature } from 'solid-icons/tb'
 import { Component, createMemo, Show } from 'solid-js'
 import { useTimeStore } from '../context/TimeStore'
-import WeatherElementLayout from '../layouts/WeatherElementLayout'
 import Duration from '../models/duration'
 import { AirportSearchFragment } from '../queries/generated/graphql'
 import { Tag } from './Tag'
@@ -10,6 +8,7 @@ import AltimeterElement from './weather-elements/AltimeterElement'
 import FlightCategoryElement from './weather-elements/FlightCategoryElement'
 import { PrecipitationElement } from './weather-elements/PrecipitationElement'
 import SkyConditionsElement from './weather-elements/SkyConditionsElement'
+import TemperatureElement from './weather-elements/TemperatureElement'
 import VisibilityElement from './weather-elements/VisibilityElement'
 import WindElement from './weather-elements/WindElement'
 
@@ -128,17 +127,9 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 							<SkyConditionsElement skyConditions={latestMetar()!.skyConditions!} airport={props.airport} />
 						</Show>
 
-						<WeatherElementLayout name="Temperature" icon={<TbTemperature></TbTemperature>}>
-							<p class="text-center text-xl dark:text-white-dark">
-								{Math.round(latestMetar()!.temperature)} °C
-							</p>
-						</WeatherElementLayout>
-
-						<WeatherElementLayout name="Dewpoint" icon={<TbTemperature></TbTemperature>}>
-							<p class="text-center text-xl dark:text-white-dark">
-								{Math.round(latestMetar()!.dewpoint)} °C
-							</p>
-						</WeatherElementLayout>
+						<TemperatureElement temperature={latestMetar()!.temperature} name="Temperature"></TemperatureElement>
+						
+						<TemperatureElement temperature={latestMetar()!.dewpoint} name="Dewpoint"></TemperatureElement>
 
 						<Show when={latestMetar()!.altimeter !== 0}>
 							<AltimeterElement altimeter={latestMetar()!.altimeter}></AltimeterElement>

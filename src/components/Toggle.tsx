@@ -20,7 +20,7 @@ const Toggle: Component<ToggleProps> = props => {
 				onChange={props.onChange}
 				class="relative inline-flex h-[1.5rem] w-[3rem] shrink-0 cursor-pointer rounded-full transition-all"
 				classList={{
-					'bg-blue-600 dark:bg-blue-700': props.checked,
+					'bg-primary dark:bg-primary-light': props.checked,
 					'bg-gray-200 dark:bg-black-100': !props.checked,
 				}}>
 				<span class="sr-only">{props.label}</span>

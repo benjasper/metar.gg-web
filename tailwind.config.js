@@ -10,6 +10,7 @@ module.exports = {
 		extend: {
 			colors: {
 				primary: '#03045e',
+				'primary-light': '#6366f1',
 				'gray-light': '#F5F5F7',
 				'gray-background': '#f9f8f9',
 				'white-dark': 'rgb(208, 214, 224)',
@@ -17,6 +18,7 @@ module.exports = {
 				'white-light': '#E6EBF8',
 				black: '#000212',
 				'black-100': '#242B3E',
+				'black-150': '#1D2332',
 				'black-200': '#191E2B',
 				'black-300': '#060609',
 			},
