@@ -5,6 +5,7 @@ enum SpeedUnit {
 	MilesPerHour = 'mph',
 	KilometersPerHour = 'km/h',
 	MetersPerSecond = 'm/s',
+	Beaufort = 'Bft',
 }
 
 // Length
@@ -26,6 +27,7 @@ enum HeightUnit {
 enum TemperatureUnit {
 	Fahrenheit = '°F',
 	Celsius = '°C',
+	Kelvin = 'K',
 }
 
 // Pressure

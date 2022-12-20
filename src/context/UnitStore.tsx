@@ -1,4 +1,4 @@
-import { createContext, createEffect, ParentComponent, useContext } from 'solid-js'
+import { createContext, ParentComponent, useContext } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import {
 	HeightUnit, LengthUnit, PressureUnit, SpeedUnit, TemperatureUnit, Unit, UnitConfiguration
@@ -35,6 +35,40 @@ const createUnitStore = () => {
 		symbol: SpeedUnit.MetersPerSecond,
 		name: 'Meters per second',
 		conversionFunction: (value: number) => value * 0.514444,
+	}
+
+	const beaufort: Unit = {
+		symbol: SpeedUnit.Beaufort,
+		name: 'Beaufort',
+		conversionFunction: (value: number) => {
+			if (value < 0.3) {
+				return 0
+			} else if (value < 1.6) {
+				return 1
+			} else if (value < 3.4) {
+				return 2
+			} else if (value < 5.5) {
+				return 3
+			} else if (value < 8) {
+				return 4
+			} else if (value < 10.8) {
+				return 5
+			} else if (value < 13.9) {
+				return 6
+			} else if (value < 17.2) {
+				return 7
+			} else if (value < 20.8) {
+				return 8
+			} else if (value < 24.5) {
+				return 9
+			} else if (value < 28.5) {
+				return 10
+			} else if (value < 32.7) {
+				return 11
+			} else {
+				return 12
+			}
+		},
 	}
 
 	const kilometers: Unit = {
@@ -91,6 +125,12 @@ const createUnitStore = () => {
 		conversionFunction: (value: number) => value * 1.8 + 32,
 	}
 
+	const kelvin: Unit = {
+		symbol: TemperatureUnit.Kelvin,
+		name: 'Kelvin',
+		conversionFunction: (value: number) => value + 273.15,
+	}
+
 	const hectopascal: Unit = {
 		symbol: PressureUnit.Hectopascals,
 		name: 'Hectopascal',
@@ -106,7 +146,7 @@ const createUnitStore = () => {
 	const [store, setStore] = createStore<UnitStore>({
 		speed: {
 			selected: 0,
-			units: [knots, metersPerSecond, kilometersPerHour, milesPerHour],
+			units: [knots, metersPerSecond, kilometersPerHour, milesPerHour, beaufort],
 			locked: '',
 		},
 		length: {
@@ -121,7 +161,7 @@ const createUnitStore = () => {
 		},
 		temperature: {
 			selected: 0,
-			units: [celsius, fahrenheit],
+			units: [celsius, fahrenheit, kelvin],
 			locked: '',
 		},
 		pressure: {

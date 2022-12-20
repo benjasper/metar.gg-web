@@ -1,9 +1,8 @@
 import { autoPlacement, autoUpdate, offset } from '@floating-ui/dom'
 import { useFloating } from 'solid-floating-ui'
-import { Menu, MenuItem, Transition } from 'solid-headless'
+import { Menu, MenuItem } from 'solid-headless'
 import { BiSolidLockAlt, BiSolidLockOpenAlt } from 'solid-icons/bi'
 import { BsThreeDotsVertical } from 'solid-icons/bs'
-import { CgArrowsExchange } from 'solid-icons/cg'
 import { createSignal, For, JSX, onCleanup, ParentComponent, Show } from 'solid-js'
 import { Portal } from 'solid-js/web'
 import { UnitStore, useUnitStore } from '../context/UnitStore'
@@ -54,7 +53,7 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 				<span class="my-auto">{props.name}</span>
 			</label>
 			<Show when={unitConfiguration() && props.unitType}>
-				<div class="absolute right-2 top-[1.4rem] flex gap-1">
+				<div class="absolute right-2 top-[1.4rem] flex gap-1 md:right-4">
 					<Show when={unitConfiguration()!.locked !== ''}>
 						<div
 							class="invisible my-auto md:visible"
@@ -89,21 +88,32 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 										{unit => (
 											<MenuItem
 												as="button"
-												disabled={
-													unitStore[props.unitType!].locked !== '' ||
-													unitStore[props.unitType!].units[
-														unitStore[props.unitType!].selected
-													].symbol === unit.symbol
-												}
+												disabled={unitStore[props.unitType!].locked !== ''}
 												onClick={() => selectUnit(props.unitType!, unit.symbol)}
-												class="flex gap-1 whitespace-nowrap rounded px-4 py-2 text-left text-sm text-black transition-all enabled:hover:bg-gray-light disabled:opacity-60 dark:text-white-darker enabled:hover:dark:bg-black-100">
-												<CgArrowsExchange class="my-auto" />
-												<span>
-													Display in {unit.name} ({unit.symbol})
-												</span>
+												class="flex gap-1 whitespace-nowrap rounded px-4 py-2 text-left text-sm text-black transition-all disabled:opacity-60 dark:text-white-darker"
+												classList={{'cursor-default ': unitStore[props.unitType!].units[
+													unitStore[props.unitType!].selected
+												].symbol === unit.symbol,
+												'enabled:hover:bg-gray-light enabled:hover:dark:bg-black-100': unitStore[props.unitType!].units[
+													unitStore[props.unitType!].selected
+												].symbol !== unit.symbol}}>
+												<div class="flex items-center gap-2">
+													<div
+														class="h-2 w-2 bg-gray-300 dark:bg-white-darker rounded-full transition-all duration-300"
+														classList={{
+															'!bg-primary dark:!bg-green-500':
+																unitStore[props.unitType!].units[
+																	unitStore[props.unitType!].selected
+																].symbol === unit.symbol,
+														}}></div>
+													<span class="text-sm font-medium text-gray-900 dark:text-white-darker">
+														Display in {unit.name} ({unit.symbol})
+													</span>
+												</div>
 											</MenuItem>
 										)}
 									</For>
+									<hr class="border-gray-300 dark:border-gray-600" />
 									<MenuItem
 										as="button"
 										onClick={() =>
@@ -116,11 +126,11 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 												  )
 												: unlockUnit(props.unitType!)
 										}
-										class="flex gap-1 whitespace-nowrap rounded px-4 py-2 text-left text-sm text-black transition-all hover:bg-gray-light dark:text-white-darker hover:dark:bg-black-100">
+										class="flex gap-2 whitespace-nowrap rounded px-4 py-2 text-left text-sm text-black transition-all hover:bg-gray-light dark:text-white-darker hover:dark:bg-black-100">
 										<Show
 											when={unitStore[props.unitType!].locked === ''}
 											fallback={<BiSolidLockOpenAlt class="my-auto" />}>
-											<BiSolidLockAlt class="my-auto" />
+											<BiSolidLockAlt class="my-auto w-2 scale-150" />
 										</Show>
 										<span>
 											{unitStore[props.unitType!].locked === '' ? 'Lock' : 'Unlock'} current unit
