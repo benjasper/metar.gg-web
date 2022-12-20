@@ -1,4 +1,4 @@
-import { autoPlacement, autoUpdate, offset } from '@floating-ui/dom'
+import { autoUpdate, flip, offset } from '@floating-ui/dom'
 import { useFloating } from 'solid-floating-ui'
 import { Menu, MenuItem } from 'solid-headless'
 import { BiSolidLockAlt, BiSolidLockOpenAlt } from 'solid-icons/bi'
@@ -25,7 +25,8 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 
 	const position = useFloating(reference, popper, {
 		whileElementsMounted: autoUpdate,
-		middleware: [offset(10), autoPlacement()],
+		placement: 'right',
+		middleware: [offset(10), flip({ fallbackPlacements: ['top', 'bottom', 'left']})],
 	})
 
 	const onClick = (event: MouseEvent) => {
@@ -101,7 +102,7 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 													<div
 														class="h-2 w-2 bg-gray-300 dark:bg-white-darker rounded-full transition-all duration-300"
 														classList={{
-															'!bg-primary dark:!bg-green-500':
+															'!bg-primary dark:!bg-primary-light':
 																unitStore[props.unitType!].units[
 																	unitStore[props.unitType!].selected
 																].symbol === unit.symbol,
