@@ -80,7 +80,7 @@ const RunwayPopup = (props: {
 
 	return (
 		<div class="flex flex-col gap-1">
-			<h4 class="text-sm font-semibold">{props.runwayDirection.runway}</h4>
+			<h4 class="text-sm font-semibold">Runway {props.runwayDirection.runway}</h4>
 			<div class="flex gap-1">
 				<RiMapCompass4Line
 					class="my-auto origin-center transform"
