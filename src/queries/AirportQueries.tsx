@@ -144,6 +144,8 @@ export const AIRPORT_SINGLE =
 			runways(closed: false) {
 				closed
 				surface
+				width(unit: METER)
+				length(unit: KILOMETER)
 				lowRunwayHeading
 				lowRunwayIdentifier
 				lowRunwayLatitude

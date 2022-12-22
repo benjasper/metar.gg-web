@@ -1,6 +1,11 @@
 import * as merc from 'mercator-projection'
+import { BsArrowUp } from 'solid-icons/bs'
+import { CgArrowsVAlt } from 'solid-icons/cg'
+import { RiMapCompass4Line } from 'solid-icons/ri'
 import { createEffect, createSignal, For, Show } from 'solid-js'
+import { useUnitStore } from '../../context/UnitStore'
 import { AirportSearchFragment } from '../../queries/generated/graphql'
+import Tooltip from '../Tooltip'
 import { VariableWind } from '../weather-elements/WindElement'
 
 const cartesianCoordinates = (lat: number, lon: number) => {
@@ -25,6 +30,8 @@ const calculateMinMaxOfCoordinates = (
 interface Runway {
 	direction1: RunwayDirection
 	direction2: RunwayDirection
+	length: number
+	width: number
 }
 
 interface RunwayDirection {
@@ -36,12 +43,128 @@ interface RunwayDirection {
 	favourableLevel: number
 }
 
+const favourableToText = (favourableLevel: number) => {
+	switch (favourableLevel) {
+		case 0:
+			return 'not favourable'
+		case 1:
+			return 'favourable'
+		case 2:
+			return 'very favourable'
+	}
+}
+
+const RunwayPopup = (props: {
+	runway: Runway
+	runwayDirection: RunwayDirection
+	windSpeed: number
+	windDirection: number
+}) => {
+	const [unitStore] = useUnitStore()
+	const selectedLengthUnit = () => unitStore.length.units[unitStore.length.selected]
+	const selectedSpeedUnit = () => unitStore.speed.units[unitStore.speed.selected]
+
+	// Calculate crosswind components
+	const crosswindComponent = () => Math.sin((props.runwayDirection.windAngle * Math.PI) / 180) * props.windSpeed
+
+	// Left or right crosswind by comparing wind direction and runway heading
+	const crosswindDirection = () => {
+		let result = props.windDirection - props.runwayDirection.heading
+		if (result < 0) result += 360
+		if (result > 180) return 'left'
+		else return 'right'
+	}
+
+	const headwindComponent = () => Math.cos((props.runwayDirection.windAngle * Math.PI) / 180) * props.windSpeed
+	const tailwindComponent = () => -headwindComponent()
+
+	return (
+		<div class="flex flex-col gap-1">
+			<h4 class="text-sm font-semibold">{props.runwayDirection.runway}</h4>
+			<div class="flex gap-1">
+				<RiMapCompass4Line
+					class="my-auto origin-center transform"
+					style={{
+						rotate: `${props.runwayDirection.heading - 45}deg`,
+					}}
+				/>
+				<span class="text-sm">Heading: {Math.round(props.runwayDirection.heading)}°</span>
+			</div>
+			<div class="flex gap-1">
+				<CgArrowsVAlt class="my-auto" />
+				<span class="text-sm">
+					Length: {selectedLengthUnit().conversionFunction(props.runway.length).toFixed(1)}{' '}
+					{selectedLengthUnit().symbol}
+				</span>
+			</div>
+			
+			<div class="flex gap-1">
+				<div
+					class="my-auto h-3 w-3 rounded-full border-[3px]"
+					classList={{
+						'bg-gray-600': props.runwayDirection.favourableLevel === 0,
+						'bg-blue-600 dark:bg-blue-800': props.runwayDirection.favourableLevel === 1,
+						'bg-green-600 dark:bg-green-800': props.runwayDirection.favourableLevel === 2,
+						'border-gray-600': props.runwayDirection.favourableLevel === 0,
+						'border-blue-400 dark:border-blue-600': props.runwayDirection.favourableLevel === 1,
+						'border-green-400 dark:border-green-600': props.runwayDirection.favourableLevel === 2,
+					}}
+					aria-label={`Wind direction is ${favourableToText(props.runwayDirection.favourableLevel)}`}></div>
+				<span class="text-sm">Wind angle: {favourableToText(props.runwayDirection.favourableLevel)} ({Math.round(props.runwayDirection.windAngle)}°)</span>
+			</div>
+
+			<Show when={headwindComponent() > 0}>
+				<div class="flex gap-1">
+					<BsArrowUp
+						class="my-auto origin-center transform"
+						style={{
+							rotate: `${180 % 360}deg`,
+						}}></BsArrowUp>
+					<span class="text-sm">
+						Headwind: {Math.round(selectedSpeedUnit().conversionFunction(headwindComponent()))}{' '}
+						{selectedSpeedUnit().symbol}
+					</span>
+				</div>
+			</Show>
+			<Show when={crosswindComponent() > 0}>
+				<div class="flex gap-1">
+					<BsArrowUp
+						class="my-auto origin-center transform"
+						style={{
+							rotate:
+								crosswindDirection() === 'right' ? `${(90 + 180) % 360}deg` : `${(270 + 180) % 360}deg`,
+						}}></BsArrowUp>
+					<span class="text-sm">
+						Crosswind: {Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent()))}{' '}
+						{selectedSpeedUnit().symbol} from the {crosswindDirection()}{' '}
+					</span>
+				</div>
+			</Show>
+			<Show when={tailwindComponent() > 0}>
+				<div class="flex gap-1">
+					<BsArrowUp
+						class="my-auto origin-center transform"
+						style={{
+							rotate: `${0}deg`,
+						}}></BsArrowUp>
+					<span class="text-sm">
+						Tailwind: {Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent()))}{' '}
+						{selectedSpeedUnit().symbol}
+					</span>
+				</div>
+			</Show>
+		</div>
+	)
+}
+
 const RunwayAndWindRenderer = (props: {
 	airport: AirportSearchFragment
 	windSpeed: number
 	windDirection: number
 	variableWind: VariableWind | undefined
 }) => {
+	const [unitStore] = useUnitStore()
+
 	const [runways, setRunways] = createSignal<Runway[]>([])
 
 	const [centerX, setCenterX] = createSignal(0)
@@ -97,6 +220,8 @@ const RunwayAndWindRenderer = (props: {
 					favourableLevel: 0,
 					windAngle: 180 - Math.abs(Math.abs((runway.highRunwayHeading ?? 0) - props.windDirection) - 180),
 				},
+				length: unitStore.length.units[unitStore.length.selected].conversionFunction(runway.length ?? 0),
+				width: unitStore.length.units[unitStore.length.selected].conversionFunction(runway.width ?? 0),
 			})
 		})
 
@@ -282,28 +407,48 @@ const RunwayAndWindRenderer = (props: {
 					<For each={runways()}>
 						{(r, i) => (
 							<>
-								<circle
-									class="transition-colors"
-									classList={{
-										'fill-gray-600': r.direction1.favourableLevel === 0,
-										'fill-blue-600 dark:fill-blue-800': r.direction1.favourableLevel === 1,
-										'fill-green-600 dark:fill-green-800': r.direction1.favourableLevel === 2,
-									}}
-									cx={r.direction1.x}
-									cy={r.direction1.y}
-									r="1.5"
-								/>
-								<circle
-									class="transition-colors"
-									classList={{
-										'fill-gray-600': r.direction2.favourableLevel === 0,
-										'fill-blue-600 dark:fill-blue-800': r.direction2.favourableLevel === 1,
-										'fill-green-600 dark:fill-green-800': r.direction2.favourableLevel === 2,
-									}}
-									cx={r.direction2.x}
-									cy={r.direction2.y}
-									r="1.5"
-								/>
+								<Tooltip
+									component={
+										<RunwayPopup
+											runway={r}
+											runwayDirection={r.direction1}
+											windDirection={props.windDirection}
+											windSpeed={props.windSpeed}
+										/>
+									}>
+									<circle
+										class="transition-colors"
+										classList={{
+											'fill-gray-600': r.direction1.favourableLevel === 0,
+											'fill-blue-600 dark:fill-blue-800': r.direction1.favourableLevel === 1,
+											'fill-green-600 dark:fill-green-800': r.direction1.favourableLevel === 2,
+										}}
+										cx={r.direction1.x}
+										cy={r.direction1.y}
+										r="1.5"
+									/>
+								</Tooltip>
+								<Tooltip
+									component={
+										<RunwayPopup
+											runway={r}
+											runwayDirection={r.direction2}
+											windDirection={props.windDirection}
+											windSpeed={props.windSpeed}
+										/>
+									}>
+									<circle
+										class="transition-colors"
+										classList={{
+											'fill-gray-600': r.direction2.favourableLevel === 0,
+											'fill-blue-600 dark:fill-blue-800': r.direction2.favourableLevel === 1,
+											'fill-green-600 dark:fill-green-800': r.direction2.favourableLevel === 2,
+										}}
+										cx={r.direction2.x}
+										cy={r.direction2.y}
+										r="1.5"
+									/>
+								</Tooltip>
 							</>
 						)}
 					</For>
@@ -313,7 +458,7 @@ const RunwayAndWindRenderer = (props: {
 						{(r, i) => (
 							<>
 								<text
-									class="fill-white text-[1.1px]"
+									class="pointer-events-none fill-white text-[1.1px]"
 									x={r.direction1.x}
 									y={r.direction1.y}
 									dominant-baseline="middle"
@@ -321,7 +466,7 @@ const RunwayAndWindRenderer = (props: {
 									{r.direction1.runway}
 								</text>
 								<text
-									class="fill-white text-[1.1px]"
+									class="pointer-events-none fill-white text-[1.1px]"
 									x={r.direction2.x}
 									y={r.direction2.y}
 									dominant-baseline="middle"

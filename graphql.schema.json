@@ -3273,16 +3273,29 @@
           },
           {
             "name": "length",
-            "description": "Length of the runway in feet.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+            "description": "The length of the runway in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "LengthUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "FOOT",
+                "isDeprecated": false,
+                "deprecationReason": null
               }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -3393,16 +3406,29 @@
           },
           {
             "name": "width",
-            "description": "Width of the runway surface in feet.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+            "description": "The width of the runway in the specified unit.",
+            "args": [
+              {
+                "name": "unit",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "LengthUnit",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "FOOT",
+                "isDeprecated": false,
+                "deprecationReason": null
               }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
