@@ -100,7 +100,7 @@ const RunwayPopup = (props: {
 			
 			<div class="flex gap-1">
 				<div
-					class="my-auto h-3 w-3 rounded-full border-[3px]"
+					class="my-auto h-3 w-3 rounded-full border-[3px] flex-shrink-0"
 					classList={{
 						'bg-gray-600': props.runwayDirection.favourableLevel === 0,
 						'bg-blue-600 dark:bg-blue-800': props.runwayDirection.favourableLevel === 1,
