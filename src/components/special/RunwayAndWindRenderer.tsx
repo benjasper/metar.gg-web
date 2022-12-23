@@ -98,7 +98,7 @@ const RunwayPopup = (props: {
 				</span>
 			</div>
 
-			<Show when={props.windDirection !== 0}>
+			<Show when={Math.round(props.runwayDirection.windAngle) !== 0}>
 				<div class="flex gap-1">
 					<div
 						class="my-auto h-3 w-3 flex-shrink-0 rounded-full border-[3px]"
@@ -119,7 +119,7 @@ const RunwayPopup = (props: {
 					</span>
 				</div>
 
-				<Show when={headwindComponent() > 0}>
+				<Show when={Math.round(selectedSpeedUnit().conversionFunction(headwindComponent())) > 0}>
 					<div class="flex gap-1">
 						<BsArrowUp
 							class="my-auto origin-center transform"
@@ -132,7 +132,7 @@ const RunwayPopup = (props: {
 						</span>
 					</div>
 				</Show>
-				<Show when={crosswindComponent() > 0}>
+				<Show when={Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent())) > 0}>
 					<div class="flex gap-1">
 						<BsArrowUp
 							class="my-auto origin-center transform"
@@ -148,7 +148,7 @@ const RunwayPopup = (props: {
 						</span>
 					</div>
 				</Show>
-				<Show when={tailwindComponent() > 0}>
+				<Show when={Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent())) > 0}>
 					<div class="flex gap-1">
 						<BsArrowUp
 							class="my-auto origin-center transform"
