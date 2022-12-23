@@ -116,7 +116,7 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 							windDirection={latestMetar()!.windDirection}
 							windSpeed={latestMetar()!.windSpeed}
 							windGust={latestMetar()!.windGust}
-							variableWindDirection={latestMetar()!.presentWeather ?? ''}
+							variableWindDirection={latestMetar()?.rawText ?? ''}
 							size="large"
 						/>
 					</div>
