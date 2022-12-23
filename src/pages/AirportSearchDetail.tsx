@@ -31,6 +31,7 @@ const AirportSearchDetail: Component = () => {
 	const newQuery = useGraphQL()
 
 	const [unitStore, { selectUnit }] = useUnitStore()
+	const selectedHeightUnit = () => unitStore.height.units[unitStore.height.selected]
 
 	const now = useTimeStore()
 
@@ -213,7 +214,7 @@ const AirportSearchDetail: Component = () => {
 						<Show when={airportStore.airport!.elevation}>
 							<Tag>
 								<TbMountain class="my-auto mr-1" />
-								Elevation {airportStore.airport!.elevation} ft
+								Elevation {Math.round(selectedHeightUnit().conversionFunction(airportStore.airport!.elevation!))} {selectedHeightUnit().symbol}
 							</Tag>
 						</Show>
 						<Show when={airportStore.airport!.timezone}>
