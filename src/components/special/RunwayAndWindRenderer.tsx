@@ -98,69 +98,63 @@ const RunwayPopup = (props: {
 				</span>
 			</div>
 
-			<Show when={Math.round(props.runwayDirection.windAngle) !== 0}>
+			<div class="flex gap-1">
+				<div
+					class="my-auto h-3 w-3 flex-shrink-0 rounded-full border-[3px]"
+					classList={{
+						'bg-gray-600': props.runwayDirection.favourableLevel === 0,
+						'bg-blue-600 dark:bg-blue-800': props.runwayDirection.favourableLevel === 1,
+						'bg-green-600 dark:bg-green-800': props.runwayDirection.favourableLevel === 2,
+						'border-gray-600': props.runwayDirection.favourableLevel === 0,
+						'border-blue-400 dark:border-blue-600': props.runwayDirection.favourableLevel === 1,
+						'border-green-400 dark:border-green-600': props.runwayDirection.favourableLevel === 2,
+					}}
+					aria-label={`Wind direction is ${favourableToText(props.runwayDirection.favourableLevel)}`}></div>
+				<span class="text-sm">
+					Wind angle: {favourableToText(props.runwayDirection.favourableLevel)} (
+					{Math.round(props.runwayDirection.windAngle)}°)
+				</span>
+			</div>
+
+			<Show when={Math.round(selectedSpeedUnit().conversionFunction(headwindComponent())) > 0}>
 				<div class="flex gap-1">
-					<div
-						class="my-auto h-3 w-3 flex-shrink-0 rounded-full border-[3px]"
-						classList={{
-							'bg-gray-600': props.runwayDirection.favourableLevel === 0,
-							'bg-blue-600 dark:bg-blue-800': props.runwayDirection.favourableLevel === 1,
-							'bg-green-600 dark:bg-green-800': props.runwayDirection.favourableLevel === 2,
-							'border-gray-600': props.runwayDirection.favourableLevel === 0,
-							'border-blue-400 dark:border-blue-600': props.runwayDirection.favourableLevel === 1,
-							'border-green-400 dark:border-green-600': props.runwayDirection.favourableLevel === 2,
-						}}
-						aria-label={`Wind direction is ${favourableToText(
-							props.runwayDirection.favourableLevel
-						)}`}></div>
+					<BsArrowUp
+						class="my-auto origin-center transform"
+						style={{
+							rotate: `${180 % 360}deg`,
+						}}></BsArrowUp>
 					<span class="text-sm">
-						Wind angle: {favourableToText(props.runwayDirection.favourableLevel)} (
-						{Math.round(props.runwayDirection.windAngle)}°)
+						Headwind: {Math.round(selectedSpeedUnit().conversionFunction(headwindComponent()))}{' '}
+						{selectedSpeedUnit().symbol}
 					</span>
 				</div>
-
-				<Show when={Math.round(selectedSpeedUnit().conversionFunction(headwindComponent())) > 0}>
-					<div class="flex gap-1">
-						<BsArrowUp
-							class="my-auto origin-center transform"
-							style={{
-								rotate: `${180 % 360}deg`,
-							}}></BsArrowUp>
-						<span class="text-sm">
-							Headwind: {Math.round(selectedSpeedUnit().conversionFunction(headwindComponent()))}{' '}
-							{selectedSpeedUnit().symbol}
-						</span>
-					</div>
-				</Show>
-				<Show when={Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent())) > 0}>
-					<div class="flex gap-1">
-						<BsArrowUp
-							class="my-auto origin-center transform"
-							style={{
-								rotate:
-									crosswindDirection() === 'right'
-										? `${(90 + 180) % 360}deg`
-										: `${(270 + 180) % 360}deg`,
-							}}></BsArrowUp>
-						<span class="text-sm">
-							Crosswind: {Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent()))}{' '}
-							{selectedSpeedUnit().symbol} from the {crosswindDirection()}{' '}
-						</span>
-					</div>
-				</Show>
-				<Show when={Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent())) > 0}>
-					<div class="flex gap-1">
-						<BsArrowUp
-							class="my-auto origin-center transform"
-							style={{
-								rotate: `${0}deg`,
-							}}></BsArrowUp>
-						<span class="text-sm">
-							Tailwind: {Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent()))}{' '}
-							{selectedSpeedUnit().symbol}
-						</span>
-					</div>
-				</Show>
+			</Show>
+			<Show when={Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent())) > 0}>
+				<div class="flex gap-1">
+					<BsArrowUp
+						class="my-auto origin-center transform"
+						style={{
+							rotate:
+								crosswindDirection() === 'right' ? `${(90 + 180) % 360}deg` : `${(270 + 180) % 360}deg`,
+						}}></BsArrowUp>
+					<span class="text-sm">
+						Crosswind: {Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent()))}{' '}
+						{selectedSpeedUnit().symbol} from the {crosswindDirection()}{' '}
+					</span>
+				</div>
+			</Show>
+			<Show when={Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent())) > 0}>
+				<div class="flex gap-1">
+					<BsArrowUp
+						class="my-auto origin-center transform"
+						style={{
+							rotate: `${0}deg`,
+						}}></BsArrowUp>
+					<span class="text-sm">
+						Tailwind: {Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent()))}{' '}
+						{selectedSpeedUnit().symbol}
+					</span>
+				</div>
 			</Show>
 		</div>
 	)
