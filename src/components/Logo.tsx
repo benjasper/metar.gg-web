@@ -1,7 +1,7 @@
 import { Component, mergeProps, Show } from 'solid-js'
 
 import { A } from '@solidjs/router'
-import LogoSvg from '/src/icons/metargg-logo.svg?component'
+import LogoSvg from '/src/icons/metargg-logo.svg?component-solid'
 
 interface LogoProps {
 	class?: string
