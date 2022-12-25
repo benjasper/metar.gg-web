@@ -1,8 +1,9 @@
 import { useNavigate } from '@solidjs/router'
 import { Component } from 'solid-js'
+import Header from '../components/Header'
 import Logo from '../components/Logo'
 import SearchBar from '../components/SearchBar'
-import PageLanding from '../layouts/PageLanding'
+import PageContent from '../layouts/PageContent'
 
 const Home: Component = () => {
 	const navigate = useNavigate()
@@ -18,16 +19,20 @@ const Home: Component = () => {
 
 	return (
 		<>
-			<PageLanding title='Latest aviation weather' description='Find the latest aviation weather observations and forecasts for any airport around the world. Get your METARs and TAFs here.'>
-				<div class="mt-[25vh] md:mt-[33vh] flex flex-col gap-8 transition-all">
-					<Logo class="mx-auto"></Logo>
-					<h2 class="mt-4 text-center dark:text-white-dark">What's the weather like in...</h2>
+			<PageContent
+				title="Latest aviation weather"
+				description="Find the latest aviation weather observations and forecasts for any airport around the world. Get your METARs and TAFs here."
+				contentFullHeight={true}>
+				<Header></Header>
+				<div class="mt-[15vh] flex flex-col gap-8  transition-all md:mt-[20vh]">
+					<Logo showText={false} class="mx-auto hidden md:flex"></Logo>
+					<h2 class="text-center dark:text-white-dark">What's the weather like in...</h2>
 					<div class="flex flex-col">
 						<SearchBar onSearch={doSearch}></SearchBar>
 						<span class="mx-auto mt-2 text-center text-gray-500">Simply start typing</span>
 					</div>
 				</div>
-			</PageLanding>
+			</PageContent>
 		</>
 	)
 }

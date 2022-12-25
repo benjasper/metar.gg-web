@@ -9,6 +9,7 @@ import { IoLocationSharp } from 'solid-icons/io'
 import { TbMountain } from 'solid-icons/tb'
 import { Component, createEffect, createMemo, createSignal, onCleanup, Show } from 'solid-js'
 import { createStore, reconcile } from 'solid-js/store'
+import DarkModeToggle from '../components/DarkModeToggle'
 import ForecastElements from '../components/ForecastElements'
 import Logo from '../components/Logo'
 import SearchBar from '../components/SearchBar'
@@ -178,13 +179,15 @@ const AirportSearchDetail: Component = () => {
 
 	return (
 		<PageContent title={title()} description={description()} contentFullHeight={true}>
-			<div class="flex flex-col justify-between gap-6 md:flex-row">
+			<div class="flex w-full flex-col justify-between gap-6 md:flex-row">
 				<Logo class="mx-auto md:mx-0 md:w-1/4"></Logo>
 				<SearchBar
 					class="my-auto mb-auto flex-grow justify-center"
 					onSearch={navigateTo}
 					placeholder="Search for another airport"></SearchBar>
-				<div class="md:w-1/4"></div>
+				<div class="flex flex-col items-end md:w-1/4">
+					<DarkModeToggle class='hidden md:flex'></DarkModeToggle>
+				</div>
 			</div>
 			<Show
 				when={
@@ -214,7 +217,11 @@ const AirportSearchDetail: Component = () => {
 						<Show when={airportStore.airport!.elevation}>
 							<Tag>
 								<TbMountain class="my-auto mr-1" />
-								Elevation {Math.round(selectedHeightUnit().conversionFunction(airportStore.airport!.elevation!))} {selectedHeightUnit().symbol}
+								Elevation{' '}
+								{Math.round(
+									selectedHeightUnit().conversionFunction(airportStore.airport!.elevation!)
+								)}{' '}
+								{selectedHeightUnit().symbol}
 							</Tag>
 						</Show>
 						<Show when={airportStore.airport!.timezone}>

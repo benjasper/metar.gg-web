@@ -4,6 +4,7 @@ import { Navigate, Route, Router, Routes, useParams } from '@solidjs/router'
 import { Component } from 'solid-js'
 import { render } from 'solid-js/web'
 import { GraphQLProvider } from './context/GraphQLClient'
+import { SettingsStoreProvider } from './context/SettingsStore'
 import { TimeStoreProvider } from './context/TimeStore'
 import { UnitStoreProvider } from './context/UnitStore'
 import About from './pages/About'
@@ -18,24 +19,26 @@ const App: Component = () => {
 	return (
 		<MetaProvider>
 			<Router>
-				<UnitStoreProvider>
-					<TimeStoreProvider>
-						<GraphQLProvider>
-							<Routes>
-								<Route path="/" component={Home} />
-								<Route path="/about" component={About} />
-								<Route path="/legal" component={Legal} />
-								<Route path="/terms" component={TermsOfUse} />
-								<Route path="/privacy" component={PrivacyPolicy} />
-								<Route path="/airport/:airportIdentifier" component={AirportSearchDetail} />
-								<Route
-									path="/:airportIdentifier"
-									element={<Navigate href={() => '/airport/' + useParams().airportIdentifier} />}
-								/>
-							</Routes>
-						</GraphQLProvider>
-					</TimeStoreProvider>
-				</UnitStoreProvider>
+				<SettingsStoreProvider>
+					<UnitStoreProvider>
+						<TimeStoreProvider>
+							<GraphQLProvider>
+								<Routes>
+									<Route path="/" component={Home} />
+									<Route path="/about" component={About} />
+									<Route path="/legal" component={Legal} />
+									<Route path="/terms" component={TermsOfUse} />
+									<Route path="/privacy" component={PrivacyPolicy} />
+									<Route path="/airport/:airportIdentifier" component={AirportSearchDetail} />
+									<Route
+										path="/:airportIdentifier"
+										element={<Navigate href={() => '/airport/' + useParams().airportIdentifier} />}
+									/>
+								</Routes>
+							</GraphQLProvider>
+						</TimeStoreProvider>
+					</UnitStoreProvider>
+				</SettingsStoreProvider>
 			</Router>
 		</MetaProvider>
 	)

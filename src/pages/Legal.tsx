@@ -1,4 +1,5 @@
 import { Meta } from '@solidjs/meta'
+import Header from '../components/Header'
 import Logo from '../components/Logo'
 import PageContent from '../layouts/PageContent'
 
@@ -8,9 +9,7 @@ const Legal = () => {
 			<Meta name='robots' content='noindex'></Meta>
 			
 			<div class="container text-black dark:text-white-dark">
-				<div class="flex flex-col justify-between gap-6 md:flex-row">
-					<Logo class="mx-auto md:mx-0 md:w-1/4"></Logo>
-				</div>
+				<Header></Header>
 				<h1 class="pt-16 text-4xl font-bold">Legal</h1>
 				<h2 class="pt-16 text-3xl">Information according to §5 TMG</h2>
 				<p class="mt-4">
