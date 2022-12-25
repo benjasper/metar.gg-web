@@ -17,6 +17,7 @@ const Footer: Component = () => {
 					<A class="mx-auto" href="https://github.com/benjasper/metar.gg-web/blob/main/LICENSE">License</A>
 					<A class="mx-auto" href="/legal">Legal</A>
 					<A class="mx-auto" href="/terms">Terms of Use</A>
+					<A class="mx-auto" href="/privacy">Privacy policy</A>
 				</div>
 
 				<div class="flex flex-col items-start gap-4 border-l-gray-400 md:pl-8 dark:text-white-light md:flex-row md:border-l">

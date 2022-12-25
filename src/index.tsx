@@ -10,6 +10,7 @@ import About from './pages/About'
 import AirportSearchDetail from './pages/AirportSearchDetail'
 import Home from './pages/Home'
 import Legal from './pages/Legal'
+import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfUse from './pages/TermsOfUse'
 import './styles/index.css'
 
@@ -25,6 +26,7 @@ const App: Component = () => {
 								<Route path="/about" component={About} />
 								<Route path="/legal" component={Legal} />
 								<Route path="/terms" component={TermsOfUse} />
+								<Route path="/privacy" component={PrivacyPolicy} />
 								<Route path="/airport/:airportIdentifier" component={AirportSearchDetail} />
 								<Route
 									path="/:airportIdentifier"
