@@ -98,23 +98,27 @@ const RunwayPopup = (props: {
 				</span>
 			</div>
 
-			<div class="flex gap-1">
-				<div
-					class="my-auto h-3 w-3 flex-shrink-0 rounded-full border-[3px]"
-					classList={{
-						'bg-gray-600': props.runwayDirection.favourableLevel === 0,
-						'bg-blue-600 dark:bg-blue-800': props.runwayDirection.favourableLevel === 1,
-						'bg-green-600 dark:bg-green-800': props.runwayDirection.favourableLevel === 2,
-						'border-gray-600': props.runwayDirection.favourableLevel === 0,
-						'border-blue-400 dark:border-blue-600': props.runwayDirection.favourableLevel === 1,
-						'border-green-400 dark:border-green-600': props.runwayDirection.favourableLevel === 2,
-					}}
-					aria-label={`Wind direction is ${favourableToText(props.runwayDirection.favourableLevel)}`}></div>
-				<span class="text-sm">
-					Wind angle: {favourableToText(props.runwayDirection.favourableLevel)} (
-					{Math.round(props.runwayDirection.windAngle)}°)
-				</span>
-			</div>
+			<Show when={props.windSpeed > 0}>
+				<div class="flex gap-1">
+					<div
+						class="my-auto h-3 w-3 flex-shrink-0 rounded-full border-[3px]"
+						classList={{
+							'bg-gray-600': props.runwayDirection.favourableLevel === 0,
+							'bg-blue-600 dark:bg-blue-800': props.runwayDirection.favourableLevel === 1,
+							'bg-green-600 dark:bg-green-800': props.runwayDirection.favourableLevel === 2,
+							'border-gray-600': props.runwayDirection.favourableLevel === 0,
+							'border-blue-400 dark:border-blue-600': props.runwayDirection.favourableLevel === 1,
+							'border-green-400 dark:border-green-600': props.runwayDirection.favourableLevel === 2,
+						}}
+						aria-label={`Wind direction is ${favourableToText(
+							props.runwayDirection.favourableLevel
+						)}`}></div>
+					<span class="text-sm">
+						Wind angle: {favourableToText(props.runwayDirection.favourableLevel)} (
+						{Math.round(props.runwayDirection.windAngle)}°)
+					</span>
+				</div>
+			</Show>
 
 			<Show when={Math.round(selectedSpeedUnit().conversionFunction(headwindComponent())) > 0}>
 				<div class="flex gap-1">
