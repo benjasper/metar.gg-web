@@ -12,7 +12,7 @@ interface ToggleProps {
 const Toggle: Component<ToggleProps> = props => {
 	return (
 		<div class="flex gap-2">
-			<label class="my-auto normal-case">
+			<label class="my-auto normal-case font-normal">
 				{props.offLabel}
 			</label>
 			<HeadlessToggle
@@ -31,7 +31,7 @@ const Toggle: Component<ToggleProps> = props => {
 					} pointer-events-none my-auto inline-block h-[1.3rem] w-[1.3rem] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out dark:bg-white-dark`}
 				/>
 			</HeadlessToggle>
-			<label class="my-auto normal-case">
+			<label class="my-auto normal-case font-normal">
 				{props.onLabel}
 			</label>
 		</div>

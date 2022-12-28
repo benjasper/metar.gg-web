@@ -47,7 +47,7 @@ p a {
 }
 
 label {
-	@apply flex gap-1 text-xs font-semibold uppercase text-gray-500 transition-colors dark:text-white-darker;
+	@apply flex gap-1 text-xs font-semibold uppercase text-gray-600 transition-colors dark:text-white-darker;
 }
 
 svg.cartesian {
