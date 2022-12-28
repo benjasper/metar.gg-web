@@ -6,6 +6,10 @@ import { Portal } from 'solid-js/web'
 interface TooltipProps {
 	text?: string
 	component?: JSX.Element
+	/**
+	 * Delay in milliseconds before the tooltip is shown
+	 */
+	delay?: number
 }
 
 const Tooltip: ParentComponent<TooltipProps> = props => {
@@ -13,6 +17,7 @@ const Tooltip: ParentComponent<TooltipProps> = props => {
 
 	const [show, setShow] = createSignal(false)
 	const [tooltip, setTooltip] = createSignal<HTMLElement>()
+	let timeout: NodeJS.Timeout | undefined
 
 	let position = useFloating(() => childRef() as HTMLElement, tooltip, {
 		whileElementsMounted: autoUpdate,
@@ -20,11 +25,20 @@ const Tooltip: ParentComponent<TooltipProps> = props => {
 	})
 
 	const onHover = () => {
-		setShow(true)
+		if (props.delay) {
+			timeout = setTimeout(() => {
+				setShow(true)
+			}, props.delay)
+		} else {
+			setShow(true)
+		}
 	}
 
 	const onLeave = () => {
 		setShow(false)
+		if (timeout) {
+			clearTimeout(timeout)
+		}
 	}
 
 	createEffect(() => {
@@ -37,6 +51,10 @@ const Tooltip: ParentComponent<TooltipProps> = props => {
 	onCleanup(() => {
 		removeEventListener('mouseover', onHover)
 		removeEventListener('mouseleave', onLeave)
+
+		if (timeout) {
+			clearTimeout(timeout)
+		}
 	})
 
 	return (
@@ -44,13 +62,14 @@ const Tooltip: ParentComponent<TooltipProps> = props => {
 			<Show when={show()}>
 				<Portal>
 					<div
+						role="tooltip"
 						style={{
 							position: position?.strategy ?? 'absolute',
 							top: `${position?.y ?? 0}px`,
 							left: `${position?.x ?? 0}px`,
 						}}
 						ref={setTooltip}
-						class="max-w-xs rounded-2xl bg-white px-3 py-2 text-sm text-black shadow-xl dark:bg-black-150 dark:text-white-darker">
+						class="max-w-xs rounded-xl bg-white px-3 py-2 text-xs text-black shadow-xl dark:bg-black-150 dark:text-white-darker">
 						{props.text}
 						{props.component}
 					</div>

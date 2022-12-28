@@ -14,6 +14,7 @@ specifiers:
   '@solidjs/meta': ^0.28.2
   '@solidjs/router': ^0.5.1
   autoprefixer: ^10.4.13
+  class-variance-authority: ^0.4.0
   graphql: ^16.6.0
   mercator-projection: ^0.0.2
   postcss: ^8.4.20
@@ -38,6 +39,7 @@ dependencies:
   '@solid-primitives/script-loader': 1.1.2_solid-js@1.6.6
   '@solidjs/meta': 0.28.2_solid-js@1.6.6
   '@solidjs/router': 0.5.1_solid-js@1.6.6
+  class-variance-authority: 0.4.0_typescript@4.9.4
   graphql: 16.6.0
   mercator-projection: 0.0.2
   solid-floating-ui: 0.2.0_qhlpnqtemrks4i7wwowv4wsrqm
@@ -2154,6 +2156,17 @@ packages:
       fsevents: 2.3.2
     dev: true
 
+  /class-variance-authority/0.4.0_typescript@4.9.4:
+    resolution: {integrity: sha512-74enNN8O9ZNieycac/y8FxqgyzZhZbxmCitAtAeUrLPlxjSd5zA7LfpprmxEcOmQBnaGs5hYhiSGnJ0mqrtBLQ==}
+    peerDependencies:
+      typescript: '>= 4.5.5 < 5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 4.9.4
+    dev: false
+
   /clean-stack/2.2.0:
     resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==}
     engines: {node: '>=6'}
@@ -4125,7 +4138,6 @@ packages:
     resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
     engines: {node: '>=4.2.0'}
     hasBin: true
-    dev: true
 
   /ua-parser-js/0.7.32:
     resolution: {integrity: sha512-f9BESNVhzlhEFf2CHMSj40NWOjYPl1YKYbrvIr/hFTDEmLq7SRbWvm7FcdcpCYT95zrOhC7gZSxjdnnTpBcwVw==}

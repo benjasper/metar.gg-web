@@ -1,7 +1,7 @@
 import { BsClockHistory } from 'solid-icons/bs'
 import { HiOutlineSwitchHorizontal } from 'solid-icons/hi'
 import { TbChevronLeft } from 'solid-icons/tb'
-import { Component, createEffect, createMemo, createSignal, For, Show, useContext } from 'solid-js'
+import { Component, createEffect, createMemo, createSignal, For, Match, Show, Switch, useContext } from 'solid-js'
 import { Slider, SliderContext, SliderProvider } from 'solid-slider'
 import { useTimeStore } from '../context/TimeStore'
 import Duration from '../models/duration'
@@ -51,7 +51,7 @@ const SliderNavigation: Component<DotsProps> = props => {
 		<Show when={props.items.length > 1}>
 			<Show when={helpers().current() > 0}>
 				<button
-					aria-label='Previous forecast page'
+					aria-label="Previous forecast page"
 					onClick={() => helpers().prev()}
 					role="button"
 					class="absolute -bottom-6 left-0 hidden h-8 w-8 -translate-y-1/2 transform rounded-full bg-white text-black shadow-sm dark:bg-black-100 dark:text-white-dark md:flex">
@@ -78,7 +78,7 @@ const SliderNavigation: Component<DotsProps> = props => {
 
 			<Show when={helpers().current() < props.items.length - 2}>
 				<button
-					aria-label='Next forecast page'
+					aria-label="Next forecast page"
 					onClick={() => helpers().next()}
 					role="button"
 					class="absolute -bottom-6 right-0 hidden h-8 w-8 -translate-y-1/2 transform rounded-full bg-white text-black shadow-sm dark:bg-black-100 dark:text-white-dark md:flex">
@@ -183,6 +183,9 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 
 	const isValid = () => validFrom().getTime() <= now().getTime() && validTo().getTime() >= now().getTime()
 
+	const validSince = createMemo(() => Duration.fromDates(validFrom(), now()))
+	const validUntil = createMemo(() => Duration.fromDates(validTo(), now()))
+
 	const [isLocalTime, setIsLocalTime] = createSignal(false)
 	const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
 	const timeZoneIsSameAsAirport = createMemo(
@@ -255,12 +258,7 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 					<div class="flex w-full flex-row flex-wrap justify-between gap-2 pt-2">
 						<div class="flex flex-wrap gap-2">
 							<Tag
-								class="text-white dark:text-white-light"
-								classList={{
-									'bg-green-600 dark:bg-green-800': issueTimeDuration().asHours() <= 24,
-									'bg-red-600 dark:bg-red-800': issueTimeDuration().asHours() > 24,
-								}}
-								title={issueTime().toLocaleTimeString([], {
+								tooltip={issueTime().toLocaleTimeString([], {
 									hour: 'numeric',
 									minute: '2-digit',
 									day: 'numeric',
@@ -271,23 +269,27 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 								Issued {issueTimeDuration().humanImprecise()}
 							</Tag>
 							<Tag
-								class="text-white dark:text-white-light"
-								classList={{
-									'bg-green-600 dark:bg-green-800': isValid(),
-									'bg-yellow-600 dark:bg-yellow-800': !isValid(),
-								}}>
-								Valid from{' '}
-								{validFrom().toLocaleDateString([], {
+								intent={isValid() ? 'successful' : 'warning'}
+								tooltip={`Valid from ${validFrom().toLocaleDateString([], {
 									hour: 'numeric',
 									minute: '2-digit',
 									timeZone: isLocalTime() ? props.airport.timezone ?? '' : browserTimezone,
-								})}{' '}
-								to{' '}
-								{validTo().toLocaleDateString([], {
+								})} to ${validTo().toLocaleDateString([], {
 									hour: 'numeric',
 									minute: '2-digit',
 									timeZone: isLocalTime() ? props.airport.timezone ?? '' : browserTimezone,
-								})}
+								})}`}>
+								<Switch>
+									<Match when={validSince().isFuture()}>
+										Valid in {validSince().humanImprecise(false)}
+									</Match>
+									<Match when={validUntil().isFuture()}>
+										Valid for {validUntil().humanPrecise(true, false)}
+									</Match>
+									<Match when={validUntil().isPast()}>
+										Expired {validUntil().humanPrecise(true)}
+									</Match>
+								</Switch>
 							</Tag>
 						</div>
 						<Show when={!timeZoneIsSameAsAirport()}>
@@ -363,8 +365,7 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 													</div>
 													<Show when={forecast.changeIndicator}>
 														<Tag
-															class="gap-1"
-															title={`Change indicator: ${changeIndicatorCodeToText(
+															tooltip={`Change indicator: ${changeIndicatorCodeToText(
 																forecast.changeIndicator!
 															)}`}>
 															<Show
@@ -381,7 +382,7 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 														</Tag>
 													</Show>
 													<Show when={forecast.changeProbability}>
-														<Tag class="gap-1" title="Probability">
+														<Tag tooltip="Probability">
 															<span>{forecast.changeProbability}%</span>
 														</Tag>
 													</Show>

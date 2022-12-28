@@ -65,7 +65,7 @@ class Duration {
 	 * 
 	 * @returns {string} a human readable but imprecise string of the duration
 	 */
-	humanImprecise(): string {
+	humanImprecise(directionWord: boolean = true): string {
 		const absoluteMilliseconds = Math.abs(this.milliseconds)
 
 		const seconds = Math.floor(absoluteMilliseconds / 1000)
@@ -77,8 +77,8 @@ class Duration {
 
 		const isFuture = this.milliseconds > 0
 
-		const prepend = isFuture ? "in " : ""
-		const append = isFuture ? "" : " ago"
+		const prepend = directionWord && isFuture ? "in " : ""
+		const append = directionWord && !isFuture ? " ago" : ""
 
 		if (years > 0) {
 			return prepend + years + " year" + (years === 1 ? "" : "s") + append
@@ -105,7 +105,7 @@ class Duration {
 	 * 
 	 * @returns {string} a human readable string of the duration
 	 */
-	humanPrecise(): string {
+	humanPrecise(omitSeconds: boolean = false, directionWord: boolean = true): string {
 		const absoluteMilliseconds = Math.abs(this.milliseconds)
 
 		const seconds = Math.round(absoluteMilliseconds / 1000)
@@ -123,8 +123,8 @@ class Duration {
 		
 		const isFuture = this.milliseconds > 0
 
-		const prepend = isFuture ? "in " : ""
-		const append = isFuture ? "" : " ago"
+		const prepend = directionWord && isFuture ? "in " : ""
+		const append = directionWord && !isFuture ? " ago" : ""
 		
 		const parts = []
 		if (years > 0) {
@@ -147,7 +147,7 @@ class Duration {
 			const minutesString = minutesRemainder === 1 ? "1 minute" : `${minutesRemainder} minutes`
 			parts.push(minutesString)
 		}
-		if (secondsRemainder > 0) {
+		if (secondsRemainder > 0 && !omitSeconds || parts.length === 0) {
 			const secondsString = secondsRemainder === 1 ? "1 second" : `${secondsRemainder} seconds`
 			parts.push(secondsString)
 		}

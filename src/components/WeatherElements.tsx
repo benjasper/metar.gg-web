@@ -4,6 +4,7 @@ import { useTimeStore } from '../context/TimeStore'
 import Duration from '../models/duration'
 import { AirportSearchFragment } from '../queries/generated/graphql'
 import { Tag } from './Tag'
+import Tooltip from './Tooltip'
 import AltimeterElement from './weather-elements/AltimeterElement'
 import FlightCategoryElement from './weather-elements/FlightCategoryElement'
 import { PrecipitationElement } from './weather-elements/PrecipitationElement'
@@ -41,12 +42,8 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 						<h3 class="text-2xl dark:text-white-dark">Current weather</h3>
 						<div class="flex flex-row flex-wrap justify-start gap-2 pt-2">
 							<Tag
-								class="cursor-default rounded-full px-3 py-1 text-xs text-white dark:text-white-light"
-								classList={{
-									'bg-green-600 dark:bg-green-800': lastObservationDuration().asHours() <= 2,
-									'bg-red-600 dark:bg-red-800': lastObservationDuration().asHours() > 2,
-								}}
-								title={metarObservationTime().toLocaleTimeString([], {
+								intent={lastObservationDuration().asHours() <= 2 ? 'successful' : 'danger'}
+								tooltip={metarObservationTime().toLocaleTimeString([], {
 									hour: 'numeric',
 									minute: '2-digit',
 									day: 'numeric',
@@ -56,8 +53,7 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 								Observed {lastObservationDuration().humanImprecise()}
 							</Tag>
 							<Tag
-								class="cursor-default rounded-full bg-white px-3 py-1 text-xs text-black dark:bg-black-200 dark:text-white-light"
-								title={importTime().toLocaleTimeString([], {
+								tooltip={importTime().toLocaleTimeString([], {
 									hour: 'numeric',
 									minute: '2-digit',
 									day: 'numeric',
@@ -74,17 +70,13 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 									)
 								}>
 								<Tag
-									class="cursor-default rounded-full px-3 py-1 text-xs text-white dark:text-white-light"
-									classList={{
-										'bg-orange-500 dark:bg-orange-800':
-											nextImportPredictionDuration().isPast() &&
-											nextImportPredictionDuration().asMinutes() > 5,
-										'bg-green-600 dark:bg-green-800':
-											nextImportPredictionDuration().isFuture() ||
-											(nextImportPredictionDuration().asMinutes() <= 5 &&
-												nextImportPredictionDuration().isPast()),
-									}}
-									title={nextImportPrediction().toLocaleTimeString([], {
+									intent={
+										nextImportPredictionDuration().isPast() &&
+										nextImportPredictionDuration().asHours() > 2
+											? 'danger'
+											: 'successful'
+									}
+									tooltip={nextImportPrediction().toLocaleTimeString([], {
 										hour: 'numeric',
 										minute: '2-digit',
 										day: 'numeric',
@@ -100,12 +92,12 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 							</Show>
 						</div>
 					</div>
-					<span
-						class="mt-4 flex text-gray-700 dark:text-white-dark md:mt-auto"
-						title={`Refreshed ${Duration.fromDates(props.lastRefreshed, now()).humanPrecise()}`}>
-						<HiOutlineRefresh class="my-auto mr-2" />
-						Constantly checking for updates
-					</span>
+					<Tooltip text={`Refreshed ${Duration.fromDates(props.lastRefreshed, now()).humanPrecise(false)}`} delay={1000}>
+						<span class="mt-4 flex text-gray-700 dark:text-white-dark md:mt-auto">
+							<HiOutlineRefresh class="my-auto mr-2" />
+							Constantly checking for updates
+						</span>
+					</Tooltip>
 				</Show>
 			</div>
 			<div class={`mt-4 flex h-full flex-col justify-center gap-8 md:flex-row`}>
@@ -124,11 +116,16 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 						<VisibilityElement visibility={latestMetar()!.visibility}></VisibilityElement>
 
 						<Show when={latestMetar()!.skyConditions!.length > 0}>
-							<SkyConditionsElement skyConditions={latestMetar()!.skyConditions!} airport={props.airport} />
+							<SkyConditionsElement
+								skyConditions={latestMetar()!.skyConditions!}
+								airport={props.airport}
+							/>
 						</Show>
 
-						<TemperatureElement temperature={latestMetar()!.temperature} name="Temperature"></TemperatureElement>
-						
+						<TemperatureElement
+							temperature={latestMetar()!.temperature}
+							name="Temperature"></TemperatureElement>
+
 						<TemperatureElement temperature={latestMetar()!.dewpoint} name="Dewpoint"></TemperatureElement>
 
 						<Show when={latestMetar()!.altimeter !== 0}>
