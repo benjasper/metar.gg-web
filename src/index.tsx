@@ -1,12 +1,13 @@
 /* @refresh reload */
 import { MetaProvider } from '@solidjs/meta'
 import { Navigate, Route, Router, Routes, useParams } from '@solidjs/router'
-import { Component } from 'solid-js'
+import { Component, ErrorBoundary } from 'solid-js'
 import { render } from 'solid-js/web'
 import { GraphQLProvider } from './context/GraphQLClient'
 import { SettingsStoreProvider } from './context/SettingsStore'
 import { TimeStoreProvider } from './context/TimeStore'
 import { UnitStoreProvider } from './context/UnitStore'
+import ErrorPage from './layouts/ErrorPage'
 import About from './pages/About'
 import AirportSearchDetail from './pages/AirportSearchDetail'
 import Home from './pages/Home'
@@ -23,18 +24,22 @@ const App: Component = () => {
 					<UnitStoreProvider>
 						<TimeStoreProvider>
 							<GraphQLProvider>
-								<Routes>
-									<Route path="/" component={Home} />
-									<Route path="/about" component={About} />
-									<Route path="/legal" component={Legal} />
-									<Route path="/terms" component={TermsOfUse} />
-									<Route path="/privacy" component={PrivacyPolicy} />
-									<Route path="/airport/:airportIdentifier" component={AirportSearchDetail} />
-									<Route
-										path="/:airportIdentifier"
-										element={<Navigate href={() => '/airport/' + useParams().airportIdentifier} />}
-									/>
-								</Routes>
+								<ErrorBoundary fallback={(err, reset) => <ErrorPage error={err} reset={reset} recoverable></ErrorPage>}>
+									<Routes>
+										<Route path="/" component={Home} />
+										<Route path="/about" component={About} />
+										<Route path="/legal" component={Legal} />
+										<Route path="/terms" component={TermsOfUse} />
+										<Route path="/privacy" component={PrivacyPolicy} />
+										<Route path="/airport/:airportIdentifier" component={AirportSearchDetail} />
+										<Route
+											path="/:airportIdentifier"
+											element={
+												<Navigate href={() => '/airport/' + useParams().airportIdentifier} />
+											}
+										/>
+									</Routes>
+								</ErrorBoundary>
 							</GraphQLProvider>
 						</TimeStoreProvider>
 					</UnitStoreProvider>
