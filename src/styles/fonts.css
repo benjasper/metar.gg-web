@@ -62,6 +62,7 @@
 
 /* fragment-mono-regular - latin */
 @font-face {
+  font-display: swap;
   font-family: 'Fragment Mono';
   font-style: normal;
   font-weight: 400;

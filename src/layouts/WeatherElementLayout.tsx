@@ -18,6 +18,9 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 	const [unitStore, { selectUnit, lockUnit, unlockUnit }] = useUnitStore()
 	const [isOpen, setIsOpen] = createSignal(false)
 
+	// ID from sanitized name
+	const id = props.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
+
 	const unitConfiguration = () => (props.unitType ? unitStore[props.unitType] : undefined)
 
 	const [reference, setReference] = createSignal<HTMLElement>()
@@ -26,7 +29,7 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 	const position = useFloating(reference, popper, {
 		whileElementsMounted: autoUpdate,
 		placement: 'right',
-		middleware: [offset(10), flip({ fallbackPlacements: ['top', 'bottom', 'left']})],
+		middleware: [offset(10), flip({ fallbackPlacements: ['top', 'bottom', 'left'] })],
 	})
 
 	const onClick = (event: MouseEvent) => {
@@ -66,6 +69,10 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 					</Show>
 					<button
 						type="button"
+						aria-expanded={isOpen()}
+						aria-haspopup="true"
+						aria-controls={`context-menu-${id}`}
+						aria-label={`Open context menu for ${props.name}. Includes unit conversion.`}
 						onClick={() => setIsOpen(!isOpen())}
 						ref={setReference}
 						class="group my-auto inline-flex items-center rounded-md text-base font-medium text-black dark:text-white-darker">
@@ -81,7 +88,10 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 									top: `${position.y ?? 0}px`,
 									left: `${position.x ?? 0}px`,
 								}}>
-								<Menu class="flex  flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-black-150 dark:shadow-xl">
+								<Menu
+									aria-label={`Context menu for ${props.name}. Includes unit conversion.`}
+									id={`context-menu-${id}`}
+									class="flex flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-black-150 dark:shadow-xl">
 									<span class="px-4 pt-2 text-xs font-semibold text-black dark:text-white-darker">
 										Unit conversion
 									</span>
@@ -92,15 +102,19 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 												disabled={unitStore[props.unitType!].locked !== ''}
 												onClick={() => selectUnit(props.unitType!, unit.symbol)}
 												class="flex gap-1 whitespace-nowrap rounded px-4 py-2 text-left text-sm text-black transition-all disabled:opacity-60 dark:text-white-darker"
-												classList={{'cursor-default ': unitStore[props.unitType!].units[
-													unitStore[props.unitType!].selected
-												].symbol === unit.symbol,
-												'enabled:hover:bg-gray-light enabled:hover:dark:bg-black-100': unitStore[props.unitType!].units[
-													unitStore[props.unitType!].selected
-												].symbol !== unit.symbol}}>
+												classList={{
+													'cursor-default ':
+														unitStore[props.unitType!].units[
+															unitStore[props.unitType!].selected
+														].symbol === unit.symbol,
+													'enabled:hover:bg-gray-light enabled:hover:dark:bg-black-100':
+														unitStore[props.unitType!].units[
+															unitStore[props.unitType!].selected
+														].symbol !== unit.symbol,
+												}}>
 												<div class="flex items-center gap-2">
 													<div
-														class="h-2 w-2 bg-gray-300 dark:bg-white-darker rounded-full transition-all duration-300"
+														class="h-2 w-2 rounded-full bg-gray-300 transition-all duration-300 dark:bg-white-darker"
 														classList={{
 															'!bg-primary dark:!bg-primary-light':
 																unitStore[props.unitType!].units[

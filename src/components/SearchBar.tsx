@@ -1,12 +1,22 @@
 import { useKeyDownList } from '@solid-primitives/keyboard'
-import { Transition } from 'solid-headless'
-import { Component, createEffect, createMemo, createSignal, For, mergeProps, onCleanup, Show, untrack } from 'solid-js'
-import { useGraphQL } from '../context/GraphQLClient'
-import { AirportSearchQuery, AirportSearchQueryVariables } from '../queries/generated/graphql'
-import { AIRPORT_SEARCH } from '../queries/AirportQueries'
 import { debounce } from '@solid-primitives/scheduled'
+import { Transition } from 'solid-headless'
 import { AiOutlineSearch } from 'solid-icons/ai'
-import { A } from '@solidjs/router'
+import {
+	Component,
+	createEffect,
+	createMemo,
+	createSignal,
+	For,
+	Match,
+	mergeProps,
+	Show,
+	Switch,
+	untrack
+} from 'solid-js'
+import { useGraphQL } from '../context/GraphQLClient'
+import { AIRPORT_SEARCH } from '../queries/AirportQueries'
+import { AirportSearchQuery, AirportSearchQueryVariables } from '../queries/generated/graphql'
 
 interface SearchBarProps {
 	class?: string
@@ -78,17 +88,19 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 			return
 		}
 
-		if (keys().includes('ARROWDOWN')) {
+		if (keys().includes('ARROWDOWN') || keys().includes('TAB')) {
 			untrackedEvent!.preventDefault()
 			setSelectedAirportId(prev =>
-				prev === undefined || prev < airportResults().length - 1 ? (prev ?? -1) + 1 : prev
+				prev === undefined || prev < airportResults().length - 1 ? (prev ?? -1) + 1 : 0
 			)
 			return
 		}
 
 		if (keys().includes('ARROWUP')) {
 			untrackedEvent!.preventDefault()
-			setSelectedAirportId(prev => (prev === undefined || prev > 0 ? (prev ?? 1) - 1 : prev))
+			setSelectedAirportId(prev =>
+				prev === undefined || prev > 0 ? (prev ?? 1) - 1 : airportResults().length - 1
+			)
 			return
 		}
 
@@ -109,7 +121,8 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 		// If it doesn't have focus we want to give it focus when we detect letters and numbers
 		if (
 			document.activeElement !== input &&
-			((untrackedEvent!.key.length === 1 && untrackedEvent!.key.match(/[a-z0-9]/i)) || keys().includes('BACKSPACE'))
+			((untrackedEvent!.key.length === 1 && untrackedEvent!.key.match(/[a-z0-9]/i)) ||
+				keys().includes('BACKSPACE'))
 		) {
 			input.focus()
 			return
@@ -125,10 +138,15 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 						type="text"
 						autofocus={true}
 						spellcheck={false}
-						tabIndex={0}
+						tabIndex={-1}
 						role="combobox"
-						aria-expanded={isFocused() && airportRequest.latest !== undefined && (airportRequest()?.getAirports.totalCount ?? 0) > 0}
-						aria-owns="owned_listbox" aria-haspopup="listbox"
+						aria-expanded={
+							isFocused() &&
+							airportRequest.latest !== undefined &&
+							(airportRequest()?.getAirports.totalCount ?? 0) > 0
+						}
+						aria-owns="search-bar"
+						aria-haspopup="listbox"
 						autocomplete="off"
 						placeholder={props.placeholder}
 						onInput={e => handleInput(e)}
@@ -172,42 +190,55 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 					class="my-auto flex flex-col gap-32"
 					show={isFocused() && currentInput() !== '' && airportRequest.latest !== undefined}
 					enter="transform transition duration-[200ms]"
-					role='listbox'
-					id='owned_listbox'
 					enterFrom="opacity-0"
 					enterTo="opacity-100"
 					leave="transform duration-200 transition ease-in-out"
 					leaveFrom="opacity-100 rotate-0"
 					leaveTo="opacity-0">
-					<ul class="py-1 absolute left-0 z-10 mt-2 w-full origin-top-right overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black-200"
+					<ul
+						class="absolute left-0 z-10 mt-2 w-full origin-top-right overflow-y-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black-200"
 						role="listbox"
+						id="search-bar"
+						aria-label="Airport selection search bar"
 						aria-orientation="vertical"
+						aria-activedescendant={`search-bar-item-${selectedAirportId()}`}
 						tabindex="-1">
-							<Show when={airportRequest.latest && (airportRequest()?.getAirports.totalCount ?? 0) > 0}>
-								<For each={airportResults()}>
-									{(airportNode, i) => (
-										<li
-											class="block w-full px-6 py-2 text-sm text-gray-700 dark:text-white-dark cursor-pointer"
-											classList={{ 'bg-gray-100 dark:bg-black-100': i() === selectedAirportId() }}
-											onMouseEnter={e => setSelectedAirportId(i())}
-											onClick={e => onSubmit(airportNode.node.identifier)}
-											role="option"
-											tabindex={i()}>
-											{airportNode.node.icaoCode} / {airportNode.node.iataCode} •{' '}
-											{airportNode.node.name}
-										</li>
-									)}
-								</For>
-							</Show>
-							<Show when={airportRequest() && airportRequest()?.getAirports.totalCount === 0}>
-								<a
-									href="#"
-									class="pointer-events-none block w-full px-6 py-2 text-sm text-gray-700 dark:text-white-dark"
-									role="menuitem">
-									Nothing found.
-								</a>
-							</Show>
-						</ul>
+						<Show when={airportRequest.latest && (airportRequest()?.getAirports.totalCount ?? 0) > 0}>
+							<For each={airportResults()}>
+								{(airportNode, i) => (
+									<li
+										id={`search-bar-item-${i()}`}
+										class="block w-full cursor-pointer px-6 py-2 text-sm text-gray-700 dark:text-white-dark"
+										classList={{ 'bg-gray-100 dark:bg-black-100': i() === selectedAirportId() }}
+										onMouseEnter={e => setSelectedAirportId(i())}
+										onClick={e => onSubmit(airportNode.node.identifier)}
+										role="option"
+										aria-selected={i() === selectedAirportId()}
+										tabindex={i()}>
+										<Switch>
+											<Match when={airportNode.node.icaoCode && airportNode.node.iataCode}>
+												{airportNode.node.icaoCode} / {airportNode.node.iataCode} •{' '}
+												{airportNode.node.name}
+											</Match>
+											<Match when={airportNode.node.icaoCode}>
+												{airportNode.node.icaoCode} • {airportNode.node.name}
+											</Match>
+											<Match when={airportNode.node.name}>
+												{airportNode.node.name}
+											</Match>
+										</Switch>
+									</li>
+								)}
+							</For>
+						</Show>
+						<Show when={airportRequest() && airportRequest()?.getAirports.totalCount === 0}>
+							<li
+								class="pointer-events-none block w-full px-6 py-2 text-sm text-gray-700 dark:text-white-dark"
+								role="option">
+								Nothing found.
+							</li>
+						</Show>
+					</ul>
 				</Transition>
 			</div>
 		</div>

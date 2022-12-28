@@ -9,7 +9,7 @@ import {
 	AirportSearchFragment,
 	ForecastChangeIndicator,
 	ForecastFragment,
-	TafFragment,
+	TafFragment
 } from '../queries/generated/graphql'
 import { Tag } from './Tag'
 import Toggle from './Toggle'
@@ -51,6 +51,7 @@ const SliderNavigation: Component<DotsProps> = props => {
 		<Show when={props.items.length > 1}>
 			<Show when={helpers().current() > 0}>
 				<button
+					aria-label='Previous forecast page'
 					onClick={() => helpers().prev()}
 					role="button"
 					class="absolute -bottom-6 left-0 hidden h-8 w-8 -translate-y-1/2 transform rounded-full bg-white text-black shadow-sm dark:bg-black-100 dark:text-white-dark md:flex">
@@ -77,6 +78,7 @@ const SliderNavigation: Component<DotsProps> = props => {
 
 			<Show when={helpers().current() < props.items.length - 2}>
 				<button
+					aria-label='Next forecast page'
 					onClick={() => helpers().next()}
 					role="button"
 					class="absolute -bottom-6 right-0 hidden h-8 w-8 -translate-y-1/2 transform rounded-full bg-white text-black shadow-sm dark:bg-black-100 dark:text-white-dark md:flex">

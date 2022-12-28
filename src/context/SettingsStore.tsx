@@ -31,8 +31,17 @@ const SettingsStoreContext = createContext<SettingsStoreContextInterface>(
 const SettingsStoreProvider: ParentComponent = props => {
 	const [store, setStore] = createStore<SettingsStore>(createSettingsStore())
 
+	// Set the theme on load when the saved theme string matches the ThemeMode enum
+	if (localStorage.theme && Object.values(ThemeMode).includes(localStorage.theme as ThemeMode)) {
+		setStore('theme', localStorage.theme as ThemeMode)
+	}
+
 	const actions: SettingsStoreContextInterface[1] = {
-		setTheme: (darkMode: ThemeMode) => setStore('theme', darkMode),
+		setTheme: (darkMode: ThemeMode) => {
+			setStore('theme', darkMode)
+			// Save the current mode
+			localStorage.theme = store.theme
+		},
 	}
 
 	const evaluateColorScheme = () => {
@@ -51,9 +60,6 @@ const SettingsStoreProvider: ParentComponent = props => {
 			document.documentElement.classList.remove('dark')
 			document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#f9f8f9')
 		}
-
-		// Save the current mode
-		localStorage.theme = store.theme
 	}
 
 	createEffect(evaluateColorScheme)
