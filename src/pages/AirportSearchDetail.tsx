@@ -208,7 +208,7 @@ const AirportSearchDetail: Component = () => {
 
 					<div class="flex max-w-md flex-wrap justify-center gap-2 pt-4">
 						<Tag>
-							<IoLocationSharp class="my-auto mr-1"></IoLocationSharp>
+							<IoLocationSharp class="my-auto"></IoLocationSharp>
 							<Show when={airportStore.airport!.municipality}>
 								{airportStore.airport!.municipality},
 							</Show>{' '}
@@ -216,7 +216,7 @@ const AirportSearchDetail: Component = () => {
 						</Tag>
 						<Show when={airportStore.airport!.elevation}>
 							<Tag>
-								<TbMountain class="my-auto mr-1" />
+								<TbMountain class="my-auto" />
 								Elevation{' '}
 								{Math.round(
 									selectedHeightUnit().conversionFunction(airportStore.airport!.elevation!)
@@ -226,7 +226,7 @@ const AirportSearchDetail: Component = () => {
 						</Show>
 						<Show when={airportStore.airport!.timezone}>
 							<Tag>
-								<HiSolidClock class="my-auto mr-1"></HiSolidClock>
+								<HiSolidClock class="my-auto"></HiSolidClock>
 								Local time{' '}
 								{now().toLocaleTimeString([], {
 									hour: 'numeric',
@@ -237,9 +237,9 @@ const AirportSearchDetail: Component = () => {
 						</Show>
 						<Show when={airportStore.airport!.website}>
 							<LinkTag href={airportStore.airport!.website!}>
-								<CgWebsite class="my-auto mr-1" />
+								<CgWebsite class="my-auto" />
 								Website
-								<FiExternalLink class="my-auto ml-1" />
+								<FiExternalLink class="my-auto" />
 							</LinkTag>
 						</Show>
 					</div>

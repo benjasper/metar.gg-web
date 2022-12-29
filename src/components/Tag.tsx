@@ -2,7 +2,7 @@ import { cva, VariantProps } from 'class-variance-authority'
 import { Match, ParentComponent, Switch } from 'solid-js'
 import Tooltip from './Tooltip'
 
-const tag = cva('flex rounded-full px-3 py-1 text-xs transition-all', {
+const tag = cva('flex gap-1 rounded-full px-3 py-1 text-xs transition-all', {
 	variants: {
 		intent: {
 			standard: 'bg-white text-black dark:bg-black-200 dark:text-white-dark',
