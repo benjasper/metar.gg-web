@@ -14,6 +14,7 @@ export const AIRPORT_SEARCH = gql`
 					identifier
 					icaoCode
 					iataCode
+					gpsCode
 					name
 				}
 			}
@@ -134,6 +135,7 @@ export const AIRPORT_SINGLE =
 			identifier
 			icaoCode
 			iataCode
+			gpsCode
 			name
 			timezone
 			elevation

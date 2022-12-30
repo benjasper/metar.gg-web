@@ -7,7 +7,7 @@ import { HiSolidClock } from 'solid-icons/hi'
 import { ImSpinner5 } from 'solid-icons/im'
 import { IoLocationSharp } from 'solid-icons/io'
 import { TbMountain } from 'solid-icons/tb'
-import { Component, createEffect, createMemo, createSignal, onCleanup, Show } from 'solid-js'
+import { Component, createEffect, createMemo, createSignal, Match, onCleanup, Show, Switch } from 'solid-js'
 import { createStore, reconcile } from 'solid-js/store'
 import DarkModeToggle from '../components/DarkModeToggle'
 import ForecastElements from '../components/ForecastElements'
@@ -56,12 +56,25 @@ const AirportSearchDetail: Component = () => {
 	})
 
 	const title = createMemo(() => {
-		if (airportStore.airport) {
+		if (airportStore.airport === undefined) {
+			return `Loading ${params.airportIdentifier}...`
+		}
+
+		if (airportStore.airport.icaoCode && airportStore.airport.iataCode) {
 			return `${airportStore.airport.icaoCode} / ${airportStore.airport.iataCode} - ${airportStore.airport.name} weather`
 		}
 
-		return `Loading ${params.airportIdentifier}...`
+		if (airportStore.airport.icaoCode) {
+			return `${airportStore.airport.icaoCode} - ${airportStore.airport.name} weather`
+		}
+
+		if (airportStore.airport.iataCode) {
+			return `${airportStore.airport.iataCode} - ${airportStore.airport.name} weather`
+		}
+
+		return `${airportStore.airport.identifier} - ${airportStore.airport.name} weather`
 	})
+
 	const description = createMemo(() => {
 		return airportStore.airport
 			? `Get real time METAR and TAF updates for ${airportStore.airport.name} (${
@@ -186,7 +199,7 @@ const AirportSearchDetail: Component = () => {
 					onSearch={navigateTo}
 					placeholder="Search for another airport"></SearchBar>
 				<div class="flex flex-col items-end md:w-1/4">
-					<DarkModeToggle class='hidden md:flex'></DarkModeToggle>
+					<DarkModeToggle class="hidden md:flex"></DarkModeToggle>
 				</div>
 			</div>
 			<Show
@@ -201,8 +214,20 @@ const AirportSearchDetail: Component = () => {
 				}>
 				<div class="mx-auto flex flex-col py-16 text-center dark:text-white-dark">
 					<h2>
-						{airportStore.airport!.icaoCode}{' '}
-						<Show when={airportStore.airport!.iataCode}>/ {airportStore.airport!.iataCode}</Show>
+						<Switch>
+							<Match when={airportStore.airport!.icaoCode && airportStore.airport!.iataCode}>
+								{airportStore.airport!.icaoCode} / {airportStore.airport!.iataCode}
+							</Match>
+							<Match when={airportStore.airport!.icaoCode}>
+								{airportStore.airport!.icaoCode}
+							</Match>
+							<Match when={airportStore.airport!.gpsCode}>
+								{airportStore.airport!.gpsCode}
+							</Match>
+							<Match when={true}>
+								{airportStore.airport!.identifier}
+							</Match>
+						</Switch>
 					</h2>
 					<span class="mt-1 text-lg">{airportStore.airport!.name}</span>
 

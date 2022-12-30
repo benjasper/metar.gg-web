@@ -57,7 +57,7 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 				<span class="my-auto">{props.name}</span>
 			</label>
 			<Show when={unitConfiguration() && props.unitType}>
-				<div class="absolute right-2 top-[1.4rem] flex gap-1 md:right-4">
+				<div class="absolute right-2 top-[1rem] flex gap-1 md:right-4">
 					<Show when={unitConfiguration()!.locked !== ''}>
 						<div
 							class="invisible my-auto md:visible"
@@ -75,7 +75,7 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 						aria-label={`Open context menu for ${props.name}. Includes unit conversion.`}
 						onClick={() => setIsOpen(!isOpen())}
 						ref={setReference}
-						class="group my-auto inline-flex items-center rounded-md text-base font-medium text-black dark:text-white-darker">
+						class="group my-auto inline-flex items-center rounded-full p-2 text-base font-medium text-black transition-all hover:bg-gray-light dark:text-white-darker dark:hover:bg-black-100">
 						<BsThreeDotsVertical></BsThreeDotsVertical>
 					</button>
 					<Show when={isOpen()}>

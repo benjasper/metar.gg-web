@@ -223,8 +223,11 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 											<Match when={airportNode.node.icaoCode}>
 												{airportNode.node.icaoCode} • {airportNode.node.name}
 											</Match>
-											<Match when={airportNode.node.name}>
-												{airportNode.node.name}
+											<Match when={airportNode.node.gpsCode}>
+												{airportNode.node.gpsCode} • {airportNode.node.name}
+											</Match>
+											<Match when={true}>
+												{airportNode.node.identifier} • {airportNode.node.name}
 											</Match>
 										</Switch>
 									</li>
