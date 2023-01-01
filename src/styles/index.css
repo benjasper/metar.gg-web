@@ -50,20 +50,6 @@ label {
 	@apply flex gap-1 text-xs font-semibold uppercase text-gray-600 transition-colors dark:text-white-darker;
 }
 
-svg.cartesian {
-	display: flex;
-}
-
-/* Flip the vertical axis in <g> to emulate cartesian. */
-svg.cartesian > svg {
-	transform: scaleY(-1);
-}
-
-/* Re-flip all <text> element descendants to their original side up. */
-svg.cartesian > svg text {
-	transform: scaleY(-1);
-}
-
 /* Slider */
 .keen-slider {
 	display: flex;

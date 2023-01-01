@@ -312,7 +312,7 @@ const RunwayAndWindRenderer = (props: {
 		<Show when={runways().length > 0}>
 			<div class="relative mx-auto w-full rounded-full md:mx-0">
 				<svg
-					class="cartesian h-full md:w-[22rem]"
+					class="flex h-full md:w-[22rem]"
 					viewBox={`${-centerX()} ${-centerY()}  ${realDiagonal() * 2} ${realDiagonal() * 2}`}
 					xmlns="http://www.w3.org/2000/svg">
 					{/* Compass circle */}
