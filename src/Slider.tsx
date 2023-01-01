@@ -1,0 +1,165 @@
+import { TbChevronLeft } from 'solid-icons/tb'
+import { Component, createEffect, For, ParentComponent, Show, useContext } from 'solid-js'
+import { Slider as SolidSlider, SliderContext, SliderProvider } from 'solid-slider'
+
+interface DotsProps {
+	items: any[]
+}
+
+const SliderNavigation: Component<DotsProps> = props => {
+	const [helpers] = useContext(SliderContext)
+
+	return (
+		<Show when={props.items.length > 1}>
+			<Show when={helpers().current() > 0}>
+				<button
+					aria-label="Previous forecast page"
+					onClick={() => helpers().prev()}
+					role="button"
+					class="absolute -bottom-6 left-0 hidden h-8 w-8 -translate-y-1/2 transform rounded-full bg-white text-black shadow-sm dark:bg-black-100 dark:text-white-dark md:flex">
+					<TbChevronLeft class="m-auto" size={24} />
+				</button>
+			</Show>
+
+			<div class="relative mx-auto mt-8 flex justify-center gap-3">
+				<For each={props.items}>
+					{(_, index) => (
+						<button
+							role="button"
+							class="h-2.5 w-2.5 rounded-full bg-gray-300 transition-all dark:bg-gray-700"
+							aria-label={`Select forecast ${index() + 1}`}
+							classList={{
+								'bg-gray-500 dark:bg-gray-400': helpers().current() === index(),
+								'hover:bg-gray-400 dark:hover:bg-gray-500': helpers().current() !== index(),
+							}}
+							disabled={helpers().current() === index()}
+							onClick={() => helpers().moveTo(index())}></button>
+					)}
+				</For>
+			</div>
+
+			<Show when={helpers().current() < props.items.length - 2}>
+				<button
+					aria-label="Next forecast page"
+					onClick={() => helpers().next()}
+					role="button"
+					class="absolute -bottom-6 right-0 hidden h-8 w-8 -translate-y-1/2 transform rounded-full bg-white text-black shadow-sm dark:bg-black-100 dark:text-white-dark md:flex">
+					<TbChevronLeft class="m-auto rotate-180" size={24} />
+				</button>
+			</Show>
+		</Show>
+	)
+}
+
+const ReloadSliderOnChange: Component<{ value: any }> = props => {
+	const [helpers] = useContext(SliderContext)
+
+	createEffect(() => {
+		if (props.value && helpers().slider()) {
+			helpers().slider().update()
+		}
+	})
+
+	return undefined
+}
+
+const WheelControls = (slider: any) => {
+	let touchTimeout: NodeJS.Timeout
+	let position = { x: 0, y: 0 }
+	let wheelActive = false
+
+	function dispatch(e: any, name: string) {
+		position.x -= e.deltaX
+		position.y -= e.deltaY
+		slider.container.dispatchEvent(
+			new CustomEvent(name, {
+				detail: {
+					x: position.x,
+					y: position.y,
+				},
+			})
+		)
+	}
+
+	function wheelStart(e: any) {
+		position = {
+			x: e.pageX,
+			y: e.pageY,
+		}
+		dispatch(e, 'ksDragStart')
+	}
+
+	function wheel(e: any) {
+		dispatch(e, 'ksDrag')
+	}
+
+	function wheelEnd(e: any) {
+		dispatch(e, 'ksDragEnd')
+	}
+
+	function eventWheel(e: WheelEvent) {
+		if (e.deltaX !== 0) e.preventDefault()
+
+		if (!wheelActive) {
+			wheelStart(e)
+			wheelActive = true
+		}
+		wheel(e)
+		clearTimeout(touchTimeout)
+		touchTimeout = setTimeout(() => {
+			wheelActive = false
+			wheelEnd(e)
+		}, 50)
+	}
+
+	slider.on('created', () => {
+		slider.container.addEventListener('wheel', eventWheel, {
+			passive: false,
+		})
+	})
+}
+
+interface SliderProps {
+	class?: string
+	items: any[]
+	updateOnChange?: any
+	noItemsMessage?: string
+}
+
+const Slider: ParentComponent<SliderProps> = props => {
+	return (
+		<div class={`relative ${props.class} flex max-w-full flex-col overflow-x-hidden md:overflow-x-visible`}>
+			<Show
+				when={props.items.length > 0}
+				fallback={
+					<Show when={props.noItemsMessage}>
+						<span class="mx-auto py-16 text-xl text-black dark:text-white-dark">
+							{props.noItemsMessage}
+						</span>
+					</Show>
+				}>
+				<SliderProvider>
+					<Show when={props.updateOnChange}>
+						<ReloadSliderOnChange value={props.updateOnChange} />
+					</Show>
+					<SolidSlider
+						options={{
+							slides: { perView: 1, spacing: 32 },
+							breakpoints: {
+								'(min-width: 500px)': {
+									slides: { perView: 'auto', spacing: 32 },
+								},
+							},
+							mode: 'snap',
+						}}
+						plugins={[WheelControls]}>
+						{props.children}
+					</SolidSlider>
+					<SliderNavigation items={props.items}></SliderNavigation>
+				</SliderProvider>
+			</Show>
+		</div>
+	)
+}
+
+export default Slider
