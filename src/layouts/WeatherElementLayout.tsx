@@ -54,7 +54,7 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 				<Show when={props.icon}>
 					<div class="my-auto">{props.icon}</div>
 				</Show>
-				<span class="my-auto">{props.name}</span>
+				<span class="my-auto whitespace-nowrap">{props.name}</span>
 			</label>
 			<Show when={unitConfiguration() && props.unitType}>
 				<div class="absolute right-2 top-[1rem] flex gap-1 md:right-4">

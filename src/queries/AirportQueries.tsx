@@ -128,8 +128,36 @@ export const AIRPORT_WEATHER =
 		}
 	`
 
+const AIRPORTS_IN_VICINITY_FRAGMENT = gql`
+	fragment StationsVicinity on Airport {
+		stationsVicinity(first: 10, radius: 250) {
+			distance
+			station {
+				airport {
+					identifier
+					name
+					type
+					icaoCode
+					iataCode
+					gpsCode
+					latitude
+					longitude
+				}
+				metars(first: 1) {
+					edges {
+						node {
+							flightCategory
+						}
+					}
+				}
+			}
+		}
+	}
+`
+
 export const AIRPORT_SINGLE =
 	WEATHER_FRAGMENT +
+	AIRPORTS_IN_VICINITY_FRAGMENT +
 	gql`
 		fragment AirportSearch on Airport {
 			identifier
@@ -143,6 +171,7 @@ export const AIRPORT_SINGLE =
 			wikipedia
 			latitude
 			longitude
+			type
 			runways(closed: false) {
 				closed
 				surface
@@ -163,6 +192,7 @@ export const AIRPORT_SINGLE =
 				name
 			}
 			...AirportWeather
+			...StationsVicinity
 		}
 
 		query GetSingleAirport($identifier: String!) {

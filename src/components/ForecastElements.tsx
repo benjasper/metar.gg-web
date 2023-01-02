@@ -133,10 +133,10 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 	}
 
 	return (
-		<div class="flex w-full flex-col">
-			<Show when={props.taf} fallback={<span class="mx-auto py-32 text-xl">No forecast available.</span>}>
+		<section class="flex w-full flex-col dark:text-white-dark">
+			<h3 class="text-2xl dark:text-white-dark">Current forecast</h3>
+			<Show when={props.taf} fallback={<span class="mx-auto py-16 text-xl">No forecast available.</span>}>
 				<>
-					<h3 class="text-2xl dark:text-white-dark">Current forecast</h3>
 					<div class="flex w-full flex-row flex-wrap justify-between gap-2 pt-2">
 						<div class="flex flex-wrap gap-2">
 							<Tag
@@ -188,10 +188,11 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 						class="mt-6"
 						items={forecasts()}
 						updateOnChange={props.taf?.rawText}
+						adaptiveHeight
 						noItemsMessage="No future forecasts available.">
 						<For each={forecasts()}>
 							{forecast => (
-								<div class="flex flex-col gap-2">
+								<div class="mb-auto flex flex-col gap-2">
 									<div class="flex flex-row flex-wrap gap-2">
 										<div class="inline-block">
 											<span class="text-left dark:text-white-dark">
@@ -283,7 +284,7 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 					</p>
 				</>
 			</Show>
-		</div>
+		</section>
 	)
 }
 

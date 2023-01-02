@@ -9,6 +9,7 @@ const tag = cva('flex gap-1 rounded-full px-3 py-1 text-xs transition-all', {
 			successful: 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-white-dark',
 			warning: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-white-dark',
 			danger: 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-white-dark',
+			neutral: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-white-dark',
 		},
 	},
 	defaultVariants: {
@@ -29,11 +30,11 @@ const Tag: ParentComponent<TagProps> = props => {
 		<Switch>
 			<Match when={props.tooltip}>
 				<Tooltip text={props.tooltip} delay={1000}>
-					<span class={`cursor-default ${tag({ intent: props.intent })}`}>{props.children}</span>
+					<span class={`${tag({ intent: props.intent })}`}>{props.children}</span>
 				</Tooltip>
 			</Match>
 			<Match when={true}>
-				<span class={`cursor-default ${tag({ intent: props.intent })}`}>{props.children}</span>
+				<span class={`${tag({ intent: props.intent })}`}>{props.children}</span>
 			</Match>
 		</Switch>
 	)

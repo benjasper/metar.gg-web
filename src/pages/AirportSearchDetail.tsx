@@ -9,6 +9,8 @@ import { IoLocationSharp } from 'solid-icons/io'
 import { TbMountain } from 'solid-icons/tb'
 import { Component, createEffect, createMemo, createSignal, Match, onCleanup, Show, Switch } from 'solid-js'
 import { createStore, reconcile } from 'solid-js/store'
+import AirportClassification from '../components/AirportClassification'
+import AirportsInVicinity from '../components/AirportsInVicinity'
 import DarkModeToggle from '../components/DarkModeToggle'
 import ForecastElements from '../components/ForecastElements'
 import Logo from '../components/Logo'
@@ -21,8 +23,7 @@ import { useUnitStore } from '../context/UnitStore'
 import PageContent from '../layouts/PageContent'
 import { AIRPORT_SINGLE } from '../queries/AirportQueries'
 import {
-	AirportSearchFragment,
-	GetSingleAirportQuery,
+	AirportSearchFragment, GetSingleAirportQuery,
 	GetSingleAirportQueryVariables
 } from '../queries/generated/graphql'
 
@@ -218,15 +219,9 @@ const AirportSearchDetail: Component = () => {
 							<Match when={airportStore.airport!.icaoCode && airportStore.airport!.iataCode}>
 								{airportStore.airport!.icaoCode} / {airportStore.airport!.iataCode}
 							</Match>
-							<Match when={airportStore.airport!.icaoCode}>
-								{airportStore.airport!.icaoCode}
-							</Match>
-							<Match when={airportStore.airport!.gpsCode}>
-								{airportStore.airport!.gpsCode}
-							</Match>
-							<Match when={true}>
-								{airportStore.airport!.identifier}
-							</Match>
+							<Match when={airportStore.airport!.icaoCode}>{airportStore.airport!.icaoCode}</Match>
+							<Match when={airportStore.airport!.gpsCode}>{airportStore.airport!.gpsCode}</Match>
+							<Match when={true}>{airportStore.airport!.identifier}</Match>
 						</Switch>
 					</h2>
 					<span class="mt-1 text-lg">{airportStore.airport!.name}</span>
@@ -267,12 +262,21 @@ const AirportSearchDetail: Component = () => {
 								<FiExternalLink class="my-auto" />
 							</LinkTag>
 						</Show>
+						<Tag>
+							<AirportClassification type={airportStore.airport!.type}></AirportClassification>
+						</Tag>
 					</div>
 				</div>
 				<WeatherElements airport={airportStore.airport!} lastRefreshed={lastRefreshed()}></WeatherElements>
 				<ForecastElements
 					airport={airportStore.airport!}
 					taf={airportStore.airport!.station?.tafs.edges[0]?.node}></ForecastElements>
+				<AirportsInVicinity
+					airportCoordinates={{
+						latitude: airportStore.airport!.latitude,
+						longitude: airportStore.airport!.longitude,
+					}}
+					stations={airportStore.airport!.stationsVicinity}></AirportsInVicinity>
 			</Show>
 		</PageContent>
 	)

@@ -56,4 +56,5 @@ label {
 	position: relative;
 	user-select: none;
 	width: 100%;
+	transition: height 0.3s;
 }

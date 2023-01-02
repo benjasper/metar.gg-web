@@ -63,7 +63,24 @@ const ReloadSliderOnChange: Component<{ value: any }> = props => {
 	return undefined
 }
 
-const WheelControls = (slider: any) => {
+const adaptiveHeight = (slider: any) => {
+	function updateHeight() {
+		// Only on mobile
+		if (window.innerWidth >= 768) {
+			slider.container.style.height = 'auto'
+			return
+		}
+
+		setTimeout(() => {
+			slider.container.style.height = slider.slides[slider.track.details.rel].offsetHeight + 'px'
+		}, 0)
+	}
+	slider.on('created', updateHeight)
+	slider.on('slideChanged', updateHeight)
+	slider.on('updated', updateHeight)
+}
+
+const wheelControls = (slider: any) => {
 	let touchTimeout: NodeJS.Timeout
 	let position = { x: 0, y: 0 }
 	let wheelActive = false
@@ -120,15 +137,23 @@ const WheelControls = (slider: any) => {
 }
 
 interface SliderProps {
-	class?: string
 	items: any[]
+	class?: string
+	mobileCentered?: boolean
+	adaptiveHeight?: boolean
 	updateOnChange?: any
 	noItemsMessage?: string
 }
 
 const Slider: ParentComponent<SliderProps> = props => {
+	const plugins = [wheelControls]
+
+	if (props.adaptiveHeight) {
+		plugins.push(adaptiveHeight)
+	}
+
 	return (
-		<div class={`relative ${props.class} flex max-w-full flex-col overflow-x-hidden md:overflow-x-visible`}>
+		<div class={`relative ${props.class ?? ''} flex max-w-full flex-col`}>
 			<Show
 				when={props.items.length > 0}
 				fallback={
@@ -144,7 +169,11 @@ const Slider: ParentComponent<SliderProps> = props => {
 					</Show>
 					<SolidSlider
 						options={{
-							slides: { perView: 1, spacing: 32 },
+							slides: {
+								perView: props.mobileCentered ? 'auto' : 1,
+								spacing: 32,
+								origin: props.mobileCentered ? 'center' : 'auto',
+							},
 							breakpoints: {
 								'(min-width: 500px)': {
 									slides: { perView: 'auto', spacing: 32 },
@@ -152,7 +181,7 @@ const Slider: ParentComponent<SliderProps> = props => {
 							},
 							mode: 'snap',
 						}}
-						plugins={[WheelControls]}>
+						plugins={plugins}>
 						{props.children}
 					</SolidSlider>
 					<SliderNavigation items={props.items}></SliderNavigation>

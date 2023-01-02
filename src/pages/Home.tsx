@@ -29,7 +29,7 @@ const Home: Component = () => {
 					<h2 class="text-center dark:text-white-dark">What's the weather like in...</h2>
 					<div class="flex flex-col">
 						<SearchBar onSearch={doSearch}></SearchBar>
-						<span class="mx-auto mt-2 text-center text-gray-500">Simply start typing</span>
+						<span class="mx-auto mt-2 text-center text-gray-600 dark:text-white-darker">Simply start typing</span>
 					</div>
 				</div>
 			</PageContent>

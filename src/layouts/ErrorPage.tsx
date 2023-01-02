@@ -12,7 +12,7 @@ type ErrorPageProps = {
 
 const ErrorPage: Component<ErrorPageProps> = props => {
 	return (
-		<PageContent title="Error" description="An error occured">
+		<PageContent title="Error" description="An error occured" contentFullHeight={true}>
 			<Header></Header>
 			<div class="flex flex-1 flex-col items-center justify-center gap-8 text-black dark:text-white-dark">
 				<h1 class="text-center text-4xl font-bold">Sorry, that didn't work</h1>
