@@ -23,7 +23,8 @@ import { useUnitStore } from '../context/UnitStore'
 import PageContent from '../layouts/PageContent'
 import { AIRPORT_SINGLE } from '../queries/AirportQueries'
 import {
-	AirportSearchFragment, GetSingleAirportQuery,
+	AirportSearchFragment,
+	GetSingleAirportQuery,
 	GetSingleAirportQueryVariables
 } from '../queries/generated/graphql'
 
@@ -234,16 +235,6 @@ const AirportSearchDetail: Component = () => {
 							</Show>{' '}
 							{airportStore.airport!.country!.name}
 						</Tag>
-						<Show when={airportStore.airport!.elevation}>
-							<Tag>
-								<TbMountain class="my-auto" />
-								Elevation{' '}
-								{Math.round(
-									selectedHeightUnit().conversionFunction(airportStore.airport!.elevation!)
-								)}{' '}
-								{selectedHeightUnit().symbol}
-							</Tag>
-						</Show>
 						<Show when={airportStore.airport!.timezone}>
 							<Tag>
 								<HiSolidClock class="my-auto"></HiSolidClock>
@@ -255,6 +246,19 @@ const AirportSearchDetail: Component = () => {
 								})}
 							</Tag>
 						</Show>
+						<Tag>
+							<AirportClassification type={airportStore.airport!.type}></AirportClassification>
+						</Tag>
+						<Show when={airportStore.airport!.elevation}>
+							<Tag>
+								<TbMountain class="my-auto" />
+								Elevation{' '}
+								{Math.round(
+									selectedHeightUnit().conversionFunction(airportStore.airport!.elevation!)
+								)}{' '}
+								{selectedHeightUnit().symbol}
+							</Tag>
+						</Show>
 						<Show when={airportStore.airport!.website}>
 							<LinkTag href={airportStore.airport!.website!}>
 								<CgWebsite class="my-auto" />
@@ -262,9 +266,6 @@ const AirportSearchDetail: Component = () => {
 								<FiExternalLink class="my-auto" />
 							</LinkTag>
 						</Show>
-						<Tag>
-							<AirportClassification type={airportStore.airport!.type}></AirportClassification>
-						</Tag>
 					</div>
 				</div>
 				<WeatherElements airport={airportStore.airport!} lastRefreshed={lastRefreshed()}></WeatherElements>
