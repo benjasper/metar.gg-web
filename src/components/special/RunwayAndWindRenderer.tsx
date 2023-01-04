@@ -227,8 +227,8 @@ const RunwayAndWindRenderer = (props: {
 					favourableLevel: 0,
 					windAngle: 180 - Math.abs(Math.abs((runway.highRunwayHeading ?? 0) - props.windDirection) - 180),
 				},
-				length: unitStore.length.units[unitStore.length.selected].conversionFunction(runway.length ?? 0),
-				width: unitStore.length.units[unitStore.length.selected].conversionFunction(runway.width ?? 0),
+				length: runway.length ?? 0,
+				width: runway.width ?? 0,
 			})
 		})
 

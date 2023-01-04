@@ -11,6 +11,7 @@ enum SpeedUnit {
 // Length
 enum LengthUnit {
 	Miles = 'mi',
+	Feet = 'ft',
 	Kilometers = 'km',
 	Meters = 'm',
 	NauticalMiles = 'NM',

@@ -83,6 +83,12 @@ const createUnitStore = () => {
 		conversionFunction: (value: number) => value * 1000,
 	}
 
+	const feetFromKilometers: Unit = {
+		symbol: LengthUnit.Feet,
+		name: 'Feet',
+		conversionFunction: (value: number) => value * 3280.84,
+	}
+
 	const miles: Unit = {
 		symbol: LengthUnit.Miles,
 		name: 'Miles',
@@ -151,7 +157,7 @@ const createUnitStore = () => {
 		},
 		length: {
 			selected: 0,
-			units: [kilometers, meters, miles, nauticalMiles],
+			units: [kilometers, meters, miles, feetFromKilometers, nauticalMiles],
 			locked: '',
 		},
 		height: {
