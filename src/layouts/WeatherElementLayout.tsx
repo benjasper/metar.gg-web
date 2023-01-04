@@ -96,7 +96,7 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 						onClick={() => setIsOpen(!isOpen())}
 						ref={setReference}
 						class="group my-auto inline-flex items-center rounded-full p-2 text-base font-medium text-black transition-all hover:bg-gray-light dark:text-white-darker dark:hover:bg-black-100"
-						classList={{ 'bg-gray-light bg-black-100': isOpen() }}>
+						classList={{ 'bg-gray-light dark:bg-black-100': isOpen() }}>
 						<BsThreeDotsVertical />
 					</button>
 					<Show when={isOpen()}>
