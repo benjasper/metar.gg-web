@@ -9,10 +9,12 @@ metar.gg is an app that fetches latest METAR and TAF data from [NOAA](https://ww
 The accompanying Go GraphQL API can be found [here](https://github.com/benjasper/metar.gg-backend).
 
 ### Features
-* ⚡ Latest, up to date METAR
+* ⚡ Latest, up to date METARs and TAFs
 * 🕑 Next METAR publishing time prediction
 * 🔄 Automatic polling for weather updates
 * 🧭 Runway wind renderer
+* 💨 Calculates preferred runway including Headwind, tailwind and crosswind components
+* 🔄 Unit conversion for every value
 * 🌑 Dark mode
 * 🛬 Nearest Airports
 
