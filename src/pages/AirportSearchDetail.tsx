@@ -21,11 +21,12 @@ import { useGraphQL } from '../context/GraphQLClient'
 import { useTimeStore } from '../context/TimeStore'
 import { useUnitStore } from '../context/UnitStore'
 import PageContent from '../layouts/PageContent'
+import { LengthUnit, PressureUnit, SpeedUnit } from '../models/units'
 import { AIRPORT_SINGLE } from '../queries/AirportQueries'
 import {
 	AirportSearchFragment,
 	GetSingleAirportQuery,
-	GetSingleAirportQueryVariables
+	GetSingleAirportQueryVariables,
 } from '../queries/generated/graphql'
 
 const AirportSearchDetail: Component = () => {
@@ -131,18 +132,20 @@ const AirportSearchDetail: Component = () => {
 		// Check for visibility unit
 		if (unitStore['length'].locked === '') {
 			if (rawMetar.includes('SM')) {
-				selectUnit('length', 'mi')
+				selectUnit('length', LengthUnit.Miles)
+				selectUnit('smallLength', LengthUnit.Feet)
 			} else {
-				selectUnit('length', 'km')
+				selectUnit('length', LengthUnit.Kilometers)
+				selectUnit('smallLength', LengthUnit.Meters)
 			}
 		}
 
 		// Check for wind speed unit
 		if (unitStore['speed'].locked === '') {
 			if (rawMetar.includes('MPS')) {
-				selectUnit('speed', 'm/s')
+				selectUnit('speed', SpeedUnit.MetersPerSecond)
 			} else {
-				selectUnit('speed', 'kt')
+				selectUnit('speed', SpeedUnit.Knots)
 			}
 		}
 
@@ -150,9 +153,9 @@ const AirportSearchDetail: Component = () => {
 		if (unitStore['pressure'].locked === '') {
 			const regexAltimeter = new RegExp(/A\d{4}/)
 			if (regexAltimeter.test(rawMetar)) {
-				selectUnit('pressure', 'inHg')
+				selectUnit('pressure', PressureUnit.InchesOfMercury)
 			} else {
-				selectUnit('pressure', 'hPa')
+				selectUnit('pressure', PressureUnit.Hectopascals)
 			}
 		}
 	})

@@ -61,7 +61,7 @@ const RunwayPopup = (props: {
 	windDirection: number
 }) => {
 	const [unitStore] = useUnitStore()
-	const selectedLengthUnit = () => unitStore.length.units[unitStore.length.selected]
+	const selectedLengthUnit = () => unitStore.smallLength.units[unitStore.smallLength.selected]
 	const selectedSpeedUnit = () => unitStore.speed.units[unitStore.speed.selected]
 
 	// Calculate crosswind components
@@ -93,12 +93,19 @@ const RunwayPopup = (props: {
 			<div class="flex gap-1">
 				<CgArrowsVAlt class="my-auto" />
 				<span class="text-sm">
-					Length: {selectedLengthUnit().conversionFunction(props.runway.length).toFixed(1)}{' '}
+					Length: {Math.round(selectedLengthUnit().conversionFunction(props.runway.length))}{' '}
+					{selectedLengthUnit().symbol}
+				</span>
+			</div>
+			<div class="flex gap-1">
+				<CgArrowsVAlt class="my-auto transform rotate-90" />
+				<span class="text-sm">
+					Width: {Math.round(selectedLengthUnit().conversionFunction(props.runway.width))}{' '}
 					{selectedLengthUnit().symbol}
 				</span>
 			</div>
 
-			<Show when={props.windSpeed > 0}>
+			<Show when={props.windSpeed > 0 && props.windDirection > 0}>
 				<div class="flex gap-1">
 					<div
 						class="my-auto h-3 w-3 flex-shrink-0 rounded-full border-[3px]"
@@ -120,7 +127,7 @@ const RunwayPopup = (props: {
 				</div>
 			</Show>
 
-			<Show when={Math.round(selectedSpeedUnit().conversionFunction(headwindComponent())) > 0}>
+			<Show when={Math.round(selectedSpeedUnit().conversionFunction(headwindComponent())) > 0 && props.windDirection > 0}>
 				<div class="flex gap-1">
 					<BsArrowUp
 						class="my-auto origin-center transform"
@@ -133,7 +140,7 @@ const RunwayPopup = (props: {
 					</span>
 				</div>
 			</Show>
-			<Show when={Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent())) > 0}>
+			<Show when={Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent())) > 0 && props.windDirection > 0}>
 				<div class="flex gap-1">
 					<BsArrowUp
 						class="my-auto origin-center transform"
@@ -147,7 +154,7 @@ const RunwayPopup = (props: {
 					</span>
 				</div>
 			</Show>
-			<Show when={Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent())) > 0}>
+			<Show when={Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent())) > 0 && props.windDirection > 0}>
 				<div class="flex gap-1">
 					<BsArrowUp
 						class="my-auto origin-center transform"
@@ -170,8 +177,6 @@ const RunwayAndWindRenderer = (props: {
 	windDirection: number
 	variableWind: VariableWind | undefined
 }) => {
-	const [unitStore] = useUnitStore()
-
 	const [runways, setRunways] = createSignal<Runway[]>([])
 
 	const [centerX, setCenterX] = createSignal(0)
@@ -233,7 +238,7 @@ const RunwayAndWindRenderer = (props: {
 		})
 
 		// Calculate the best runway heading
-		if (props.windSpeed > 2 && props.windDirection != 0) {
+		if (props.windSpeed > 1 && props.windDirection != 0) {
 			const bestRunways = preparingRunways.filter(runway => {
 				return runway.direction1.windAngle < 90 || runway.direction2.windAngle < 90
 			})
@@ -280,7 +285,7 @@ const RunwayAndWindRenderer = (props: {
 	const windArrows = (): { angle: number; x: number; y: number; isVariable: boolean }[] => {
 		const arrows: { angle: number; x: number; y: number; isVariable: boolean }[] = []
 
-		if (props.windSpeed > 2 && props.windDirection != 0) {
+		if (props.windSpeed > 0 && props.windDirection != 0) {
 			arrows.push({
 				angle: props.windDirection,
 				x: realCenterX() + radius() * Math.cos(((props.windDirection - 90) * Math.PI) / 180),

@@ -37,8 +37,10 @@ enum PressureUnit {
 	Hectopascals = 'hPa',
 }
 
+type UnitType = SpeedUnit | LengthUnit | HeightUnit | TemperatureUnit | PressureUnit
+
 interface Unit {
-	symbol: string
+	symbol: UnitType
 	name: string
 
 	/**
@@ -54,5 +56,5 @@ interface UnitConfiguration {
 }
 
 export { SpeedUnit, LengthUnit, HeightUnit, TemperatureUnit, PressureUnit }
-export type { Unit, UnitConfiguration }
+export type { Unit, UnitConfiguration, UnitType }
 

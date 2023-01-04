@@ -3,14 +3,15 @@ import { useFloating } from 'solid-floating-ui'
 import { Menu, MenuItem } from 'solid-headless'
 import { BiSolidLockAlt, BiSolidLockOpenAlt } from 'solid-icons/bi'
 import { BsThreeDotsVertical } from 'solid-icons/bs'
-import { createSignal, For, JSX, onCleanup, ParentComponent, Show } from 'solid-js'
+import { createMemo, createSignal, For, JSX, Match, onCleanup, ParentComponent, Show, Switch } from 'solid-js'
 import { Portal } from 'solid-js/web'
+import Tooltip from '../components/Tooltip'
 import { UnitStore, useUnitStore } from '../context/UnitStore'
 
-interface ParsedWeatherElementLayoutProps {
+export interface ParsedWeatherElementLayoutProps {
 	name: string
 	class?: string
-	unitType?: keyof UnitStore
+	unitType?: { name?: string; unitType: keyof UnitStore }[]
 	icon?: JSX.Element
 }
 
@@ -21,7 +22,21 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 	// ID from sanitized name
 	const id = props.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
 
-	const unitConfiguration = () => (props.unitType ? unitStore[props.unitType] : undefined)
+	const unitConfigurations = createMemo(() => {
+		if (props.unitType === undefined) {
+			return []
+		}
+
+		return props.unitType.map(item => {
+			return { name: item.name, type: item.unitType, configuration: unitStore[item.unitType] }
+		})
+	})
+
+	const lockedUnits = createMemo(() => {
+		return unitConfigurations()
+			.map(x => x)
+			.filter(item => item.configuration.locked !== '')
+	})
 
 	const [reference, setReference] = createSignal<HTMLElement>()
 	const [popper, setPopper] = createSignal<HTMLElement>()
@@ -56,15 +71,20 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 				</Show>
 				<span class="my-auto whitespace-nowrap">{props.name}</span>
 			</label>
-			<Show when={unitConfiguration() && props.unitType}>
+			<Show when={unitConfigurations().length > 0}>
 				<div class="absolute right-2 top-[1rem] flex gap-1 md:right-4">
-					<Show when={unitConfiguration()!.locked !== ''}>
-						<div
-							class="invisible my-auto md:visible"
-							title={`The unit of this component is locked to ${
-								unitConfiguration()!.locked
-							}. It will persist across different airports.`}>
-							<BiSolidLockAlt></BiSolidLockAlt>
+					<Show when={lockedUnits().length > 0}>
+						<div class="invisible my-auto md:visible">
+							<Tooltip
+								text={`The unit${lockedUnits().length > 1 ? 's' : ''} of this component ${
+									lockedUnits().length > 1 ? 'are' : 'is'
+								} locked to ${lockedUnits()
+									.map(x => unitStore[x.type].units[unitStore[x.type].selected].symbol)
+									.join(', ')}. It will persist across different airports. You can unlock ${
+									lockedUnits().length > 1 ? 'them' : 'it'
+								} by opening the context menu.`}>
+								<BiSolidLockAlt></BiSolidLockAlt>
+							</Tooltip>
 						</div>
 					</Show>
 					<button
@@ -72,10 +92,11 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 						aria-expanded={isOpen()}
 						aria-haspopup="true"
 						aria-controls={`context-menu-${id}`}
-						aria-label={`Open context menu for ${props.name}. Includes unit conversion.`}
+						aria-label={`Context menu for ${props.name}. Includes unit conversions.`}
 						onClick={() => setIsOpen(!isOpen())}
 						ref={setReference}
-						class="group my-auto inline-flex items-center rounded-full p-2 text-base font-medium text-black transition-all hover:bg-gray-light dark:text-white-darker dark:hover:bg-black-100">
+						class="group my-auto inline-flex items-center rounded-full p-2 text-base font-medium text-black transition-all hover:bg-gray-light dark:text-white-darker dark:hover:bg-black-100"
+						classList={{ 'bg-gray-light bg-black-100': isOpen() }}>
 						<BsThreeDotsVertical></BsThreeDotsVertical>
 					</button>
 					<Show when={isOpen()}>
@@ -92,71 +113,101 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 									aria-label={`Context menu for ${props.name}. Includes unit conversion.`}
 									id={`context-menu-${id}`}
 									class="flex flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-black-150 dark:shadow-xl">
-									<span class="px-4 pt-2 text-xs font-semibold text-black dark:text-white-darker">
-										Unit conversion
-									</span>
-									<For each={unitConfiguration()!.units}>
-										{unit => (
-											<MenuItem
-												as="button"
-												disabled={unitStore[props.unitType!].locked !== ''}
-												onClick={() => selectUnit(props.unitType!, unit.symbol)}
-												class="flex gap-1 whitespace-nowrap rounded px-4 py-2 text-left text-sm text-black transition-all disabled:opacity-60 dark:text-white-darker"
-												classList={{
-													'cursor-default ':
-														unitStore[props.unitType!].units[
-															unitStore[props.unitType!].selected
-														].symbol === unit.symbol,
-													'enabled:hover:bg-gray-light enabled:hover:dark:bg-black-100':
-														unitStore[props.unitType!].units[
-															unitStore[props.unitType!].selected
-														].symbol !== unit.symbol,
-												}}>
-												<div class="flex items-center gap-2">
+									<For each={unitConfigurations()}>
+										{(unitConfiguration, index) => (
+											<>
+												<span class="px-4 pt-2 text-xs font-semibold text-black dark:text-white-darker">
+													{unitConfiguration.name ?? props.name} unit conversion
+												</span>
+												<For each={unitConfiguration.configuration!.units}>
+													{unit => (
+														<MenuItem
+															as="button"
+															disabled={unitStore[unitConfiguration.type!].locked !== ''}
+															onClick={() =>
+																selectUnit(unitConfiguration.type!, unit.symbol)
+															}
+															class="flex gap-1 whitespace-nowrap rounded px-4 py-2 text-left text-sm text-black transition-all disabled:opacity-60 dark:text-white-darker"
+															classList={{
+																'cursor-default ':
+																	unitStore[unitConfiguration.type!].units[
+																		unitStore[unitConfiguration.type!].selected
+																	].symbol === unit.symbol,
+																'enabled:hover:bg-gray-light enabled:hover:dark:bg-black-100':
+																	unitStore[unitConfiguration.type!].units[
+																		unitStore[unitConfiguration.type!].selected
+																	].symbol !== unit.symbol,
+															}}>
+															<div class="flex items-center gap-2">
+																<div
+																	class="h-2 w-2 rounded-full bg-gray-300 transition-all duration-300 dark:bg-white-darker"
+																	classList={{
+																		'!bg-primary dark:!bg-primary-light':
+																			unitStore[unitConfiguration.type!].units[
+																				unitStore[unitConfiguration.type!]
+																					.selected
+																			].symbol === unit.symbol,
+																	}}></div>
+																<span class="text-sm font-medium text-gray-900 dark:text-white-darker">
+																	Display in {unit.name} ({unit.symbol})
+																</span>
+															</div>
+														</MenuItem>
+													)}
+												</For>
+												<MenuItem
+													as="button"
+													onClick={() =>
+														unitStore[unitConfiguration.type!].locked === ''
+															? lockUnit(
+																	unitConfiguration.type!,
+																	unitStore[unitConfiguration.type!].units[
+																		unitStore[unitConfiguration.type!].selected
+																	].symbol
+															  )
+															: unlockUnit(unitConfiguration.type!)
+													}
+													class="flex gap-2 whitespace-nowrap rounded px-4 py-2 text-left text-sm text-black transition-all hover:bg-gray-light dark:text-white-darker hover:dark:bg-black-100">
 													<div
-														class="h-2 w-2 rounded-full bg-gray-300 transition-all duration-300 dark:bg-white-darker"
+														class="my-auto flex flex-col items-center text-gray-300 transition-all duration-300 dark:text-white-darker"
 														classList={{
-															'!bg-primary dark:!bg-primary-light':
-																unitStore[props.unitType!].units[
-																	unitStore[props.unitType!].selected
-																].symbol === unit.symbol,
-														}}></div>
-													<span class="text-sm font-medium text-gray-900 dark:text-white-darker">
-														Display in {unit.name} ({unit.symbol})
+															'!text-primary dark:!text-primary-light':
+																unitStore[unitConfiguration.type!].locked !== '',
+														}}>
+														<Switch>
+															<Match
+																when={unitStore[unitConfiguration.type!].locked === ''}>
+																<BiSolidLockAlt class="my-auto w-2 scale-[1.6]" />
+															</Match>
+															<Match
+																when={unitStore[unitConfiguration.type!].locked !== ''}>
+																<BiSolidLockOpenAlt class="my-auto w-2 scale-[1.6]" />
+															</Match>
+														</Switch>
+													</div>
+													<span>
+														{unitStore[unitConfiguration.type!].locked === ''
+															? 'Lock'
+															: 'Unlock'}{' '}
+														current unit (
+														{
+															unitStore[unitConfiguration.type!].units[
+																unitStore[unitConfiguration.type!].selected
+															].symbol
+														}
+														)
 													</span>
-												</div>
-											</MenuItem>
+												</MenuItem>
+												<Show
+													when={
+														index() !== (unitConfigurations().length ?? 0) - 1 &&
+														(unitConfigurations().length ?? 0) > 0
+													}>
+													<hr class="border-gray-300 dark:border-gray-600" />
+												</Show>
+											</>
 										)}
 									</For>
-									<hr class="border-gray-300 dark:border-gray-600" />
-									<MenuItem
-										as="button"
-										onClick={() =>
-											unitStore[props.unitType!].locked === ''
-												? lockUnit(
-														props.unitType!,
-														unitStore[props.unitType!].units[
-															unitStore[props.unitType!].selected
-														].symbol
-												  )
-												: unlockUnit(props.unitType!)
-										}
-										class="flex gap-2 whitespace-nowrap rounded px-4 py-2 text-left text-sm text-black transition-all hover:bg-gray-light dark:text-white-darker hover:dark:bg-black-100">
-										<Show
-											when={unitStore[props.unitType!].locked === ''}
-											fallback={<BiSolidLockOpenAlt class="my-auto" />}>
-											<BiSolidLockAlt class="my-auto w-2 scale-150" />
-										</Show>
-										<span>
-											{unitStore[props.unitType!].locked === '' ? 'Lock' : 'Unlock'} current unit
-											(
-											{
-												unitStore[props.unitType!].units[unitStore[props.unitType!].selected]
-													.symbol
-											}
-											)
-										</span>
-									</MenuItem>
 								</Menu>
 							</div>
 						</Portal>

@@ -11,7 +11,7 @@ import {
 } from 'solid-icons/ri'
 import { Component, createMemo, For, Match, Show, Switch } from 'solid-js'
 import { useUnitStore } from '../../context/UnitStore'
-import WeatherElementLayout from '../../layouts/WeatherElementLayout'
+import WeatherElementLayout, { ParsedWeatherElementLayoutProps } from '../../layouts/WeatherElementLayout'
 import { AirportSearchFragment, SkyConditionFragment, SkyConditionSkyCover } from '../../queries/generated/graphql'
 
 const SkyConditionIcon = (props: { skyCover: SkyConditionSkyCover; class: string; isDayTime: boolean }) => {
@@ -110,13 +110,26 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 
 	const isDayTime = () => localHour() >= 6 && localHour() <= 18
 
+	const unitConfiguration = (): ParsedWeatherElementLayoutProps['unitType'] => {
+		const configs: ParsedWeatherElementLayoutProps['unitType'] = []
+
+		if (hasCloudBase()) {
+			configs.push({
+				name: 'Height',
+				unitType: 'height',
+			})
+		}
+
+		return configs
+	}
+
 	return (
-		<WeatherElementLayout name="Sky conditions" icon={<IoCloudy></IoCloudy>} unitType={hasCloudBase() ? 'height' : undefined}>
+		<WeatherElementLayout name="Sky conditions" icon={<IoCloudy></IoCloudy>} unitType={unitConfiguration()}>
 			<div class="flex flex-col gap-2 text-center text-xl dark:text-white-dark">
 				<Show when={props.skyConditions.length > 1}>
 					<For each={sortedSkyConditions()}>
 						{(condition, i) => (
-							<div class="mx-auto flex whitespace-nowrap flex-row gap-1 text-center">
+							<div class="mx-auto flex flex-row gap-1 whitespace-nowrap text-center">
 								<SkyConditionIcon
 									skyCover={condition.skyCover}
 									class="my-auto w-5"
@@ -126,7 +139,13 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 									<SkyConditionText skyCover={condition.skyCover}></SkyConditionText>
 								</span>
 								<Show when={condition.cloudBase}>
-									<span class="my-auto text-base">at {Math.round(convert(condition.cloudBase!)) > 1 ? Math.round(convert(condition.cloudBase!)) : convert(condition.cloudBase!).toFixed(1)} {selected().symbol}</span>
+									<span class="my-auto text-base">
+										at{' '}
+										{Math.round(convert(condition.cloudBase!)) > 1
+											? Math.round(convert(condition.cloudBase!))
+											: convert(condition.cloudBase!).toFixed(1)}{' '}
+										{selected().symbol}
+									</span>
 								</Show>
 							</div>
 						)}
@@ -143,7 +162,11 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 					<span class="text-base">
 						<SkyConditionText skyCover={props.skyConditions[0].skyCover}></SkyConditionText>
 						<Show when={props.skyConditions[0].cloudBase}>
-							&nbsp;at {Math.round(convert(props.skyConditions[0].cloudBase!)) > 1 ? Math.round(convert(props.skyConditions[0].cloudBase!)) : convert(props.skyConditions[0].cloudBase!).toFixed(1)} {selected().symbol}
+							&nbsp;at{' '}
+							{Math.round(convert(props.skyConditions[0].cloudBase!)) > 1
+								? Math.round(convert(props.skyConditions[0].cloudBase!))
+								: convert(props.skyConditions[0].cloudBase!).toFixed(1)}{' '}
+							{selected().symbol}
 						</Show>
 					</span>
 				</Show>

@@ -2,7 +2,7 @@ import { BsArrowUp } from 'solid-icons/bs'
 import { TbWindsock } from 'solid-icons/tb'
 import { Component, createMemo, Show } from 'solid-js'
 import { useUnitStore } from '../../context/UnitStore'
-import WeatherElementLayout from '../../layouts/WeatherElementLayout'
+import WeatherElementLayout, { ParsedWeatherElementLayoutProps } from '../../layouts/WeatherElementLayout'
 import { AirportSearchFragment, MetarFragment } from '../../queries/generated/graphql'
 import RunwayAndWindRenderer from '../special/RunwayAndWindRenderer'
 
@@ -44,8 +44,30 @@ const WindElement: Component<WindElementProps> = props => {
 	const windSpeed = () => Math.round(selected().conversionFunction(props.windSpeed))
 	const windGust = () => Math.round(selected().conversionFunction(props.windGust))
 
+	const unitConfigurations = () => {
+		const configurations: ParsedWeatherElementLayoutProps['unitType'] = []
+
+		if (props.windSpeed || props.windGust) {
+			configurations.push({
+				name: 'Wind speed',
+				unitType: 'speed',
+			})
+		}
+
+		configurations.push({
+			name: 'Runway length and width',
+			unitType: 'smallLength',
+		})
+
+		return configurations
+	}
+
 	return (
-		<WeatherElementLayout name="Wind" class="flex-shrink-0" icon={<TbWindsock></TbWindsock>} unitType={props.windSpeed || props.windGust ? 'speed' : undefined }>
+		<WeatherElementLayout
+			name="Wind"
+			class="flex-shrink-0"
+			icon={<TbWindsock></TbWindsock>}
+			unitType={unitConfigurations()}>
 			<Show when={props.size === 'large'}>
 				<RunwayAndWindRenderer
 					airport={props.airport}
@@ -78,7 +100,9 @@ const WindElement: Component<WindElementProps> = props => {
 					</span>
 				</Show>
 				<Show when={props.windGust}>
-					<span>with gusts up to {windGust()} {selected().symbol}</span>
+					<span>
+						with gusts up to {windGust()} {selected().symbol}
+					</span>
 				</Show>
 			</div>
 		</WeatherElementLayout>

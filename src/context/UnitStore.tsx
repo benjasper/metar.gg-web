@@ -1,12 +1,13 @@
 import { createContext, ParentComponent, useContext } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import {
-	HeightUnit, LengthUnit, PressureUnit, SpeedUnit, TemperatureUnit, Unit, UnitConfiguration
+	HeightUnit, LengthUnit, PressureUnit, SpeedUnit, TemperatureUnit, Unit, UnitConfiguration, UnitType
 } from '../models/units'
 
 interface UnitStore {
 	speed: UnitConfiguration
 	length: UnitConfiguration
+	smallLength: UnitConfiguration
 	height: UnitConfiguration
 	temperature: UnitConfiguration
 	pressure: UnitConfiguration
@@ -160,6 +161,11 @@ const createUnitStore = () => {
 			units: [kilometers, meters, miles, feetFromKilometers, nauticalMiles],
 			locked: '',
 		},
+		smallLength: {
+			selected: 0,
+			units: [meters, feetFromKilometers],
+			locked: '',
+		},
 		height: {
 			selected: 0,
 			units: [feet, metersHeight, kilometersHeight],
@@ -186,8 +192,8 @@ const createUnitStore = () => {
 type UnitStoreContext = [
 	UnitStore,
 	{
-		selectUnit: (type: keyof UnitStore, identifier: string) => void
-		lockUnit: (type: keyof UnitStore, identifier: string) => void
+		selectUnit: (type: keyof UnitStore, identifier: UnitType) => void
+		lockUnit: (type: keyof UnitStore, identifier: UnitType) => void
 		unlockUnit: (type: keyof UnitStore) => void
 	}
 ]
