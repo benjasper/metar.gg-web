@@ -6,10 +6,10 @@ import PageContent from '../layouts/PageContent'
 const PrivacyPolicy = () => {
 	return (
 		<PageContent title="Privacy policy" description="">
-			<Meta name="robots" content="noindex"></Meta>
+			<Meta name="robots" content="noindex" />
 
 			<div class="container text-black dark:text-white-dark">
-				<Header></Header>
+				<Header />
 				<h1 class="pt-16 text-4xl font-bold">Privacy policy</h1>
 				<p class="mt-4">
 					We want to process as little personal information as possible when you use our website. That's why

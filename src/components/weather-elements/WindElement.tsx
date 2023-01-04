@@ -63,17 +63,14 @@ const WindElement: Component<WindElementProps> = props => {
 	}
 
 	return (
-		<WeatherElementLayout
-			name="Wind"
-			class="flex-shrink-0"
-			icon={<TbWindsock></TbWindsock>}
-			unitType={unitConfigurations()}>
+		<WeatherElementLayout name="Wind" class="flex-shrink-0" icon={<TbWindsock />} unitType={unitConfigurations()}>
 			<Show when={props.size === 'large'}>
 				<RunwayAndWindRenderer
 					airport={props.airport}
 					windDirection={props.windDirection}
 					windSpeed={props.windSpeed}
-					variableWind={variableWind()}></RunwayAndWindRenderer>
+					variableWind={variableWind()}
+				/>
 			</Show>
 			<Show when={props.size === 'small'}>
 				<Show when={props.windDirection > 0}>
@@ -82,7 +79,8 @@ const WindElement: Component<WindElementProps> = props => {
 						size={24}
 						style={{
 							rotate: `${(props.windDirection + 180) % 360}deg`,
-						}}></BsArrowUp>
+						}}
+					/>
 				</Show>
 			</Show>
 			<div class="flex flex-col text-center dark:text-white-dark">

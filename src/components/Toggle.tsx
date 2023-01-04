@@ -12,12 +12,10 @@ interface ToggleProps {
 const Toggle: Component<ToggleProps> = props => {
 	return (
 		<div class="flex gap-2">
-			<label class="my-auto normal-case font-normal">
-				{props.offLabel}
-			</label>
+			<label class="my-auto font-normal normal-case">{props.offLabel}</label>
 			<HeadlessToggle
 				pressed={props.checked}
-				onChange={props.onChange}
+				onChange={checked => props.onChange(checked)}
 				class="relative inline-flex h-[1.5rem] w-[3rem] shrink-0 cursor-pointer rounded-full transition-all"
 				classList={{
 					'bg-primary dark:bg-primary-light': props.checked,
@@ -31,9 +29,7 @@ const Toggle: Component<ToggleProps> = props => {
 					} pointer-events-none my-auto inline-block h-[1.3rem] w-[1.3rem] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out dark:bg-white-dark`}
 				/>
 			</HeadlessToggle>
-			<label class="my-auto normal-case font-normal">
-				{props.onLabel}
-			</label>
+			<label class="my-auto font-normal normal-case">{props.onLabel}</label>
 		</div>
 	)
 }

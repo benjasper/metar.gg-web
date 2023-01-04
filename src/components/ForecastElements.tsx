@@ -7,7 +7,7 @@ import {
 	AirportSearchFragment,
 	ForecastChangeIndicator,
 	ForecastFragment,
-	TafFragment
+	TafFragment,
 } from '../queries/generated/graphql'
 import Slider from '../Slider'
 import { Tag } from './Tag'
@@ -245,19 +245,19 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 									</div>
 									<div class="flex w-full max-w-full flex-col flex-wrap gap-4 md:w-[30rem] md:flex-row">
 										<Show when={forecast.visibilityHorizontal}>
-											<VisibilityElement
-												visibility={forecast.visibilityHorizontal!}></VisibilityElement>
+											<VisibilityElement visibility={forecast.visibilityHorizontal!} />
 										</Show>
 										<Show when={forecast.skyConditions && forecast.skyConditions.length > 0}>
 											<SkyConditionsElement
 												skyConditions={forecast.skyConditions!}
-												airport={props.airport}></SkyConditionsElement>
+												airport={props.airport}
+											/>
 										</Show>
 										<Show when={forecast.weather && forecast.weather.length > 1}>
-											<PrecipitationElement weather={forecast.weather!}></PrecipitationElement>
+											<PrecipitationElement weather={forecast.weather!} />
 										</Show>
 										<Show when={forecast.altimeter && forecast.altimeter > 0}>
-											<AltimeterElement altimeter={forecast.altimeter!}></AltimeterElement>
+											<AltimeterElement altimeter={forecast.altimeter!} />
 										</Show>
 										<Show when={forecast.windSpeed && forecast.windDirection}>
 											<WindElement
@@ -272,7 +272,8 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 											<WindShearElement
 												direction={forecast.windShearDirection!}
 												speed={forecast.windShearSpeed!}
-												height={forecast.windShearHeight ?? 0}></WindShearElement>
+												height={forecast.windShearHeight ?? 0}
+											/>
 										</Show>
 									</div>
 								</div>

@@ -5,11 +5,11 @@ import PageContent from '../layouts/PageContent'
 
 const Legal = () => {
 	return (
-		<PageContent title='Legal' description=''>
-			<Meta name='robots' content='noindex'></Meta>
-			
+		<PageContent title="Legal" description="">
+			<Meta name="robots" content="noindex" />
+
 			<div class="container text-black dark:text-white-dark">
-				<Header></Header>
+				<Header />
 				<h1 class="pt-16 text-4xl font-bold">Legal</h1>
 				<h2 class="pt-16 text-3xl">Information according to §5 TMG</h2>
 				<p class="mt-4">

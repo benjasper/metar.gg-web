@@ -12,7 +12,7 @@ const FlightCategoryElement: Component<FlightCategoryElementProps> = props => {
 	return (
 		<WeatherElementLayout name="Flight category" icon={<BiRegularCategoryAlt />}>
 			<div class="flex flex-col text-center">
-				<FlightCategorySymbol size='large' class="mb-2" flightCategory={props.latestMetar.flightCategory!}></FlightCategorySymbol>
+				<FlightCategorySymbol size="large" class="mb-2" flightCategory={props.latestMetar.flightCategory!} />
 				<p class="mx-auto text-center text-base dark:text-white-dark">{props.latestMetar.flightCategory}</p>
 			</div>
 		</WeatherElementLayout>

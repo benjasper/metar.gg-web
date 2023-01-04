@@ -42,7 +42,11 @@ const Tag: ParentComponent<TagProps> = props => {
 
 const LinkTag: ParentComponent<LinkTagProps> = props => {
 	return (
-		<a href={props.href} class={`cursor-pointer ${tag({ intent: props.intent })}`} title={props.tooltip} target="_blank">
+		<a
+			href={props.href}
+			class={`cursor-pointer ${tag({ intent: props.intent })}`}
+			title={props.tooltip}
+			target="_blank">
 			{props.children}
 		</a>
 	)

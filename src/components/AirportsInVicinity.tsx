@@ -116,8 +116,7 @@ const AirportsInVicinity: Component<AirportsInVicinityProps> = props => {
 									<span class="text-sm">{airport.station.airport?.name}</span>
 									<div class="mt-2 flex gap-2">
 										<Tag intent="neutral">
-											<AirportClassification
-												type={airport.station.airport!.type}></AirportClassification>
+											<AirportClassification type={airport.station.airport!.type} />
 										</Tag>
 										<Show
 											when={
@@ -142,7 +141,8 @@ const AirportsInVicinity: Component<AirportsInVicinityProps> = props => {
 									size={36}
 									style={{
 										rotate: `${bearing(airport)}deg`,
-									}}></TbArrowTopCircle>
+									}}
+								/>
 								<span class="mx-auto whitespace-nowrap">
 									{Math.round(selectedLengthUnit().conversionFunction(airport.distance))}{' '}
 									{selectedLengthUnit().symbol} ({degreeToDirection(bearing(airport))})

@@ -57,4 +57,3 @@ interface UnitConfiguration {
 
 export { SpeedUnit, LengthUnit, HeightUnit, TemperatureUnit, PressureUnit }
 export type { Unit, UnitConfiguration, UnitType }
-

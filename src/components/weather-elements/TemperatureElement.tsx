@@ -15,10 +15,7 @@ const TemperatureElement: Component<TemperatureElementProps> = props => {
 	const temperature = () => Math.round(selected().conversionFunction(props.temperature))
 
 	return (
-		<WeatherElementLayout
-			name={props.name}
-			icon={<TbTemperature></TbTemperature>}
-			unitType={[{ unitType: 'temperature' }]}>
+		<WeatherElementLayout name={props.name} icon={<TbTemperature />} unitType={[{ unitType: 'temperature' }]}>
 			<p class="text-center text-xl dark:text-white-dark">
 				{temperature} {selected().symbol}
 			</p>

@@ -10,7 +10,7 @@ const Footer: Component = () => {
 		<footer class="flex flex-col gap-4 py-16">
 			<div class="container flex flex-col items-center justify-center gap-8 md:flex-row">
 				<div class="flex flex-col items-center gap-2">
-					<Logo showText={false}></Logo>
+					<Logo showText={false} />
 				</div>
 
 				<div class="flex flex-col items-start gap-4 border-l-gray-400 dark:text-white-light md:flex-row md:border-l md:pl-8">
@@ -42,8 +42,8 @@ const Footer: Component = () => {
 					</A>
 				</div>
 
-				<div class='flex flex-col md:hidden'>
-					<DarkModeToggle></DarkModeToggle>
+				<div class="flex flex-col md:hidden">
+					<DarkModeToggle />
 				</div>
 			</div>
 		</footer>

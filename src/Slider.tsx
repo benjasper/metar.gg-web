@@ -33,7 +33,8 @@ const SliderNavigation: Component<DotsProps> = props => {
 								'hover:bg-gray-400 dark:hover:bg-gray-500': helpers().current() !== index(),
 							}}
 							disabled={helpers().current() === index()}
-							onClick={() => helpers().moveTo(index())}></button>
+							onClick={() => helpers().moveTo(index())}
+						/>
 					)}
 				</For>
 			</div>
@@ -148,6 +149,8 @@ interface SliderProps {
 const Slider: ParentComponent<SliderProps> = props => {
 	const plugins = [wheelControls]
 
+	// Ignore this line, because the slider is not reactive and will not update the plugins
+	// eslint-disable-next-line solid/reactivity
 	if (props.adaptiveHeight) {
 		plugins.push(adaptiveHeight)
 	}
@@ -184,7 +187,7 @@ const Slider: ParentComponent<SliderProps> = props => {
 						plugins={plugins}>
 						{props.children}
 					</SolidSlider>
-					<SliderNavigation items={props.items}></SliderNavigation>
+					<SliderNavigation items={props.items} />
 				</SliderProvider>
 			</Show>
 		</div>

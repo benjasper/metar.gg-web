@@ -3,29 +3,28 @@ import { IoWaterOutline } from 'solid-icons/io'
 import { TbHelicopterLanding } from 'solid-icons/tb'
 import { Component, Match, Switch } from 'solid-js'
 import { AirportType } from '../queries/generated/graphql'
-import { Tag } from './Tag'
 
 const AirportClassification: Component<{ type: AirportType }> = props => {
 	return (
 		<Switch>
 			<Match when={props.type === AirportType.LargeAirport}>
-				<BiSolidPlaneTakeOff class="my-auto"></BiSolidPlaneTakeOff>
+				<BiSolidPlaneTakeOff class="my-auto" />
 				Large airport
 			</Match>
 			<Match when={props.type === AirportType.MediumAirport}>
-				<BiSolidPlaneTakeOff class="my-auto"></BiSolidPlaneTakeOff>
+				<BiSolidPlaneTakeOff class="my-auto" />
 				Medium airport
 			</Match>
 			<Match when={props.type === AirportType.SmallAirport}>
-				<BiSolidPlaneTakeOff class="my-auto"></BiSolidPlaneTakeOff>
+				<BiSolidPlaneTakeOff class="my-auto" />
 				Small airport
 			</Match>
 			<Match when={props.type === AirportType.SeaplaneBase}>
-				<IoWaterOutline class="my-auto"></IoWaterOutline>
+				<IoWaterOutline class="my-auto" />
 				Seaplane base
 			</Match>
 			<Match when={props.type === AirportType.Heliport}>
-				<TbHelicopterLanding class="my-auto"></TbHelicopterLanding>
+				<TbHelicopterLanding class="my-auto" />
 				Heliport
 			</Match>
 			<Match when={props.type === AirportType.ClosedAirport}>Closed</Match>

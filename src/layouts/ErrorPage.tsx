@@ -13,12 +13,12 @@ type ErrorPageProps = {
 const ErrorPage: Component<ErrorPageProps> = props => {
 	return (
 		<PageContent title="Error" description="An error occured" contentFullHeight={true}>
-			<Header></Header>
+			<Header />
 			<div class="flex flex-1 flex-col items-center justify-center gap-8 text-black dark:text-white-dark">
 				<h1 class="text-center text-4xl font-bold">Sorry, that didn't work</h1>
 				<p class="text-xl">{props.error.toString()}</p>
 				<Show when={props.reset !== undefined}>
-					<Button onClick={props.reset}>Try again</Button>
+					<Button onClick={() => props.reset && props.reset()}>Try again</Button>
 				</Show>
 				<Show when={props.recoverable}>
 					<A href="/" class="mt-8 transition-all hover:underline">

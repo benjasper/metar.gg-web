@@ -1,7 +1,14 @@
 import { createContext, ParentComponent, useContext } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import {
-	HeightUnit, LengthUnit, PressureUnit, SpeedUnit, TemperatureUnit, Unit, UnitConfiguration, UnitType
+	HeightUnit,
+	LengthUnit,
+	PressureUnit,
+	SpeedUnit,
+	TemperatureUnit,
+	Unit,
+	UnitConfiguration,
+	UnitType,
 } from '../models/units'
 
 interface UnitStore {
@@ -229,13 +236,17 @@ const UnitStoreProvider: ParentComponent = props => {
 			if (!store[key as keyof UnitStore]) {
 				return
 			}
-			
+
 			setStore(key as keyof UnitStore, 'locked', unit)
 			selectUnit(key as keyof UnitStore, unit)
 		}
 	})
 
-	return <UnitStoreContext.Provider value={[store, { selectUnit, lockUnit, unlockUnit }]}>{props.children}</UnitStoreContext.Provider>
+	return (
+		<UnitStoreContext.Provider value={[store, { selectUnit, lockUnit, unlockUnit }]}>
+			{props.children}
+		</UnitStoreContext.Provider>
+	)
 }
 
 function useUnitStore() {
@@ -244,4 +255,3 @@ function useUnitStore() {
 
 export { UnitStoreProvider, useUnitStore }
 export type { UnitConfiguration, Unit, UnitStore }
-
