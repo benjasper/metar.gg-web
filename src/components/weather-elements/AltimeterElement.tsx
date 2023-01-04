@@ -18,10 +18,7 @@ const AltimeterElement: Component<AltimeterElementProps> = props => {
 			: Math.round(selected().conversionFunction(props.altimeter))
 
 	return (
-		<WeatherElementLayout
-			name="Altimeter"
-			icon={<FaSolidGauge></FaSolidGauge>}
-			unitType={[{ unitType: 'pressure' }]}>
+		<WeatherElementLayout name="Altimeter" icon={<FaSolidGauge />} unitType={[{ unitType: 'pressure' }]}>
 			<p class="text-center text-xl dark:text-white-dark">
 				{altimeter} {selected().symbol}
 			</p>

@@ -8,7 +8,7 @@ import {
 	RiWeatherSnowyLine,
 	RiWeatherThunderstormsLine,
 	RiWeatherTornadoLine,
-	RiWeatherWindyLine
+	RiWeatherWindyLine,
 } from 'solid-icons/ri'
 import { TbGrain } from 'solid-icons/tb'
 import { Component, For, Match, Show, Switch } from 'solid-js'
@@ -81,7 +81,7 @@ const PrecipitationConditionElement: Component<{ condition: string }> = props =>
 
 	return (
 		<div class="flex flex-row justify-center gap-1 text-xl">
-			<div class="text-gray-600 dark:text-white-dark my-auto">
+			<div class="my-auto text-gray-600 dark:text-white-dark">
 				<Switch>
 					<Match when={precipitationType() === PrecipitationType.Drizzle}>
 						<RiWeatherDrizzleLine />
@@ -215,7 +215,7 @@ const PrecipitationElement: Component<PrecipitationElementProps> = props => {
 	const conditions = () => props.weather.split(' ')
 
 	return (
-		<WeatherElementLayout name="Precipitation" icon={<TbGrain></TbGrain>}>
+		<WeatherElementLayout name="Precipitation" icon={<TbGrain />}>
 			<div class="flex flex-col gap-1 dark:text-white-dark">
 				<For each={conditions()}>{condition => <PrecipitationConditionElement condition={condition} />}</For>
 			</div>

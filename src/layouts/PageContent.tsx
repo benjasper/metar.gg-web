@@ -13,21 +13,25 @@ interface PageContentProps {
 const PageContent: ParentComponent<PageContentProps> = props => {
 	return (
 		<>
-			<PageTitle content={props.title}></PageTitle>
-			<Meta name="description" content={props.description}></Meta>
+			<PageTitle content={props.title} />
+			<Meta name="description" content={props.description} />
 
-			<Meta name="og:title" content={props.title}></Meta>
-			<Meta name="og:description" content={props.description}></Meta>
-			<Meta name="og:image" content={metarGGLogo}></Meta>
+			<Meta name="og:title" content={props.title} />
+			<Meta name="og:description" content={props.description} />
+			<Meta name="og:image" content={metarGGLogo} />
 
-			<Meta name="twitter:card" content='summary'></Meta>
-			<Meta name="twitter:title" content={props.title}></Meta>
-			<Meta name="twitter:description" content={props.description}></Meta>
-			<Meta name="twitter:image" content={metarGGLogo}></Meta>
+			<Meta name="twitter:card" content="summary" />
+			<Meta name="twitter:title" content={props.title} />
+			<Meta name="twitter:description" content={props.description} />
+			<Meta name="twitter:image" content={metarGGLogo} />
 
 			<div class="grid min-h-full grid-rows-layout bg-gray-light pt-6 transition-colors dark:bg-black">
-				<div class="container flex flex-col transition-colors" classList={{'min-h-screen': props.contentFullHeight ?? false}}>{props.children}</div>
-				<Footer></Footer>
+				<div
+					class="container flex flex-col transition-colors"
+					classList={{ 'min-h-screen': props.contentFullHeight ?? false }}>
+					{props.children}
+				</div>
+				<Footer />
 			</div>
 		</>
 	)

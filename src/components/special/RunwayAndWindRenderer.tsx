@@ -98,7 +98,7 @@ const RunwayPopup = (props: {
 				</span>
 			</div>
 			<div class="flex gap-1">
-				<CgArrowsVAlt class="my-auto transform rotate-90" />
+				<CgArrowsVAlt class="my-auto rotate-90 transform" />
 				<span class="text-sm">
 					Width: {Math.round(selectedLengthUnit().conversionFunction(props.runway.width))}{' '}
 					{selectedLengthUnit().symbol}
@@ -117,9 +117,8 @@ const RunwayPopup = (props: {
 							'border-blue-400 dark:border-blue-600': props.runwayDirection.favourableLevel === 1,
 							'border-green-400 dark:border-green-600': props.runwayDirection.favourableLevel === 2,
 						}}
-						aria-label={`Wind direction is ${favourableToText(
-							props.runwayDirection.favourableLevel
-						)}`}></div>
+						aria-label={`Wind direction is ${favourableToText(props.runwayDirection.favourableLevel)}`}
+					/>
 					<span class="text-sm">
 						Wind angle: {favourableToText(props.runwayDirection.favourableLevel)} (
 						{Math.round(props.runwayDirection.windAngle)}°)
@@ -127,40 +126,55 @@ const RunwayPopup = (props: {
 				</div>
 			</Show>
 
-			<Show when={Math.round(selectedSpeedUnit().conversionFunction(headwindComponent())) > 0 && props.windDirection > 0}>
+			<Show
+				when={
+					Math.round(selectedSpeedUnit().conversionFunction(headwindComponent())) > 0 &&
+					props.windDirection > 0
+				}>
 				<div class="flex gap-1">
 					<BsArrowUp
 						class="my-auto origin-center transform"
 						style={{
 							rotate: `${180 % 360}deg`,
-						}}></BsArrowUp>
+						}}
+					/>
 					<span class="text-sm">
 						Headwind: {Math.round(selectedSpeedUnit().conversionFunction(headwindComponent()))}{' '}
 						{selectedSpeedUnit().symbol}
 					</span>
 				</div>
 			</Show>
-			<Show when={Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent())) > 0 && props.windDirection > 0}>
+			<Show
+				when={
+					Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent())) > 0 &&
+					props.windDirection > 0
+				}>
 				<div class="flex gap-1">
 					<BsArrowUp
 						class="my-auto origin-center transform"
 						style={{
 							rotate:
 								crosswindDirection() === 'right' ? `${(90 + 180) % 360}deg` : `${(270 + 180) % 360}deg`,
-						}}></BsArrowUp>
+						}}
+					/>
 					<span class="text-sm">
 						Crosswind: {Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent()))}{' '}
 						{selectedSpeedUnit().symbol} from the {crosswindDirection()}{' '}
 					</span>
 				</div>
 			</Show>
-			<Show when={Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent())) > 0 && props.windDirection > 0}>
+			<Show
+				when={
+					Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent())) > 0 &&
+					props.windDirection > 0
+				}>
 				<div class="flex gap-1">
 					<BsArrowUp
 						class="my-auto origin-center transform"
 						style={{
 							rotate: `${0}deg`,
-						}}></BsArrowUp>
+						}}
+					/>
 					<span class="text-sm">
 						Tailwind: {Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent()))}{' '}
 						{selectedSpeedUnit().symbol}
@@ -327,7 +341,8 @@ const RunwayAndWindRenderer = (props: {
 						stroke-width="0.2"
 						cx={realCenterX()}
 						cy={realCenterY()}
-						r={realDiagonal() * 0.85}></circle>
+						r={realDiagonal() * 0.85}
+					/>
 
 					{/* Wind arrow */}
 					<Show when={props.windSpeed > 0 && props.windDirection != 0}>
@@ -352,7 +367,8 @@ const RunwayAndWindRenderer = (props: {
 										stroke-linejoin="round"
 										stroke-dasharray={arrow.isVariable ? '1 1.2' : ''}
 										stroke-width={arrow.isVariable ? '0.75' : '1.25'}
-										d="M15.25 10.75L12 14.25L8.75 10.75"></path>
+										d="M15.25 10.75L12 14.25L8.75 10.75"
+									/>
 								</svg>
 							)}
 						</For>

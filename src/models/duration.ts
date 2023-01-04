@@ -4,7 +4,7 @@ class Duration {
 	constructor(milliseconds: number) {
 		this.milliseconds = milliseconds
 	}
-	
+
 	static fromDates(lessRecentDate: Date, moreRecentDate: Date): Duration {
 		return new Duration(lessRecentDate.getTime() - moreRecentDate.getTime())
 	}
@@ -62,7 +62,7 @@ class Duration {
 	 * approximate. For example, if the duration is 1 hour and 30 minutes, the
 	 * string will be "1 hour". It supports plurals and singulars.
 	 * as well as "in" or "ago" depending on the sign of the duration.
-	 * 
+	 *
 	 * @returns {string} a human readable but imprecise string of the duration
 	 */
 	humanImprecise(directionWord: boolean = true): string {
@@ -77,23 +77,23 @@ class Duration {
 
 		const isFuture = this.milliseconds > 0
 
-		const prepend = directionWord && isFuture ? "in " : ""
-		const append = directionWord && !isFuture ? " ago" : ""
+		const prepend = directionWord && isFuture ? 'in ' : ''
+		const append = directionWord && !isFuture ? ' ago' : ''
 
 		if (years > 0) {
-			return prepend + years + " year" + (years === 1 ? "" : "s") + append
+			return prepend + years + ' year' + (years === 1 ? '' : 's') + append
 		} else if (months > 0) {
-			return prepend + months + " month" + (months === 1 ? "" : "s") + append
+			return prepend + months + ' month' + (months === 1 ? '' : 's') + append
 		} else if (days > 0) {
-			return prepend + days + " day" + (days === 1 ? "" : "s") + append
+			return prepend + days + ' day' + (days === 1 ? '' : 's') + append
 		} else if (hours > 0) {
-			return prepend + hours + " hour" + (hours === 1 ? "" : "s") + append
+			return prepend + hours + ' hour' + (hours === 1 ? '' : 's') + append
 		} else if (minutes > 0) {
-			return prepend + minutes + " minute" + (minutes === 1 ? "" : "s") + append
+			return prepend + minutes + ' minute' + (minutes === 1 ? '' : 's') + append
 		} else if (seconds > 0) {
 			return `${prepend}a few seconds${append}`
 		} else {
-			return "just now"
+			return 'just now'
 		}
 	}
 
@@ -102,7 +102,7 @@ class Duration {
 	 * precise. For example, if the duration is 1 hour and 30 minutes, the
 	 * string will be "1 hour and 30 minutes". It also supports plurals and singulars.
 	 * it will also print "in" or "ago" depending on the sign of the duration.
-	 * 
+	 *
 	 * @returns {string} a human readable string of the duration
 	 */
 	humanPrecise(omitSeconds: boolean = false, directionWord: boolean = true): string {
@@ -120,47 +120,47 @@ class Duration {
 		const hoursRemainder = hours % 24
 		const daysRemainder = days % 30
 		const monthsRemainder = months % 12
-		
+
 		const isFuture = this.milliseconds > 0
 
-		const prepend = directionWord && isFuture ? "in " : ""
-		const append = directionWord && !isFuture ? " ago" : ""
-		
+		const prepend = directionWord && isFuture ? 'in ' : ''
+		const append = directionWord && !isFuture ? ' ago' : ''
+
 		const parts = []
 		if (years > 0) {
-			const yearsString = years === 1 ? "1 year" : `${years} years`
+			const yearsString = years === 1 ? '1 year' : `${years} years`
 			parts.push(yearsString)
 		}
 		if (monthsRemainder > 0) {
-			const monthsString = monthsRemainder === 1 ? "1 month" : `${monthsRemainder} months`
+			const monthsString = monthsRemainder === 1 ? '1 month' : `${monthsRemainder} months`
 			parts.push(monthsString)
 		}
 		if (daysRemainder > 0) {
-			const daysString = daysRemainder === 1 ? "1 day" : `${daysRemainder} days`
+			const daysString = daysRemainder === 1 ? '1 day' : `${daysRemainder} days`
 			parts.push(daysString)
 		}
 		if (hoursRemainder > 0) {
-			const hoursString = hoursRemainder === 1 ? "1 hour" : `${hoursRemainder} hours`
+			const hoursString = hoursRemainder === 1 ? '1 hour' : `${hoursRemainder} hours`
 			parts.push(hoursString)
 		}
 		if (minutesRemainder > 0) {
-			const minutesString = minutesRemainder === 1 ? "1 minute" : `${minutesRemainder} minutes`
+			const minutesString = minutesRemainder === 1 ? '1 minute' : `${minutesRemainder} minutes`
 			parts.push(minutesString)
 		}
-		if (secondsRemainder > 0 && !omitSeconds || parts.length === 0) {
-			const secondsString = secondsRemainder === 1 ? "1 second" : `${secondsRemainder} seconds`
+		if ((secondsRemainder > 0 && !omitSeconds) || parts.length === 0) {
+			const secondsString = secondsRemainder === 1 ? '1 second' : `${secondsRemainder} seconds`
 			parts.push(secondsString)
 		}
 
 		if (parts.length === 0) {
-			return "now"
+			return 'now'
 		} else if (parts.length === 1) {
 			return `${prepend}${parts[0]}${append}`
 		} else if (parts.length === 2) {
 			return `${prepend}${parts[0]} and ${parts[1]}${append}`
 		} else {
 			const lastPart = parts.pop()
-			return `${prepend}${parts.join(", ")}, and ${lastPart}${append}`
+			return `${prepend}${parts.join(', ')}, and ${lastPart}${append}`
 		}
 	}
 }

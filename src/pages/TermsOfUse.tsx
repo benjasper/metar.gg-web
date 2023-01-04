@@ -5,10 +5,10 @@ import PageContent from '../layouts/PageContent'
 const TermsOfUse = () => {
 	return (
 		<PageContent title="Terms of Use" description="">
-			<Meta name="robots" content="noindex"></Meta>
+			<Meta name="robots" content="noindex" />
 
 			<div class="container text-black dark:text-white-dark">
-				<Header></Header>
+				<Header />
 				<h1 class="pt-16 text-4xl font-bold">Terms of Use</h1>
 				<h2 class="pt-16 text-3xl">Usage Disclaimer</h2>
 				<p class="mt-4">

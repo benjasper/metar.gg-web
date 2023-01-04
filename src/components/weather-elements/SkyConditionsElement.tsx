@@ -7,7 +7,7 @@ import {
 	RiWeatherMoonCloudyLine,
 	RiWeatherSunCloudyFill,
 	RiWeatherSunCloudyLine,
-	RiWeatherSunFill
+	RiWeatherSunFill,
 } from 'solid-icons/ri'
 import { Component, createMemo, For, Match, Show, Switch } from 'solid-js'
 import { useUnitStore } from '../../context/UnitStore'
@@ -15,45 +15,45 @@ import WeatherElementLayout, { ParsedWeatherElementLayoutProps } from '../../lay
 import { AirportSearchFragment, SkyConditionFragment, SkyConditionSkyCover } from '../../queries/generated/graphql'
 
 const SkyConditionIcon = (props: { skyCover: SkyConditionSkyCover; class: string; isDayTime: boolean }) => {
-	const classes = `h-auto ${props.class ?? ''}`
+	const classes = () => `h-auto ${props.class ?? ''}`
 
 	return (
 		<div class="text-gray-600 dark:text-white-light">
 			<Switch>
 				<Match when={props.skyCover === SkyConditionSkyCover.Few}>
-					<Show when={props.isDayTime} fallback={<RiWeatherMoonCloudyLine class={classes} />}>
-						<RiWeatherSunCloudyLine class={classes} />
+					<Show when={props.isDayTime} fallback={<RiWeatherMoonCloudyLine class={classes()} />}>
+						<RiWeatherSunCloudyLine class={classes()} />
 					</Show>
 				</Match>
 				<Match when={props.skyCover === SkyConditionSkyCover.Sct}>
-					<Show when={props.isDayTime} fallback={<RiWeatherMoonCloudyFill class={classes} />}>
-						<RiWeatherSunCloudyFill class={classes} />
+					<Show when={props.isDayTime} fallback={<RiWeatherMoonCloudyFill class={classes()} />}>
+						<RiWeatherSunCloudyFill class={classes()} />
 					</Show>
 				</Match>
 				<Match when={props.skyCover === SkyConditionSkyCover.Bkn}>
-					<RiWeatherCloudyLine class={classes} />
+					<RiWeatherCloudyLine class={classes()} />
 				</Match>
 				<Match when={props.skyCover === SkyConditionSkyCover.Ovc}>
-					<RiWeatherCloudyFill class={classes} />
+					<RiWeatherCloudyFill class={classes()} />
 				</Match>
 				<Match when={props.skyCover === SkyConditionSkyCover.Clr}>
-					<Show when={props.isDayTime} fallback={<RiWeatherMoonClearFill class={classes} />}>
-						<RiWeatherSunFill class={classes} />
+					<Show when={props.isDayTime} fallback={<RiWeatherMoonClearFill class={classes()} />}>
+						<RiWeatherSunFill class={classes()} />
 					</Show>
 				</Match>
 				<Match when={props.skyCover === SkyConditionSkyCover.Skc}>
-					<Show when={props.isDayTime} fallback={<RiWeatherMoonClearFill class={classes} />}>
-						<RiWeatherSunFill class={classes} />
+					<Show when={props.isDayTime} fallback={<RiWeatherMoonClearFill class={classes()} />}>
+						<RiWeatherSunFill class={classes()} />
 					</Show>
 				</Match>
 				<Match when={props.skyCover === SkyConditionSkyCover.Cavok}>
-					<Show when={props.isDayTime} fallback={<RiWeatherMoonClearFill class={classes} />}>
-						<RiWeatherSunFill class={classes} />
+					<Show when={props.isDayTime} fallback={<RiWeatherMoonClearFill class={classes()} />}>
+						<RiWeatherSunFill class={classes()} />
 					</Show>
 				</Match>
 				<Match when={props.skyCover === SkyConditionSkyCover.Nsc}>
-					<Show when={props.isDayTime} fallback={<RiWeatherMoonClearFill class={classes} />}>
-						<RiWeatherSunFill class={classes} />
+					<Show when={props.isDayTime} fallback={<RiWeatherMoonClearFill class={classes()} />}>
+						<RiWeatherSunFill class={classes()} />
 					</Show>
 				</Match>
 				<Match when={true}>
@@ -124,7 +124,7 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 	}
 
 	return (
-		<WeatherElementLayout name="Sky conditions" icon={<IoCloudy></IoCloudy>} unitType={unitConfiguration()}>
+		<WeatherElementLayout name="Sky conditions" icon={<IoCloudy />} unitType={unitConfiguration()}>
 			<div class="flex flex-col gap-2 text-center text-xl dark:text-white-dark">
 				<Show when={props.skyConditions.length > 1}>
 					<For each={sortedSkyConditions()}>
@@ -136,7 +136,7 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 									isDayTime={isDayTime()}
 								/>
 								<span class="my-auto text-base">
-									<SkyConditionText skyCover={condition.skyCover}></SkyConditionText>
+									<SkyConditionText skyCover={condition.skyCover} />
 								</span>
 								<Show when={condition.cloudBase}>
 									<span class="my-auto text-base">
@@ -160,7 +160,7 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 						/>
 					</div>
 					<span class="text-base">
-						<SkyConditionText skyCover={props.skyConditions[0].skyCover}></SkyConditionText>
+						<SkyConditionText skyCover={props.skyConditions[0].skyCover} />
 						<Show when={props.skyConditions[0].cloudBase}>
 							&nbsp;at{' '}
 							{Math.round(convert(props.skyConditions[0].cloudBase!)) > 1

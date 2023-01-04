@@ -12,7 +12,7 @@ import {
 	mergeProps,
 	Show,
 	Switch,
-	untrack
+	untrack,
 } from 'solid-js'
 import { useGraphQL } from '../context/GraphQLClient'
 import { AIRPORT_SEARCH } from '../queries/AirportQueries'
@@ -39,6 +39,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 
 	const newQuery = useGraphQL()
 
+	// eslint-disable-next-line solid/reactivity
 	const [airportRequest, refetch] = newQuery<AirportSearchQuery, AirportSearchQueryVariables>(
 		AIRPORT_SEARCH,
 		queryVars
@@ -131,7 +132,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 
 	return (
 		<div class={`flex flex-col ${props.class}`}>
-			<div ref={root} class={`relative mx-auto w-full max-w-lg`}>
+			<div ref={root} class={'relative mx-auto w-full max-w-lg'}>
 				<div class="flex flex-col">
 					<input
 						ref={input}
@@ -152,11 +153,14 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 						onInput={e => handleInput(e)}
 						onFocus={e => setIsFocused(true)}
 						onFocusOut={e => onFocusLeave(e)}
-						class={`w-full rounded-full bg-white px-10 py-2 text-left text-xl text-gray-700 outline-none transition-all dark:bg-black-200 dark:text-white-dark`}
+						class={
+							'w-full rounded-full bg-white px-10 py-2 text-left text-xl text-gray-700 outline-none transition-all dark:bg-black-200 dark:text-white-dark'
+						}
 					/>
 					<AiOutlineSearch
 						class="absolute left-3 top-1/2 -translate-y-1/2 transform fill-gray-700 dark:fill-white-dark"
-						size={20}></AiOutlineSearch>
+						size={20}
+					/>
 					<Transition
 						show={airportRequest.loading}
 						enter="transition duration-[25ms]"
@@ -177,11 +181,13 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 									cy="12"
 									r="10"
 									stroke="currentColor"
-									stroke-width="4"></circle>
+									stroke-width="4"
+								/>
 								<path
 									class="opacity-75"
 									fill="currentColor"
-									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+								/>
 							</svg>
 						</div>
 					</Transition>

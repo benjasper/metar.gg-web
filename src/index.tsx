@@ -24,7 +24,8 @@ const App: Component = () => {
 					<UnitStoreProvider>
 						<TimeStoreProvider>
 							<GraphQLProvider>
-								<ErrorBoundary fallback={(err, reset) => <ErrorPage error={err} reset={reset} recoverable></ErrorPage>}>
+								<ErrorBoundary
+									fallback={(err, reset) => <ErrorPage error={err} reset={reset} recoverable />}>
 									<Routes>
 										<Route path="/" component={Home} />
 										<Route path="/about" component={About} />

@@ -85,4 +85,3 @@ function useSettingsStore() {
 
 export { ThemeMode, useSettingsStore, SettingsStoreProvider }
 export type { SettingsStoreContextInterface }
-

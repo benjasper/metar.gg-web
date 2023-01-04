@@ -8,7 +8,6 @@
 	"bracketSpacing": true,
 	"jsxBracketSameLine": true,
 	"arrowParens": "avoid",
-	"filePath": "src",
 	"requirePragma": false,
 	"insertPragma": false,
 	"proseWrap": "always",

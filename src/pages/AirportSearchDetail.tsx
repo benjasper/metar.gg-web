@@ -48,6 +48,7 @@ const AirportSearchDetail: Component = () => {
 	const [airportRequest, { mutate, refetch: refetchAirport }] = newQuery<
 		GetSingleAirportQuery,
 		GetSingleAirportQueryVariables
+		// eslint-disable-next-line solid/reactivity
 	>(AIRPORT_SINGLE, () => airportIdentifier())
 
 	const throttledLoading = debounce((id: string) => setAirportIdentifier({ identifier: id }), 100)
@@ -198,13 +199,14 @@ const AirportSearchDetail: Component = () => {
 	return (
 		<PageContent title={title()} description={description()} contentFullHeight={true}>
 			<div class="flex w-full flex-col justify-between gap-6 md:flex-row">
-				<Logo class="mx-auto md:mx-0 md:w-1/4"></Logo>
+				<Logo class="mx-auto md:mx-0 md:w-1/4" />
 				<SearchBar
 					class="my-auto mb-auto flex-grow justify-center"
 					onSearch={navigateTo}
-					placeholder="Search for another airport"></SearchBar>
+					placeholder="Search for another airport"
+				/>
 				<div class="flex flex-col items-end md:w-1/4">
-					<DarkModeToggle class="hidden md:flex"></DarkModeToggle>
+					<DarkModeToggle class="hidden md:flex" />
 				</div>
 			</div>
 			<Show
@@ -232,7 +234,7 @@ const AirportSearchDetail: Component = () => {
 
 					<div class="flex max-w-md flex-wrap justify-center gap-2 pt-4">
 						<Tag>
-							<IoLocationSharp class="my-auto"></IoLocationSharp>
+							<IoLocationSharp class="my-auto" />
 							<Show when={airportStore.airport!.municipality}>
 								{airportStore.airport!.municipality},
 							</Show>{' '}
@@ -240,7 +242,7 @@ const AirportSearchDetail: Component = () => {
 						</Tag>
 						<Show when={airportStore.airport!.timezone}>
 							<Tag>
-								<HiSolidClock class="my-auto"></HiSolidClock>
+								<HiSolidClock class="my-auto" />
 								Local time{' '}
 								{now().toLocaleTimeString([], {
 									hour: 'numeric',
@@ -250,7 +252,7 @@ const AirportSearchDetail: Component = () => {
 							</Tag>
 						</Show>
 						<Tag>
-							<AirportClassification type={airportStore.airport!.type}></AirportClassification>
+							<AirportClassification type={airportStore.airport!.type} />
 						</Tag>
 						<Show when={airportStore.airport!.elevation}>
 							<Tag>
@@ -271,16 +273,18 @@ const AirportSearchDetail: Component = () => {
 						</Show>
 					</div>
 				</div>
-				<WeatherElements airport={airportStore.airport!} lastRefreshed={lastRefreshed()}></WeatherElements>
+				<WeatherElements airport={airportStore.airport!} lastRefreshed={lastRefreshed()} />
 				<ForecastElements
 					airport={airportStore.airport!}
-					taf={airportStore.airport!.station?.tafs.edges[0]?.node}></ForecastElements>
+					taf={airportStore.airport!.station?.tafs.edges[0]?.node}
+				/>
 				<AirportsInVicinity
 					airportCoordinates={{
 						latitude: airportStore.airport!.latitude,
 						longitude: airportStore.airport!.longitude,
 					}}
-					stations={airportStore.airport!.stationsVicinity}></AirportsInVicinity>
+					stations={airportStore.airport!.stationsVicinity}
+				/>
 			</Show>
 		</PageContent>
 	)

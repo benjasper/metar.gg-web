@@ -9,7 +9,7 @@ interface WindShearElementProps {
 	height: number
 }
 
-const WindShearElement: Component<WindShearElementProps> = (props) => {
+const WindShearElement: Component<WindShearElementProps> = props => {
 	return (
 		<WeatherElementLayout name="Wind shear" icon={<RiWeatherWindyLine />}>
 			<BsArrowUp
@@ -17,7 +17,8 @@ const WindShearElement: Component<WindShearElementProps> = (props) => {
 				size={24}
 				style={{
 					rotate: `${(props.direction + 180) % 360}deg`,
-				}}></BsArrowUp>
+				}}
+			/>
 			<div class="flex flex-col text-center">
 				<span>
 					{props.direction}° at {props.speed} kt

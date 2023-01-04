@@ -28,7 +28,7 @@ const DarkModeToggle: Component<TabGroupProps> = props => {
 						'bg-white dark:bg-black-100 dark:text-white-light bg-opacity-75 text-black cursor-default shadow-sm':
 							settingsStore.theme === ThemeMode.Dark,
 					}}>
-					<BsMoonStars class="my-auto" size={16}></BsMoonStars>
+					<BsMoonStars class="my-auto" size={16} />
 				</button>
 				<button
 					type="button"
@@ -41,7 +41,7 @@ const DarkModeToggle: Component<TabGroupProps> = props => {
 						'bg-white dark:bg-black-100 dark:text-white-light bg-opacity-75 text-black cursor-default shadow-sm':
 							settingsStore.theme === ThemeMode.Light,
 					}}>
-					<WiDaySunny class="my-auto" size={26}></WiDaySunny>
+					<WiDaySunny class="my-auto" size={26} />
 				</button>
 				<button
 					type="button"

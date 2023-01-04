@@ -20,7 +20,7 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 	const [isOpen, setIsOpen] = createSignal(false)
 
 	// ID from sanitized name
-	const id = props.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
+	const id = () => props.name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
 
 	const unitConfigurations = createMemo(() => {
 		if (props.unitType === undefined) {
@@ -83,7 +83,7 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 									.join(', ')}. It will persist across different airports. You can unlock ${
 									lockedUnits().length > 1 ? 'them' : 'it'
 								} by opening the context menu.`}>
-								<BiSolidLockAlt></BiSolidLockAlt>
+								<BiSolidLockAlt />
 							</Tooltip>
 						</div>
 					</Show>
@@ -91,13 +91,13 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 						type="button"
 						aria-expanded={isOpen()}
 						aria-haspopup="true"
-						aria-controls={`context-menu-${id}`}
+						aria-controls={`context-menu-${id()}`}
 						aria-label={`Context menu for ${props.name}. Includes unit conversions.`}
 						onClick={() => setIsOpen(!isOpen())}
 						ref={setReference}
 						class="group my-auto inline-flex items-center rounded-full p-2 text-base font-medium text-black transition-all hover:bg-gray-light dark:text-white-darker dark:hover:bg-black-100"
 						classList={{ 'bg-gray-light bg-black-100': isOpen() }}>
-						<BsThreeDotsVertical></BsThreeDotsVertical>
+						<BsThreeDotsVertical />
 					</button>
 					<Show when={isOpen()}>
 						<Portal>
@@ -111,7 +111,7 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 								}}>
 								<Menu
 									aria-label={`Context menu for ${props.name}. Includes unit conversion.`}
-									id={`context-menu-${id}`}
+									id={`context-menu-${id()}`}
 									class="flex flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-black-150 dark:shadow-xl">
 									<For each={unitConfigurations()}>
 										{(unitConfiguration, index) => (
@@ -147,7 +147,8 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 																				unitStore[unitConfiguration.type!]
 																					.selected
 																			].symbol === unit.symbol,
-																	}}></div>
+																	}}
+																/>
 																<span class="text-sm font-medium text-gray-900 dark:text-white-darker">
 																	Display in {unit.name} ({unit.symbol})
 																</span>

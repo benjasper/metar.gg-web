@@ -9,18 +9,18 @@ const About = () => {
 			title="About"
 			description="An app for getting up to date METAR and TAF information. Get latest weather observations and forecasts here.">
 			<div class="container text-black dark:text-white-dark">
-				<Header></Header>
+				<Header />
 				<h1 class="pt-16 text-4xl font-bold">About</h1>
 
 				<h2 class="pt-16 text-3xl">What is this?</h2>
 				<p class="mt-4">
 					metar.gg is an open source aviation weather app, featuring weather reports and forecasts for about
 					5000 airports. For the airport data it uses the publicly available{' '}
-					<a href="https://www.ourairports.com/">OurAirports</a> database, while the weather data is imported every
-					2 minutes directly from <a href="https://www.noaa.gov/">NOAA</a>.
+					<a href="https://www.ourairports.com/">OurAirports</a> database, while the weather data is imported
+					every 2 minutes directly from <a href="https://www.noaa.gov/">NOAA</a>.
 				</p>
-				<p class='mt-4'>Features of the app include:</p>
-				<ul class='list-disc pl-6'>
+				<p class="mt-4">Features of the app include:</p>
+				<ul class="list-disc pl-6">
 					<li>a graphical representation of the raw METAR and TAF strings</li>
 					<li>a runway layout view for representing wind conditions</li>
 					<li>a time prediction for the next METAR update</li>
