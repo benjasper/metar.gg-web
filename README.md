@@ -14,6 +14,7 @@ The accompanying Go GraphQL API can be found [here](https://github.com/benjasper
 * 🔄 Automatic polling for weather updates
 * 🧭 Runway wind renderer
 * 🌑 Dark mode
+* 🛬 Nearest Airports
 
 ## Development 💻
 
