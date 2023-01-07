@@ -85,8 +85,8 @@ const WindElement: Component<WindElementProps> = props => {
 			</Show>
 			<div class="flex flex-col text-center dark:text-white-dark">
 				<span class="text-lg">
-					<Show when={props.windSpeed !== 0} fallback="Wind calm">
-						<Show when={props.windDirection !== 0} fallback="Variable">
+					<Show when={props.windSpeed && props.windSpeed != 0} fallback="Wind calm">
+						<Show when={props.windDirection} fallback="Variable">
 							{props.windDirection}°
 						</Show>{' '}
 						at {windSpeed()} {selected().symbol}
