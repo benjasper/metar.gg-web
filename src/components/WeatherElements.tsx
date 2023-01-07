@@ -104,16 +104,18 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 			</div>
 			<div class={'mt-4 flex h-full flex-col justify-center gap-8 md:flex-row'}>
 				<Show when={latestMetar()} fallback={<span class="m-auto text-lg">No recent weather available.</span>}>
-					<div class="flex flex-shrink-0 flex-col">
-						<WindElement
-							airport={props.airport}
-							windDirection={latestMetar()!.windDirection}
-							windSpeed={latestMetar()!.windSpeed}
-							windGust={latestMetar()!.windGust}
-							variableWindDirection={latestMetar()?.rawText ?? ''}
-							size="large"
-						/>
-					</div>
+					<Show when={latestMetar()!.windSpeed && latestMetar()!.windDirection}>
+						<div class="flex flex-shrink-0 flex-col">
+							<WindElement
+								airport={props.airport}
+								windDirection={latestMetar()!.windDirection}
+								windSpeed={latestMetar()!.windSpeed}
+								windGust={latestMetar()!.windGust}
+								variableWindDirection={latestMetar()?.rawText ?? ''}
+								size="large"
+							/>
+						</div>
+					</Show>
 					<div class="flex flex-row flex-wrap justify-center gap-8 md:justify-start">
 						<VisibilityElement visibility={latestMetar()!.visibility} />
 
@@ -124,12 +126,16 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 							/>
 						</Show>
 
-						<TemperatureElement temperature={latestMetar()!.temperature} name="Temperature" />
+						<Show when={latestMetar()!.temperature}>
+							<TemperatureElement temperature={latestMetar()!.temperature!} name="Temperature" />
+						</Show>
 
-						<TemperatureElement temperature={latestMetar()!.dewpoint} name="Dewpoint" />
+						<Show when={latestMetar()!.dewpoint}>
+							<TemperatureElement temperature={latestMetar()!.dewpoint!} name="Dewpoint" />
+						</Show>
 
-						<Show when={latestMetar()!.altimeter !== 0}>
-							<AltimeterElement altimeter={latestMetar()!.altimeter} />
+						<Show when={latestMetar()!.altimeter}>
+							<AltimeterElement altimeter={latestMetar()!.altimeter!} />
 						</Show>
 
 						<Show when={latestMetar()!.presentWeather && (latestMetar()!.presentWeather ?? '').length > 0}>

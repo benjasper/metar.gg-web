@@ -274,9 +274,9 @@ export enum LengthUnit {
 export type Metar = {
 	__typename?: 'Metar'
 	/** The altimeter in the specified unit. */
-	altimeter: Scalars['Float']
+	altimeter?: Maybe<Scalars['Float']>
 	/** The dew point in the specified unit. */
-	dewpoint: Scalars['Float']
+	dewpoint?: Maybe<Scalars['Float']>
 	flightCategory?: Maybe<MetarFlightCategory>
 	/** The unique identifier of the record. */
 	id: Scalars['ID']
@@ -331,17 +331,17 @@ export type Metar = {
 	snowDepth?: Maybe<Scalars['Float']>
 	station: WeatherStation
 	/** The temperature in the specified unit. */
-	temperature: Scalars['Float']
+	temperature?: Maybe<Scalars['Float']>
 	/** Vertical visibility in the specified unit. */
 	verticalVisibility?: Maybe<Scalars['Float']>
 	/** The visibility in the specified unit. */
-	visibility: Scalars['Float']
+	visibility?: Maybe<Scalars['Float']>
 	/** The wind direction in degrees, or 0 if calm. */
-	windDirection: Scalars['Int']
+	windDirection?: Maybe<Scalars['Int']>
 	/** Wind gust speed in the specified unit. */
-	windGust: Scalars['Float']
+	windGust?: Maybe<Scalars['Float']>
 	/** The wind speed in the specified unit. */
-	windSpeed: Scalars['Float']
+	windSpeed?: Maybe<Scalars['Float']>
 }
 
 export type MetarAltimeterArgs = {
@@ -850,13 +850,13 @@ export type MetarFragment = {
 	importTime: any
 	nextImportTimePrediction?: any | null
 	rawText: string
-	temperature: number
-	dewpoint: number
-	altimeter: number
-	visibility: number
-	windDirection: number
-	windSpeed: number
-	windGust: number
+	temperature?: number | null
+	dewpoint?: number | null
+	altimeter?: number | null
+	visibility?: number | null
+	windDirection?: number | null
+	windSpeed?: number | null
+	windGust?: number | null
 	flightCategory?: MetarFlightCategory | null
 	presentWeather?: string | null
 	skyConditions?: Array<{
@@ -933,13 +933,13 @@ export type AirportWeatherFragment = {
 					importTime: any
 					nextImportTimePrediction?: any | null
 					rawText: string
-					temperature: number
-					dewpoint: number
-					altimeter: number
-					visibility: number
-					windDirection: number
-					windSpeed: number
-					windGust: number
+					temperature?: number | null
+					dewpoint?: number | null
+					altimeter?: number | null
+					visibility?: number | null
+					windDirection?: number | null
+					windSpeed?: number | null
+					windGust?: number | null
 					flightCategory?: MetarFlightCategory | null
 					presentWeather?: string | null
 					skyConditions?: Array<{
@@ -1031,13 +1031,13 @@ export type AirportWeatherQuery = {
 						importTime: any
 						nextImportTimePrediction?: any | null
 						rawText: string
-						temperature: number
-						dewpoint: number
-						altimeter: number
-						visibility: number
-						windDirection: number
-						windSpeed: number
-						windGust: number
+						temperature?: number | null
+						dewpoint?: number | null
+						altimeter?: number | null
+						visibility?: number | null
+						windDirection?: number | null
+						windSpeed?: number | null
+						windGust?: number | null
 						flightCategory?: MetarFlightCategory | null
 						presentWeather?: string | null
 						skyConditions?: Array<{
@@ -1182,13 +1182,13 @@ export type AirportSearchFragment = {
 					importTime: any
 					nextImportTimePrediction?: any | null
 					rawText: string
-					temperature: number
-					dewpoint: number
-					altimeter: number
-					visibility: number
-					windDirection: number
-					windSpeed: number
-					windGust: number
+					temperature?: number | null
+					dewpoint?: number | null
+					altimeter?: number | null
+					visibility?: number | null
+					windDirection?: number | null
+					windSpeed?: number | null
+					windGust?: number | null
 					flightCategory?: MetarFlightCategory | null
 					presentWeather?: string | null
 					skyConditions?: Array<{
@@ -1334,13 +1334,13 @@ export type GetSingleAirportQuery = {
 						importTime: any
 						nextImportTimePrediction?: any | null
 						rawText: string
-						temperature: number
-						dewpoint: number
-						altimeter: number
-						visibility: number
-						windDirection: number
-						windSpeed: number
-						windGust: number
+						temperature?: number | null
+						dewpoint?: number | null
+						altimeter?: number | null
+						visibility?: number | null
+						windDirection?: number | null
+						windSpeed?: number | null
+						windGust?: number | null
 						flightCategory?: MetarFlightCategory | null
 						presentWeather?: string | null
 						skyConditions?: Array<{

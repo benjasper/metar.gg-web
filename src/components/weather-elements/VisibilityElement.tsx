@@ -12,7 +12,7 @@ const VisibilityElement: Component<VisibilityElementProps> = props => {
 	const [unitStore] = useUnitStore()
 
 	const selected = () => unitStore.length.units[unitStore.length.selected]
-	const visibility = () => selected().conversionFunction(props.visibility)
+	const visibility = () => selected().conversionFunction(props.visibility!)
 
 	return (
 		<WeatherElementLayout name="Visibility" icon={<RiMapPinDistanceFill />} unitType={[{ unitType: 'length' }]}>

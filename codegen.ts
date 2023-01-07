@@ -13,10 +13,7 @@ const config: CodegenConfig = {
 		},
 	},
 	hooks: {
-		afterOneFileWrite: [
-			'prettier --write src/queries/generated/graphql.ts',
-			'eslint --fix src/queries/generated/graphql.ts',
-		],
+		afterOneFileWrite: ['prettier --write', 'eslint --fix'],
 	},
 }
 export default config

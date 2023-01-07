@@ -41,8 +41,8 @@ const WindElement: Component<WindElementProps> = props => {
 	})
 
 	const selected = () => unitStore.speed.units[unitStore.speed.selected]
-	const windSpeed = () => Math.round(selected().conversionFunction(props.windSpeed))
-	const windGust = () => Math.round(selected().conversionFunction(props.windGust))
+	const windSpeed = () => Math.round(selected().conversionFunction(props.windSpeed!))
+	const windGust = () => Math.round(selected().conversionFunction(props.windGust!))
 
 	const unitConfigurations = () => {
 		const configurations: ParsedWeatherElementLayoutProps['unitType'] = []
@@ -67,18 +67,18 @@ const WindElement: Component<WindElementProps> = props => {
 			<Show when={props.size === 'large'}>
 				<RunwayAndWindRenderer
 					airport={props.airport}
-					windDirection={props.windDirection}
-					windSpeed={props.windSpeed}
+					windDirection={props.windDirection!}
+					windSpeed={props.windSpeed!}
 					variableWind={variableWind()}
 				/>
 			</Show>
 			<Show when={props.size === 'small'}>
-				<Show when={props.windDirection > 0}>
+				<Show when={props.windDirection! > 0}>
 					<BsArrowUp
 						class="mx-auto origin-center transform"
 						size={24}
 						style={{
-							rotate: `${(props.windDirection + 180) % 360}deg`,
+							rotate: `${(props.windDirection! + 180) % 360}deg`,
 						}}
 					/>
 				</Show>
