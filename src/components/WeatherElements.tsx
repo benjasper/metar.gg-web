@@ -104,18 +104,16 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 			</div>
 			<div class={'mt-4 flex h-full flex-col justify-center gap-8 md:flex-row'}>
 				<Show when={latestMetar()} fallback={<span class="m-auto text-lg">No recent weather available.</span>}>
-					<Show when={latestMetar()!.windSpeed && latestMetar()!.windDirection}>
-						<div class="flex flex-shrink-0 flex-col">
-							<WindElement
-								airport={props.airport}
-								windDirection={latestMetar()!.windDirection}
-								windSpeed={latestMetar()!.windSpeed}
-								windGust={latestMetar()!.windGust}
-								variableWindDirection={latestMetar()?.rawText ?? ''}
-								size="large"
-							/>
-						</div>
-					</Show>
+					<div class="flex flex-shrink-0 flex-col">
+						<WindElement
+							airport={props.airport}
+							windDirection={latestMetar()!.windDirection}
+							windSpeed={latestMetar()!.windSpeed}
+							windGust={latestMetar()!.windGust}
+							variableWindDirection={latestMetar()?.rawText ?? ''}
+							size="large"
+						/>
+					</div>
 					<div class="flex flex-row flex-wrap justify-center gap-8 md:justify-start">
 						<VisibilityElement visibility={latestMetar()!.visibility} />
 
