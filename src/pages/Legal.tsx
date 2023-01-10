@@ -21,7 +21,7 @@ const Legal = () => {
 				</p>
 				<h2 class="pt-8 text-3xl">Contact</h2>
 				<p>
-					<a class="mt-4 block" href="benjaminjasper.com">
+					<a class="mt-4 block" href="https://benjaminjasper.com">
 						benjaminjasper.com
 					</a>
 				</p>
