@@ -124,15 +124,15 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 							/>
 						</Show>
 
-						<Show when={latestMetar()!.temperature}>
+						<Show when={latestMetar()!.temperature !== undefined}>
 							<TemperatureElement temperature={latestMetar()!.temperature!} name="Temperature" />
 						</Show>
 
-						<Show when={latestMetar()!.dewpoint}>
+						<Show when={latestMetar()!.dewpoint !== undefined}>
 							<TemperatureElement temperature={latestMetar()!.dewpoint!} name="Dewpoint" />
 						</Show>
 
-						<Show when={latestMetar()!.altimeter}>
+						<Show when={latestMetar()!.altimeter !== undefined}>
 							<AltimeterElement altimeter={latestMetar()!.altimeter!} />
 						</Show>
 
