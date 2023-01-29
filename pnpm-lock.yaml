@@ -1,14 +1,14 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@floating-ui/dom': ^1.1.0
+  '@floating-ui/dom': ^1.1.1
   '@graphql-codegen/cli': 2.16.1
   '@graphql-codegen/fragment-matcher': 3.3.3
   '@graphql-codegen/introspection': 2.2.3
   '@graphql-codegen/typescript': 2.8.5
   '@graphql-codegen/typescript-operations': 2.5.10
-  '@solid-primitives/graphql': ^1.5.1
-  '@solid-primitives/keyboard': ^1.0.6
+  '@solid-primitives/graphql': ^1.5.2
+  '@solid-primitives/keyboard': ^1.0.7
   '@solid-primitives/scheduled': ^1.2.1
   '@solid-primitives/script-loader': ^1.1.3
   '@solidjs/meta': ^0.28.2
@@ -17,10 +17,10 @@ specifiers:
   '@typescript-eslint/parser': ^5.49.0
   autoprefixer: ^10.4.13
   class-variance-authority: ^0.4.0
-  eslint: ^8.32.0
+  eslint: ^8.33.0
   eslint-config-prettier: ^8.6.0
   eslint-plugin-prettier: ^4.2.1
-  eslint-plugin-solid: ^0.9.3
+  eslint-plugin-solid: ^0.9.4
   graphql: ^16.6.0
   mercator-projection: ^0.0.2
   postcss: ^8.4.21
@@ -38,9 +38,9 @@ specifiers:
   vite-plugin-solid-svg: ^0.6.0
 
 dependencies:
-  '@floating-ui/dom': 1.1.0
-  '@solid-primitives/graphql': 1.5.1_solid-js@1.6.9
-  '@solid-primitives/keyboard': 1.0.6_solid-js@1.6.9
+  '@floating-ui/dom': 1.1.1
+  '@solid-primitives/graphql': 1.5.2_solid-js@1.6.9
+  '@solid-primitives/keyboard': 1.0.7_solid-js@1.6.9
   '@solid-primitives/scheduled': 1.2.1_solid-js@1.6.9
   '@solid-primitives/script-loader': 1.1.3_solid-js@1.6.9
   '@solidjs/meta': 0.28.2_solid-js@1.6.9
@@ -48,7 +48,7 @@ dependencies:
   class-variance-authority: 0.4.0_typescript@4.9.4
   graphql: 16.6.0
   mercator-projection: 0.0.2
-  solid-floating-ui: 0.2.0_x33v2wqt46fxb2abta7du24hte
+  solid-floating-ui: 0.2.0_e56ig7v2mzmknnobkkfshcmlke
   solid-headless: 0.13.0_solid-js@1.6.9
   solid-icons: 1.0.4_solid-js@1.6.9
   solid-js: 1.6.9
@@ -60,13 +60,13 @@ devDependencies:
   '@graphql-codegen/introspection': 2.2.3_graphql@16.6.0
   '@graphql-codegen/typescript': 2.8.5_graphql@16.6.0
   '@graphql-codegen/typescript-operations': 2.5.10_graphql@16.6.0
-  '@typescript-eslint/eslint-plugin': 5.49.0_iu322prlnwsygkcra5kbpy22si
-  '@typescript-eslint/parser': 5.49.0_7uibuqfxkfaozanbtbziikiqje
+  '@typescript-eslint/eslint-plugin': 5.49.0_rsaczafy73x3xqauzesvzbsgzy
+  '@typescript-eslint/parser': 5.49.0_zkdaqh7it7uc4cvz2haft7rc6u
   autoprefixer: 10.4.13_postcss@8.4.21
-  eslint: 8.32.0
-  eslint-config-prettier: 8.6.0_eslint@8.32.0
-  eslint-plugin-prettier: 4.2.1_cn4lalcyadplruoxa5mhp7j3dq
-  eslint-plugin-solid: 0.9.3_7uibuqfxkfaozanbtbziikiqje
+  eslint: 8.33.0
+  eslint-config-prettier: 8.6.0_eslint@8.33.0
+  eslint-plugin-prettier: 4.2.1_jqplj6qf3uqpxpu4gdyhwwasnq
+  eslint-plugin-solid: 0.9.4_zkdaqh7it7uc4cvz2haft7rc6u
   postcss: 8.4.21
   prettier: 2.8.3
   prettier-plugin-tailwindcss: 0.2.2_prettier@2.8.3
@@ -1125,8 +1125,8 @@ packages:
     resolution: {integrity: sha512-zbsLwtnHo84w1Kc8rScAo5GMk1GdecSlrflIbfnEBJwvTSj1SL6kkOYV+nHraMCPEy+RNZZUaZyL8JosDGCtGQ==}
     dev: false
 
-  /@floating-ui/dom/1.1.0:
-    resolution: {integrity: sha512-TSogMPVxbRe77QCj1dt8NmRiJasPvuc+eT5jnJ6YpLqgOD2zXc5UA3S1qwybN+GVCDNdKfpKy1oj8RpzLJvh6A==}
+  /@floating-ui/dom/1.1.1:
+    resolution: {integrity: sha512-TpIO93+DIujg3g7SykEAGZMDtbJRrmnYRCNYSjJlvIbGhBjRSNTLVbNeDQBrzy9qDgUbiWdc7KA0uZHZ2tJmiw==}
     dependencies:
       '@floating-ui/core': 1.1.0
     dev: false
@@ -1784,43 +1784,43 @@ packages:
     resolution: {integrity: sha512-AW8PKd6iX3vAZ0vA43nOUOnbq/X5ihgU+mSXXqunMkeQADGiqw/PY0JNeYtD5sr0PAy51YPgAPbDoeapv9r8WA==}
     dev: true
 
-  /@solid-primitives/event-listener/2.2.5_solid-js@1.6.9:
-    resolution: {integrity: sha512-oso8DYLQbHxkSneQIB/vxjigV/1sb0qJA7BJecBljjVMwTB2n+sMcK6BSPojwfMGFgPR+F8ZvBEZFb31sW5ANg==}
+  /@solid-primitives/event-listener/2.2.6_solid-js@1.6.9:
+    resolution: {integrity: sha512-Lb2q888Apv8wqgZ3WvPlt8ic2rEmHx6QT8d3pgi+JRSIRNwAysE6PZDmbwT6/hzzP1TIQG0IRZwh5tomfuqlaQ==}
     peerDependencies:
       solid-js: ^1.6.0
     dependencies:
-      '@solid-primitives/utils': 4.0.1_solid-js@1.6.9
+      '@solid-primitives/utils': 5.0.0_solid-js@1.6.9
       solid-js: 1.6.9
     dev: false
 
-  /@solid-primitives/graphql/1.5.1_solid-js@1.6.9:
-    resolution: {integrity: sha512-pB5nn4hF69Z/eUV+RVO25d43K6bh9tUP7crMp3n2xq6P68cmo5P14NJzecjwssLByZ9JV5TD2DrCfdnC1lAv5Q==}
+  /@solid-primitives/graphql/1.5.2_solid-js@1.6.9:
+    resolution: {integrity: sha512-HBu7Qevi1Yfh+ntYNA6aja7wb5x1abssiwspJah+oImDsmzXXpxD7NweCa9oX+O8wTMNvQxFUvsHL6sGeyvyuQ==}
     peerDependencies:
       solid-js: ^1.6.0
     dependencies:
       '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
-      '@solid-primitives/utils': 4.0.1_solid-js@1.6.9
+      '@solid-primitives/utils': 5.0.0_solid-js@1.6.9
       graphql: 16.6.0
       solid-js: 1.6.9
     dev: false
 
-  /@solid-primitives/keyboard/1.0.6_solid-js@1.6.9:
-    resolution: {integrity: sha512-ko3sWIE5FgjLEYO27twVbTgjArPeKF1jxSo+FQU0qjRsPsCbiJQW1fZb1tKpM5PZulIg9nYfDdK3vL/rKjT3Lg==}
+  /@solid-primitives/keyboard/1.0.7_solid-js@1.6.9:
+    resolution: {integrity: sha512-28fzmKBhHS1CPa439zCEN0ZH9sSQ/AEao5TyWFDtOsJnozdbaT8s1IAw6BgQSbn54vOyWkgbkJ/aYN7+tSJPtQ==}
     peerDependencies:
       solid-js: ^1.6.0
     dependencies:
-      '@solid-primitives/event-listener': 2.2.5_solid-js@1.6.9
-      '@solid-primitives/rootless': 1.2.2_solid-js@1.6.9
-      '@solid-primitives/utils': 4.0.1_solid-js@1.6.9
+      '@solid-primitives/event-listener': 2.2.6_solid-js@1.6.9
+      '@solid-primitives/rootless': 1.2.3_solid-js@1.6.9
+      '@solid-primitives/utils': 5.0.0_solid-js@1.6.9
       solid-js: 1.6.9
     dev: false
 
-  /@solid-primitives/rootless/1.2.2_solid-js@1.6.9:
-    resolution: {integrity: sha512-ZzwQuSeFtxlb6jrHDZB9WIPTZjDTHOinx/xeC3Ey1Cpe7Rw1SMEbiVwpXzRnvghAPCiXqd1x78tvekAhKnBGaw==}
+  /@solid-primitives/rootless/1.2.3_solid-js@1.6.9:
+    resolution: {integrity: sha512-g6sKTQt8onmyWAh92q/+7ZwAZwVQx5qCDBEo7c0+yWZbFK81t6jWCPIYDWXpI1QJ/xxLg41iuN6Eb3fJL5IDHA==}
     peerDependencies:
       solid-js: ^1.6.0
     dependencies:
-      '@solid-primitives/utils': 4.0.1_solid-js@1.6.9
+      '@solid-primitives/utils': 5.0.0_solid-js@1.6.9
       solid-js: 1.6.9
     dev: false
 
@@ -1856,8 +1856,8 @@ packages:
       solid-js: 1.6.9
     dev: false
 
-  /@solid-primitives/utils/4.0.1_solid-js@1.6.9:
-    resolution: {integrity: sha512-06fSyBair7ZxCquMjIqJes29aNg65X776TVw4EUN7PBtdWsGUeIZ9F/H4ek7yrDSxaSDaPHeye5knEYsYAq2gA==}
+  /@solid-primitives/utils/5.0.0_solid-js@1.6.9:
+    resolution: {integrity: sha512-VTvsVYFuZlglLqaEnsY/QIjKAdWs8YKn3+bhiOHkogaE8CSosu2Sg7jybnCfcuw7fePVG75MkoGbQylyo+yovg==}
     peerDependencies:
       solid-js: ^1.6.0
     dependencies:
@@ -1946,7 +1946,7 @@ packages:
       '@types/node': 18.11.17
     dev: true
 
-  /@typescript-eslint/eslint-plugin/5.49.0_iu322prlnwsygkcra5kbpy22si:
+  /@typescript-eslint/eslint-plugin/5.49.0_rsaczafy73x3xqauzesvzbsgzy:
     resolution: {integrity: sha512-IhxabIpcf++TBaBa1h7jtOWyon80SXPRLDq0dVz5SLFC/eW6tofkw/O7Ar3lkx5z5U6wzbKDrl2larprp5kk5Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -1957,12 +1957,12 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.49.0_7uibuqfxkfaozanbtbziikiqje
+      '@typescript-eslint/parser': 5.49.0_zkdaqh7it7uc4cvz2haft7rc6u
       '@typescript-eslint/scope-manager': 5.49.0
-      '@typescript-eslint/type-utils': 5.49.0_7uibuqfxkfaozanbtbziikiqje
-      '@typescript-eslint/utils': 5.49.0_7uibuqfxkfaozanbtbziikiqje
+      '@typescript-eslint/type-utils': 5.49.0_zkdaqh7it7uc4cvz2haft7rc6u
+      '@typescript-eslint/utils': 5.49.0_zkdaqh7it7uc4cvz2haft7rc6u
       debug: 4.3.4
-      eslint: 8.32.0
+      eslint: 8.33.0
       ignore: 5.2.0
       natural-compare-lite: 1.4.0
       regexpp: 3.2.0
@@ -1973,7 +1973,7 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/parser/5.49.0_7uibuqfxkfaozanbtbziikiqje:
+  /@typescript-eslint/parser/5.49.0_zkdaqh7it7uc4cvz2haft7rc6u:
     resolution: {integrity: sha512-veDlZN9mUhGqU31Qiv2qEp+XrJj5fgZpJ8PW30sHU+j/8/e5ruAhLaVDAeznS7A7i4ucb/s8IozpDtt9NqCkZg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -1987,7 +1987,7 @@ packages:
       '@typescript-eslint/types': 5.49.0
       '@typescript-eslint/typescript-estree': 5.49.0_typescript@4.9.4
       debug: 4.3.4
-      eslint: 8.32.0
+      eslint: 8.33.0
       typescript: 4.9.4
     transitivePeerDependencies:
       - supports-color
@@ -2009,7 +2009,7 @@ packages:
       '@typescript-eslint/visitor-keys': 5.49.0
     dev: true
 
-  /@typescript-eslint/type-utils/5.49.0_7uibuqfxkfaozanbtbziikiqje:
+  /@typescript-eslint/type-utils/5.49.0_zkdaqh7it7uc4cvz2haft7rc6u:
     resolution: {integrity: sha512-eUgLTYq0tR0FGU5g1YHm4rt5H/+V2IPVkP0cBmbhRyEmyGe4XvJ2YJ6sYTmONfjmdMqyMLad7SB8GvblbeESZA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -2020,9 +2020,9 @@ packages:
         optional: true
     dependencies:
       '@typescript-eslint/typescript-estree': 5.49.0_typescript@4.9.4
-      '@typescript-eslint/utils': 5.49.0_7uibuqfxkfaozanbtbziikiqje
+      '@typescript-eslint/utils': 5.49.0_zkdaqh7it7uc4cvz2haft7rc6u
       debug: 4.3.4
-      eslint: 8.32.0
+      eslint: 8.33.0
       tsutils: 3.21.0_typescript@4.9.4
       typescript: 4.9.4
     transitivePeerDependencies:
@@ -2081,7 +2081,7 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/utils/5.48.0_7uibuqfxkfaozanbtbziikiqje:
+  /@typescript-eslint/utils/5.48.0_zkdaqh7it7uc4cvz2haft7rc6u:
     resolution: {integrity: sha512-x2jrMcPaMfsHRRIkL+x96++xdzvrdBCnYRd5QiW5Wgo1OB4kDYPbC1XjWP/TNqlfK93K/lUL92erq5zPLgFScQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -2092,16 +2092,16 @@ packages:
       '@typescript-eslint/scope-manager': 5.48.0
       '@typescript-eslint/types': 5.48.0
       '@typescript-eslint/typescript-estree': 5.48.0_typescript@4.9.4
-      eslint: 8.32.0
+      eslint: 8.33.0
       eslint-scope: 5.1.1
-      eslint-utils: 3.0.0_eslint@8.32.0
+      eslint-utils: 3.0.0_eslint@8.33.0
       semver: 7.3.8
     transitivePeerDependencies:
       - supports-color
       - typescript
     dev: true
 
-  /@typescript-eslint/utils/5.49.0_7uibuqfxkfaozanbtbziikiqje:
+  /@typescript-eslint/utils/5.49.0_zkdaqh7it7uc4cvz2haft7rc6u:
     resolution: {integrity: sha512-cPJue/4Si25FViIb74sHCLtM4nTSBXtLx1d3/QT6mirQ/c65bV8arBEebBJJizfq8W2YyMoPI/WWPFWitmNqnQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -2112,9 +2112,9 @@ packages:
       '@typescript-eslint/scope-manager': 5.49.0
       '@typescript-eslint/types': 5.49.0
       '@typescript-eslint/typescript-estree': 5.49.0_typescript@4.9.4
-      eslint: 8.32.0
+      eslint: 8.33.0
       eslint-scope: 5.1.1
-      eslint-utils: 3.0.0_eslint@8.32.0
+      eslint-utils: 3.0.0_eslint@8.33.0
       semver: 7.3.8
     transitivePeerDependencies:
       - supports-color
@@ -3053,16 +3053,16 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /eslint-config-prettier/8.6.0_eslint@8.32.0:
+  /eslint-config-prettier/8.6.0_eslint@8.33.0:
     resolution: {integrity: sha512-bAF0eLpLVqP5oEVUFKpMA+NnRFICwn9X8B5jrR9FcqnYBuPbqWEjTEspPWMj5ye6czoSLDweCzSo3Ko7gGrZaA==}
     hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
     dependencies:
-      eslint: 8.32.0
+      eslint: 8.33.0
     dev: true
 
-  /eslint-plugin-prettier/4.2.1_cn4lalcyadplruoxa5mhp7j3dq:
+  /eslint-plugin-prettier/4.2.1_jqplj6qf3uqpxpu4gdyhwwasnq:
     resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -3073,20 +3073,20 @@ packages:
       eslint-config-prettier:
         optional: true
     dependencies:
-      eslint: 8.32.0
-      eslint-config-prettier: 8.6.0_eslint@8.32.0
+      eslint: 8.33.0
+      eslint-config-prettier: 8.6.0_eslint@8.33.0
       prettier: 2.8.3
       prettier-linter-helpers: 1.0.0
     dev: true
 
-  /eslint-plugin-solid/0.9.3_7uibuqfxkfaozanbtbziikiqje:
-    resolution: {integrity: sha512-UoCoFwN5FjkspugmBTZrQYgX0Vr9eaPufY3Hl1sVqGhpmlLCkPua1Mgt+BW/d1q1k1XotAZhu0gIiWOKiJ/KBw==}
+  /eslint-plugin-solid/0.9.4_zkdaqh7it7uc4cvz2haft7rc6u:
+    resolution: {integrity: sha512-AGS7XnkepV2jiFwBMSg3FW7GKe6uJwgx65nnRC7I6s0dbV7rGpouwj9KDkXV5NJHQENxACeOLUTgjyMi3JeHNw==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
-      '@typescript-eslint/utils': 5.48.0_7uibuqfxkfaozanbtbziikiqje
-      eslint: 8.32.0
+      '@typescript-eslint/utils': 5.48.0_zkdaqh7it7uc4cvz2haft7rc6u
+      eslint: 8.33.0
       is-html: 2.0.0
       jsx-ast-utils: 3.3.3
       kebab-case: 1.0.2
@@ -3113,13 +3113,13 @@ packages:
       estraverse: 5.3.0
     dev: true
 
-  /eslint-utils/3.0.0_eslint@8.32.0:
+  /eslint-utils/3.0.0_eslint@8.33.0:
     resolution: {integrity: sha512-uuQC43IGctw68pJA1RgbQS8/NP7rch6Cwd4j3ZBtgo4/8Flj4eGE7ZYSZRN3iq5pVUv6GPdW5Z1RFleo84uLDA==}
     engines: {node: ^10.0.0 || ^12.0.0 || >= 14.0.0}
     peerDependencies:
       eslint: '>=5'
     dependencies:
-      eslint: 8.32.0
+      eslint: 8.33.0
       eslint-visitor-keys: 2.1.0
     dev: true
 
@@ -3133,8 +3133,8 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /eslint/8.32.0:
-    resolution: {integrity: sha512-nETVXpnthqKPFyuY2FNjz/bEd6nbosRgKbkgS/y1C7LJop96gYHWpiguLecMHQ2XCPxn77DS0P+68WzG6vkZSQ==}
+  /eslint/8.33.0:
+    resolution: {integrity: sha512-WjOpFQgKK8VrCnAtl8We0SUOy/oVZ5NHykyMiagV1M9r8IFpIJX7DduK6n1mpfhlG7T1NLWm2SuD8QB7KFySaA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     hasBin: true
     dependencies:
@@ -3149,7 +3149,7 @@ packages:
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.1.1
-      eslint-utils: 3.0.0_eslint@8.32.0
+      eslint-utils: 3.0.0_eslint@8.33.0
       eslint-visitor-keys: 3.3.0
       espree: 9.4.1
       esquery: 1.4.0
@@ -4981,14 +4981,14 @@ packages:
       tslib: 2.4.1
     dev: true
 
-  /solid-floating-ui/0.2.0_x33v2wqt46fxb2abta7du24hte:
+  /solid-floating-ui/0.2.0_e56ig7v2mzmknnobkkfshcmlke:
     resolution: {integrity: sha512-c1iXyQ8AU62bzZtPVggpp+rzTAuE1PkGs2HI9jIoaJV/RfOjGiM4HTOcAVGwkg/Gm0XFqj8w4bTptAM3rqbrRA==}
     engines: {node: '>=10'}
     peerDependencies:
       '@floating-ui/dom': ^1.0
       solid-js: ^1.3
     dependencies:
-      '@floating-ui/dom': 1.1.0
+      '@floating-ui/dom': 1.1.1
       solid-js: 1.6.9
     dev: false
 
