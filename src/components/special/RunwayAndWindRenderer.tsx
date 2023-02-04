@@ -489,6 +489,7 @@ const RunwayAndWindRenderer = (props: {
 									x={r.direction1.x}
 									y={r.direction1.y}
 									dominant-baseline="middle"
+									text-rendering="optimizeLegibility"
 									text-anchor="middle">
 									{r.direction1.runway}
 								</text>
@@ -497,6 +498,7 @@ const RunwayAndWindRenderer = (props: {
 									x={r.direction2.x}
 									y={r.direction2.y}
 									dominant-baseline="middle"
+									text-rendering="optimizeLegibility"
 									text-anchor="middle">
 									{r.direction2.runway}
 								</text>
