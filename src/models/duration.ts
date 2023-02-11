@@ -108,12 +108,12 @@ class Duration {
 	humanPrecise(omitSeconds: boolean = false, directionWord: boolean = true): string {
 		const absoluteMilliseconds = Math.abs(this.milliseconds)
 
-		const seconds = Math.round(absoluteMilliseconds / 1000)
-		const minutes = Math.round(seconds / 60)
-		const hours = Math.round(minutes / 60)
-		const days = Math.round(hours / 24)
-		const months = Math.round(days / 30)
-		const years = Math.round(months / 12)
+		const seconds = Math.floor(absoluteMilliseconds / 1000)
+		const minutes = Math.floor(seconds / 60)
+		const hours = Math.floor(minutes / 60)
+		const days = Math.floor(hours / 24)
+		const months = Math.floor(days / 30)
+		const years = Math.floor(months / 12)
 
 		const secondsRemainder = seconds % 60
 		const minutesRemainder = minutes % 60
