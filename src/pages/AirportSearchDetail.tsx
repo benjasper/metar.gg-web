@@ -165,9 +165,9 @@ const AirportSearchDetail: Component = () => {
 		JSON.stringify({
 			'@context': 'https://schema.org',
 			'@type': 'Airport',
-			iataCode: airportStore.airport?.iataCode,
-			icaoCode: airportStore.airport?.icaoCode,
-			name: airportStore.airport?.name,
+			iataCode: airportStore.airport?.iataCode ?? '',
+			icaoCode: airportStore.airport?.icaoCode ?? '',
+			name: airportStore.airport?.name ?? '',
 			address: {
 				'@type': 'PostalAddress',
 				addressCountry: airportStore.airport?.country?.name ?? '',
@@ -186,14 +186,15 @@ const AirportSearchDetail: Component = () => {
 			url: window.location.href,
 		})
 
-	const [_, removeJsonLdAirport] = createScriptLoader({
+	const scriptLdElement = createScriptLoader({
 		src: () => jsonLdAirport(),
 		type: 'application/ld+json',
 	})
 
 	onCleanup(() => {
 		clearTimeout(refetchInterval)
-		removeJsonLdAirport()
+		
+		scriptLdElement?.remove()
 	})
 
 	return (
