@@ -29,7 +29,7 @@ const SliderNavigation: Component<DotsProps> = props => {
 							class="h-2.5 w-2.5 rounded-full bg-gray-300 transition-all dark:bg-gray-700"
 							aria-label={`Select forecast ${index() + 1}`}
 							classList={{
-								'bg-gray-500 dark:bg-gray-400': helpers().current() === index(),
+								'!bg-gray-500 !dark:bg-gray-400': helpers().current() === index(),
 								'hover:bg-gray-400 dark:hover:bg-gray-500': helpers().current() !== index(),
 							}}
 							disabled={helpers().current() === index()}
