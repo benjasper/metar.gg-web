@@ -17,7 +17,7 @@ const TemperatureElement: Component<TemperatureElementProps> = props => {
 	return (
 		<WeatherElementLayout name={props.name} icon={<TbTemperature />} unitType={[{ unitType: 'temperature' }]}>
 			<p class="text-center text-xl dark:text-white-dark">
-				{temperature} {selected().symbol}
+				{temperature()} {selected().symbol}
 			</p>
 		</WeatherElementLayout>
 	)

@@ -15,6 +15,7 @@ const Toggle: Component<ToggleProps> = props => {
 			<label class="my-auto font-normal normal-case">{props.offLabel}</label>
 			<HeadlessToggle
 				pressed={props.checked}
+				// eslint-disable-next-line solid/reactivity
 				onChange={checked => props.onChange(checked)}
 				class="relative inline-flex h-[1.5rem] w-[3rem] shrink-0 cursor-pointer rounded-full transition-all"
 				classList={{

@@ -193,7 +193,7 @@ const AirportSearchDetail: Component = () => {
 
 	onCleanup(() => {
 		clearTimeout(refetchInterval)
-		
+
 		scriptLdElement?.remove()
 	})
 

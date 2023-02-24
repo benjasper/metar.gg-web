@@ -9,7 +9,7 @@ import {
 	ForecastFragment,
 	TafFragment,
 } from '../queries/generated/graphql'
-import Slider from '../Slider'
+import Slider from './Slider'
 import { Tag } from './Tag'
 import Toggle from './Toggle'
 import AltimeterElement from './weather-elements/AltimeterElement'

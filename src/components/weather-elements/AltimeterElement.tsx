@@ -20,7 +20,7 @@ const AltimeterElement: Component<AltimeterElementProps> = props => {
 	return (
 		<WeatherElementLayout name="Altimeter" icon={<FaSolidGauge />} unitType={[{ unitType: 'pressure' }]}>
 			<p class="text-center text-xl dark:text-white-dark">
-				{altimeter} {selected().symbol}
+				{altimeter()} {selected().symbol}
 			</p>
 		</WeatherElementLayout>
 	)
