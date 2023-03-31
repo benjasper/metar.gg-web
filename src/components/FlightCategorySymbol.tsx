@@ -30,7 +30,7 @@ const FlightCategorySymbol: Component<FlightCategorySymbolProps> = props => {
 				'bg-purple-400 dark:bg-purple-600': props.flightCategory === MetarFlightCategory.Lifr,
 			}}>
 			<div
-				class={`absolute top-1/2 left-1/2 flex-shrink-0 -translate-x-1/2 -translate-y-1/2 transform rounded-full ${
+				class={`absolute left-1/2 top-1/2 flex-shrink-0 -translate-x-1/2 -translate-y-1/2 transform rounded-full ${
 					sizesInside[props.size ?? 'medium']
 				}`}
 				classList={{

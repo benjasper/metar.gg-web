@@ -23,7 +23,7 @@ const DarkModeToggle: Component<TabGroupProps> = props => {
 					aria-checked={settingsStore.theme === ThemeMode.Dark}
 					aria-label="Dark mode"
 					onClick={() => setTheme(ThemeMode.Dark)}
-					class="flex cursor-pointer rounded-lg py-2 px-4 text-sm font-medium transition-all"
+					class="flex cursor-pointer rounded-lg px-4 py-2 text-sm font-medium transition-all"
 					classList={{
 						'bg-white dark:bg-black-100 dark:text-white-light bg-opacity-75 text-black cursor-default shadow-sm':
 							settingsStore.theme === ThemeMode.Dark,
@@ -36,7 +36,7 @@ const DarkModeToggle: Component<TabGroupProps> = props => {
 					aria-checked={settingsStore.theme === ThemeMode.Light}
 					aria-label="Light mode"
 					onClick={() => setTheme(ThemeMode.Light)}
-					class="flex cursor-pointer rounded-lg py-2 px-4 align-middle text-sm font-medium transition-all"
+					class="flex cursor-pointer rounded-lg px-4 py-2 align-middle text-sm font-medium transition-all"
 					classList={{
 						'bg-white dark:bg-black-100 dark:text-white-light bg-opacity-75 text-black cursor-default shadow-sm':
 							settingsStore.theme === ThemeMode.Light,
@@ -49,7 +49,7 @@ const DarkModeToggle: Component<TabGroupProps> = props => {
 					aria-checked={settingsStore.theme === ThemeMode.System}
 					aria-label="System theme"
 					onClick={() => setTheme(ThemeMode.System)}
-					class="flex cursor-pointer rounded-lg py-2 px-4 align-middle text-sm font-medium transition-all"
+					class="flex cursor-pointer rounded-lg px-4 py-2 align-middle text-sm font-medium transition-all"
 					classList={{
 						'bg-white dark:bg-black-100 dark:text-white bg-opacity-75 text-black cursor-default shadow-sm':
 							settingsStore.theme === ThemeMode.System,
