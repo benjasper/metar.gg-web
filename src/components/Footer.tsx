@@ -17,6 +17,9 @@ const Footer: Component = () => {
 					<A class="mx-auto" href="/about">
 						About
 					</A>
+					<A class="mx-auto" href="https://status.metar.gg">
+						Status
+					</A>
 					<A class="mx-auto" href="/legal">
 						Legal
 					</A>
