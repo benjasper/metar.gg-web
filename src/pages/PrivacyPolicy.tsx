@@ -12,14 +12,11 @@ const PrivacyPolicy = () => {
 				<Header />
 				<h1 class="pt-16 text-4xl font-bold">Privacy policy</h1>
 				<p class="mt-4">
-					We want to process as little personal information as possible when you use our website. That's why
-					we've chosen Fathom Analytics for our website analytics, which doesn't use cookies and complies with
-					the GDPR, ePrivacy (including PECR), COPPA and CCPA. Using this privacy-friendly website analytics
-					software, your IP address is only briefly processed, and we (running this website) have no way of
-					identifying you. As per the CCPA, your personal information is de-identified. You can read more
-					about this on{' '}
-					<a href="https://usefathom.com/compliance" target="_blank">
-						Fathom Analytics' website
+					We use Plausible Analytics (self-hosted) to track overall trends in the usage of our website.
+					Plausible Analytics collects only aggregated information, which does not allow us to identify any
+					visitor to our website. For more information, please visit the{' '}
+					<a href="https://plausible.io/data-policy" target="_blank">
+						https://plausible.io/data-policy
 					</a>
 					.
 				</p>
