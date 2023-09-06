@@ -15,7 +15,7 @@ type SettingsStoreContextInterface = [
 	settingsStore: SettingsStore,
 	actions: {
 		setTheme: (theme: ThemeMode) => void
-	}
+	},
 ]
 
 const createSettingsStore = (): SettingsStore => {

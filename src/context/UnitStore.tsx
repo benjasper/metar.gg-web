@@ -202,7 +202,7 @@ type UnitStoreContext = [
 		selectUnit: (type: keyof UnitStore, identifier: UnitType) => void
 		lockUnit: (type: keyof UnitStore, identifier: UnitType) => void
 		unlockUnit: (type: keyof UnitStore) => void
-	}
+	},
 ]
 
 const UnitStoreContext = createContext<UnitStoreContext>(undefined as unknown as UnitStoreContext)

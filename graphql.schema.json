@@ -13,7 +13,7 @@
 				"fields": [
 					{
 						"name": "country",
-						"description": null,
+						"description": "The country that the airport is located in.",
 						"args": [],
 						"type": {
 							"kind": "OBJECT",
@@ -37,7 +37,7 @@
 					},
 					{
 						"name": "frequencies",
-						"description": null,
+						"description": "Frequencies at the airport.",
 						"args": [],
 						"type": {
 							"kind": "LIST",
@@ -269,7 +269,7 @@
 					},
 					{
 						"name": "region",
-						"description": null,
+						"description": "The region that the airport is located in.",
 						"args": [],
 						"type": {
 							"kind": "OBJECT",
@@ -334,7 +334,7 @@
 					},
 					{
 						"name": "station",
-						"description": null,
+						"description": "Weather station at the airport.",
 						"args": [],
 						"type": {
 							"kind": "OBJECT",
@@ -992,7 +992,7 @@
 					},
 					{
 						"name": "icingConditions",
-						"description": null,
+						"description": "The icing conditions.",
 						"args": [],
 						"type": {
 							"kind": "LIST",
@@ -1040,7 +1040,7 @@
 					},
 					{
 						"name": "skyConditions",
-						"description": null,
+						"description": "The sky conditions.",
 						"args": [],
 						"type": {
 							"kind": "LIST",
@@ -1060,7 +1060,7 @@
 					},
 					{
 						"name": "temperatureData",
-						"description": null,
+						"description": "The temperature data.",
 						"args": [],
 						"type": {
 							"kind": "LIST",
@@ -1096,7 +1096,7 @@
 					},
 					{
 						"name": "turbulenceConditions",
-						"description": null,
+						"description": "The turbulence conditions.",
 						"args": [],
 						"type": {
 							"kind": "LIST",
@@ -2089,7 +2089,7 @@
 					},
 					{
 						"name": "skyConditions",
-						"description": null,
+						"description": "The sky conditions.",
 						"args": [],
 						"type": {
 							"kind": "LIST",
@@ -2138,7 +2138,7 @@
 					},
 					{
 						"name": "station",
-						"description": null,
+						"description": "The station that provided the METAR.",
 						"args": [],
 						"type": {
 							"kind": "NON_NULL",
@@ -2484,6 +2484,66 @@
 				"possibleTypes": null
 			},
 			{
+				"kind": "INPUT_OBJECT",
+				"name": "MetarOrder",
+				"description": "Ordering options for Metar connections",
+				"fields": null,
+				"inputFields": [
+					{
+						"name": "direction",
+						"description": "The ordering direction.",
+						"type": {
+							"kind": "NON_NULL",
+							"name": null,
+							"ofType": {
+								"kind": "ENUM",
+								"name": "OrderDirection",
+								"ofType": null
+							}
+						},
+						"defaultValue": "ASC",
+						"isDeprecated": false,
+						"deprecationReason": null
+					},
+					{
+						"name": "field",
+						"description": "The field by which to order Metars.",
+						"type": {
+							"kind": "NON_NULL",
+							"name": null,
+							"ofType": {
+								"kind": "ENUM",
+								"name": "MetarOrderField",
+								"ofType": null
+							}
+						},
+						"defaultValue": null,
+						"isDeprecated": false,
+						"deprecationReason": null
+					}
+				],
+				"interfaces": null,
+				"enumValues": null,
+				"possibleTypes": null
+			},
+			{
+				"kind": "ENUM",
+				"name": "MetarOrderField",
+				"description": "Properties by which Metar connections can be ordered.",
+				"fields": null,
+				"inputFields": null,
+				"interfaces": null,
+				"enumValues": [
+					{
+						"name": "OBSERVATION_TIME",
+						"description": null,
+						"isDeprecated": false,
+						"deprecationReason": null
+					}
+				],
+				"possibleTypes": null
+			},
+			{
 				"kind": "ENUM",
 				"name": "OrderDirection",
 				"description": "Possible directions in which to order a list of items when provided an `orderBy` argument.",
@@ -2784,7 +2844,7 @@
 							},
 							{
 								"name": "search",
-								"description": "Search the airport by its name, ICAO, IATA, GPS code, municipality, local code and keywords.",
+								"description": "Search the airport by its name, ICAO, IATA, GPS code, municipality and local code. This disables the order parameter.",
 								"type": {
 									"kind": "SCALAR",
 									"name": "String",
@@ -3717,7 +3777,7 @@
 					},
 					{
 						"name": "forecast",
-						"description": null,
+						"description": "The forecasts",
 						"args": [],
 						"type": {
 							"kind": "LIST",
@@ -3817,7 +3877,7 @@
 					},
 					{
 						"name": "station",
-						"description": null,
+						"description": "The station that issued this taf.",
 						"args": [],
 						"type": {
 							"kind": "NON_NULL",
@@ -4030,6 +4090,12 @@
 				"inputFields": null,
 				"interfaces": null,
 				"enumValues": [
+					{
+						"name": "ISSUE_TIME",
+						"description": null,
+						"isDeprecated": false,
+						"deprecationReason": null
+					},
 					{
 						"name": "valid_from_time",
 						"description": null,
@@ -4314,7 +4380,7 @@
 				"fields": [
 					{
 						"name": "airport",
-						"description": null,
+						"description": "The airport that hosts this station. This can also be empty if the metar is from a weather station outside an airport.",
 						"args": [],
 						"type": {
 							"kind": "OBJECT",
@@ -5547,6 +5613,38 @@
 			}
 		],
 		"directives": [
+			{
+				"name": "defer",
+				"description": "The @defer directive may be specified on a fragment spread to imply de-prioritization, that causes the fragment to be omitted in the initial response, and delivered as a subsequent response afterward. A query with @defer directive will cause the request to potentially return multiple responses, where non-deferred data is delivered in the initial response and data deferred delivered in a subsequent response. @include and @skip take precedence over @defer.",
+				"isRepeatable": false,
+				"locations": ["FRAGMENT_SPREAD", "INLINE_FRAGMENT"],
+				"args": [
+					{
+						"name": "if",
+						"description": null,
+						"type": {
+							"kind": "SCALAR",
+							"name": "Boolean",
+							"ofType": null
+						},
+						"defaultValue": "true",
+						"isDeprecated": false,
+						"deprecationReason": null
+					},
+					{
+						"name": "label",
+						"description": null,
+						"type": {
+							"kind": "SCALAR",
+							"name": "String",
+							"ofType": null
+						},
+						"defaultValue": null,
+						"isDeprecated": false,
+						"deprecationReason": null
+					}
+				]
+			},
 			{
 				"name": "deprecated",
 				"description": "The @deprecated built-in directive is used within the type system definition language to indicate deprecated portions of a GraphQL service's schema, such as deprecated fields on a type, arguments on a field, input fields on an input type, or values of an enum type.",
