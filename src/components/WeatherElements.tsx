@@ -115,7 +115,10 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 						/>
 					</div>
 					<div class="flex flex-row flex-wrap justify-center gap-8 md:justify-start">
-						<VisibilityElement visibility={latestMetar()!.visibility} />
+						<VisibilityElement
+							visibility={latestMetar()!.visibility}
+							visibilityMoreThan={latestMetar()!.visibilityIsMoreThan}
+						/>
 
 						<Show when={latestMetar()!.skyConditions!.length > 0}>
 							<SkyConditionsElement

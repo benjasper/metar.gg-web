@@ -1144,6 +1144,22 @@
 						"deprecationReason": null
 					},
 					{
+						"name": "visibilityHorizontalIsMoreThan",
+						"description": "Whether the visibility is more than it's assigned value (+)",
+						"args": [],
+						"type": {
+							"kind": "NON_NULL",
+							"name": null,
+							"ofType": {
+								"kind": "SCALAR",
+								"name": "Boolean",
+								"ofType": null
+							}
+						},
+						"isDeprecated": false,
+						"deprecationReason": null
+					},
+					{
 						"name": "visibilityVertical",
 						"description": "Visibility vertical in the specified unit.",
 						"args": [
@@ -1192,6 +1208,22 @@
 							"kind": "SCALAR",
 							"name": "Int",
 							"ofType": null
+						},
+						"isDeprecated": false,
+						"deprecationReason": null
+					},
+					{
+						"name": "windDirectionVariable",
+						"description": "Whether the wind direction is variable (VRB)",
+						"args": [],
+						"type": {
+							"kind": "NON_NULL",
+							"name": null,
+							"ofType": {
+								"kind": "SCALAR",
+								"name": "Boolean",
+								"ofType": null
+							}
 						},
 						"isDeprecated": false,
 						"deprecationReason": null
@@ -2240,6 +2272,22 @@
 						"deprecationReason": null
 					},
 					{
+						"name": "visibilityIsMoreThan",
+						"description": "Whether the visibility is more than it's assigned value (+)",
+						"args": [],
+						"type": {
+							"kind": "NON_NULL",
+							"name": null,
+							"ofType": {
+								"kind": "SCALAR",
+								"name": "Boolean",
+								"ofType": null
+							}
+						},
+						"isDeprecated": false,
+						"deprecationReason": null
+					},
+					{
 						"name": "windDirection",
 						"description": "The wind direction in degrees, or 0 if calm.",
 						"args": [],
@@ -2247,6 +2295,22 @@
 							"kind": "SCALAR",
 							"name": "Int",
 							"ofType": null
+						},
+						"isDeprecated": false,
+						"deprecationReason": null
+					},
+					{
+						"name": "windDirectionVariable",
+						"description": "Whether the wind direction is variable (VRB)",
+						"args": [],
+						"type": {
+							"kind": "NON_NULL",
+							"name": null,
+							"ofType": {
+								"kind": "SCALAR",
+								"name": "Boolean",
+								"ofType": null
+							}
 						},
 						"isDeprecated": false,
 						"deprecationReason": null

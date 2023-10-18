@@ -1,11 +1,12 @@
 import { RiMapPinDistanceFill } from 'solid-icons/ri'
-import { Component, Show } from 'solid-js'
+import { Component, Match, Switch, createEffect } from 'solid-js'
 import { useUnitStore } from '../../context/UnitStore'
 import WeatherElementLayout from '../../layouts/WeatherElementLayout'
 import { MetarFragment } from '../../queries/generated/graphql'
 
 interface VisibilityElementProps {
 	visibility: MetarFragment['visibility']
+	visibilityMoreThan: boolean
 }
 
 const VisibilityElement: Component<VisibilityElementProps> = props => {
@@ -17,8 +18,14 @@ const VisibilityElement: Component<VisibilityElementProps> = props => {
 	return (
 		<WeatherElementLayout name="Visibility" icon={<RiMapPinDistanceFill />} unitType={[{ unitType: 'length' }]}>
 			<p class="text-center text-xl dark:text-white-dark">
-				<Show when={visibility() === 9.99402624}>&ge;&nbsp;</Show>
-				{visibility().toFixed(1)} {selected().symbol}
+				<Switch>
+					<Match when={props.visibilityMoreThan}>
+						&ge; {Math.round(visibility())} {selected().symbol}
+					</Match>
+					<Match when={true}>
+						{visibility().toFixed(1)} {selected().symbol}
+					</Match>
+				</Switch>
 			</p>
 		</WeatherElementLayout>
 	)

@@ -1,4 +1,4 @@
-import { useKeyDownList } from '@solid-primitives/keyboard'
+import { useKeyDownEvent, useKeyDownList } from '@solid-primitives/keyboard'
 import { debounce } from '@solid-primitives/scheduled'
 import { Transition } from 'solid-headless'
 import { AiOutlineSearch } from 'solid-icons/ai'
@@ -35,7 +35,8 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 	let input!: HTMLInputElement
 
 	const [selectedAirportId, setSelectedAirportId] = createSignal<number | undefined>(undefined)
-	const [keys, { event }] = useKeyDownList()
+	const keys = useKeyDownList()
+	const event = useKeyDownEvent()
 
 	const newQuery = useGraphQL()
 

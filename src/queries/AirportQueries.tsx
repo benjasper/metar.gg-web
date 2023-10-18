@@ -63,9 +63,11 @@ const WEATHER_FRAGMENT = gql`
 		windSpeed(unit: KNOT)
 		windGust(unit: KNOT)
 		visibilityHorizontal(unit: KILOMETER)
+		visibilityHorizontalIsMoreThan
 		visibilityVertical(unit: FOOT)
 		windShearHeight(unit: FOOT)
 		windShearSpeed(unit: KNOT)
+		windDirectionVariable
 	}
 
 	fragment Metar on Metar {
@@ -77,7 +79,9 @@ const WEATHER_FRAGMENT = gql`
 		dewpoint
 		altimeter
 		visibility
+		visibilityIsMoreThan
 		windDirection
+		windDirectionVariable
 		windSpeed
 		windGust
 		flightCategory

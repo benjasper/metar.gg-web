@@ -182,12 +182,16 @@ export type Forecast = {
 	turbulenceConditions?: Maybe<Array<TurbulenceCondition>>
 	/** Visibility horizontal in the specified unit. */
 	visibilityHorizontal?: Maybe<Scalars['Float']['output']>
+	/** Whether the visibility is more than it's assigned value (+) */
+	visibilityHorizontalIsMoreThan: Scalars['Boolean']['output']
 	/** Visibility vertical in the specified unit. */
 	visibilityVertical?: Maybe<Scalars['Float']['output']>
 	/** The weather string. */
 	weather?: Maybe<Scalars['String']['output']>
 	/** The wind direction in degrees. */
 	windDirection?: Maybe<Scalars['Int']['output']>
+	/** Whether the wind direction is variable (VRB) */
+	windDirectionVariable: Scalars['Boolean']['output']
 	/** Wind gust speed in the specified unit. */
 	windGust?: Maybe<Scalars['Float']['output']>
 	/** The wind shear direction in degrees. */
@@ -348,8 +352,12 @@ export type Metar = {
 	verticalVisibility?: Maybe<Scalars['Float']['output']>
 	/** The visibility in the specified unit. */
 	visibility?: Maybe<Scalars['Float']['output']>
+	/** Whether the visibility is more than it's assigned value (+) */
+	visibilityIsMoreThan: Scalars['Boolean']['output']
 	/** The wind direction in degrees, or 0 if calm. */
 	windDirection?: Maybe<Scalars['Int']['output']>
+	/** Whether the wind direction is variable (VRB) */
+	windDirectionVariable: Scalars['Boolean']['output']
 	/** Wind gust speed in the specified unit. */
 	windGust?: Maybe<Scalars['Float']['output']>
 	/** The wind speed in the specified unit. */
@@ -843,9 +851,11 @@ export type ForecastFragment = {
 	windSpeed?: number | null
 	windGust?: number | null
 	visibilityHorizontal?: number | null
+	visibilityHorizontalIsMoreThan: boolean
 	visibilityVertical?: number | null
 	windShearHeight?: number | null
 	windShearSpeed?: number | null
+	windDirectionVariable: boolean
 	skyConditions?: Array<{
 		__typename?: 'SkyCondition'
 		skyCover: SkyConditionSkyCover
@@ -883,7 +893,9 @@ export type MetarFragment = {
 	dewpoint?: number | null
 	altimeter?: number | null
 	visibility?: number | null
+	visibilityIsMoreThan: boolean
 	windDirection?: number | null
+	windDirectionVariable: boolean
 	windSpeed?: number | null
 	windGust?: number | null
 	flightCategory?: MetarFlightCategory | null
@@ -917,9 +929,11 @@ export type TafFragment = {
 		windSpeed?: number | null
 		windGust?: number | null
 		visibilityHorizontal?: number | null
+		visibilityHorizontalIsMoreThan: boolean
 		visibilityVertical?: number | null
 		windShearHeight?: number | null
 		windShearSpeed?: number | null
+		windDirectionVariable: boolean
 		skyConditions?: Array<{
 			__typename?: 'SkyCondition'
 			skyCover: SkyConditionSkyCover
@@ -966,7 +980,9 @@ export type AirportWeatherFragment = {
 					dewpoint?: number | null
 					altimeter?: number | null
 					visibility?: number | null
+					visibilityIsMoreThan: boolean
 					windDirection?: number | null
+					windDirectionVariable: boolean
 					windSpeed?: number | null
 					windGust?: number | null
 					flightCategory?: MetarFlightCategory | null
@@ -1005,9 +1021,11 @@ export type AirportWeatherFragment = {
 						windSpeed?: number | null
 						windGust?: number | null
 						visibilityHorizontal?: number | null
+						visibilityHorizontalIsMoreThan: boolean
 						visibilityVertical?: number | null
 						windShearHeight?: number | null
 						windShearSpeed?: number | null
+						windDirectionVariable: boolean
 						skyConditions?: Array<{
 							__typename?: 'SkyCondition'
 							skyCover: SkyConditionSkyCover
@@ -1064,7 +1082,9 @@ export type AirportWeatherQuery = {
 						dewpoint?: number | null
 						altimeter?: number | null
 						visibility?: number | null
+						visibilityIsMoreThan: boolean
 						windDirection?: number | null
+						windDirectionVariable: boolean
 						windSpeed?: number | null
 						windGust?: number | null
 						flightCategory?: MetarFlightCategory | null
@@ -1103,9 +1123,11 @@ export type AirportWeatherQuery = {
 							windSpeed?: number | null
 							windGust?: number | null
 							visibilityHorizontal?: number | null
+							visibilityHorizontalIsMoreThan: boolean
 							visibilityVertical?: number | null
 							windShearHeight?: number | null
 							windShearSpeed?: number | null
+							windDirectionVariable: boolean
 							skyConditions?: Array<{
 								__typename?: 'SkyCondition'
 								skyCover: SkyConditionSkyCover
@@ -1215,7 +1237,9 @@ export type AirportSearchFragment = {
 					dewpoint?: number | null
 					altimeter?: number | null
 					visibility?: number | null
+					visibilityIsMoreThan: boolean
 					windDirection?: number | null
+					windDirectionVariable: boolean
 					windSpeed?: number | null
 					windGust?: number | null
 					flightCategory?: MetarFlightCategory | null
@@ -1254,9 +1278,11 @@ export type AirportSearchFragment = {
 						windSpeed?: number | null
 						windGust?: number | null
 						visibilityHorizontal?: number | null
+						visibilityHorizontalIsMoreThan: boolean
 						visibilityVertical?: number | null
 						windShearHeight?: number | null
 						windShearSpeed?: number | null
+						windDirectionVariable: boolean
 						skyConditions?: Array<{
 							__typename?: 'SkyCondition'
 							skyCover: SkyConditionSkyCover
@@ -1367,7 +1393,9 @@ export type GetSingleAirportQuery = {
 						dewpoint?: number | null
 						altimeter?: number | null
 						visibility?: number | null
+						visibilityIsMoreThan: boolean
 						windDirection?: number | null
+						windDirectionVariable: boolean
 						windSpeed?: number | null
 						windGust?: number | null
 						flightCategory?: MetarFlightCategory | null
@@ -1406,9 +1434,11 @@ export type GetSingleAirportQuery = {
 							windSpeed?: number | null
 							windGust?: number | null
 							visibilityHorizontal?: number | null
+							visibilityHorizontalIsMoreThan: boolean
 							visibilityVertical?: number | null
 							windShearHeight?: number | null
 							windShearSpeed?: number | null
+							windDirectionVariable: boolean
 							skyConditions?: Array<{
 								__typename?: 'SkyCondition'
 								skyCover: SkyConditionSkyCover

@@ -245,7 +245,10 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 									</div>
 									<div class="flex w-full max-w-full flex-col flex-wrap gap-4 md:w-[30rem] md:flex-row">
 										<Show when={forecast.visibilityHorizontal}>
-											<VisibilityElement visibility={forecast.visibilityHorizontal!} />
+											<VisibilityElement
+												visibility={forecast.visibilityHorizontal!}
+												visibilityMoreThan={forecast.visibilityHorizontalIsMoreThan}
+											/>
 										</Show>
 										<Show when={forecast.skyConditions && forecast.skyConditions.length > 0}>
 											<SkyConditionsElement

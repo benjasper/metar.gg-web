@@ -7,7 +7,7 @@ import { HiSolidClock } from 'solid-icons/hi'
 import { ImSpinner5 } from 'solid-icons/im'
 import { IoLocationSharp } from 'solid-icons/io'
 import { TbMountain } from 'solid-icons/tb'
-import { Component, createEffect, createMemo, createSignal, Match, onCleanup, Show, Switch } from 'solid-js'
+import { Component, Match, Show, Switch, createEffect, createMemo, createSignal, onCleanup } from 'solid-js'
 import { createStore, reconcile } from 'solid-js/store'
 import AirportClassification from '../components/AirportClassification'
 import AirportsInVicinity from '../components/AirportsInVicinity'
@@ -210,83 +210,84 @@ const AirportSearchDetail: Component = () => {
 					<DarkModeToggle class="hidden md:flex" />
 				</div>
 			</div>
-			<Show
-				when={
-					airportStore.airport !== undefined ||
-					(airportStore.airport !== undefined && !airportRequest.loading && !airportRequest.error)
-				}
-				fallback={
+			<Switch>
+				<Match when={airportStore.airport === undefined && airportRequest.loading}>
 					<div class="flex h-full justify-center text-gray-700 dark:text-white-dark">
 						<ImSpinner5 class="m-auto w-16 animate-spin" size={36} />
 					</div>
-				}>
-				<div class="mx-auto flex flex-col py-16 text-center dark:text-white-dark">
-					<h2>
-						<Switch>
-							<Match when={airportStore.airport!.icaoCode && airportStore.airport!.iataCode}>
-								{airportStore.airport!.icaoCode} / {airportStore.airport!.iataCode}
-							</Match>
-							<Match when={airportStore.airport!.icaoCode}>{airportStore.airport!.icaoCode}</Match>
-							<Match when={airportStore.airport!.gpsCode}>{airportStore.airport!.gpsCode}</Match>
-							<Match when={true}>{airportStore.airport!.identifier}</Match>
-						</Switch>
-					</h2>
-					<span class="mt-1 text-lg">{airportStore.airport!.name}</span>
+				</Match>
+				<Match when={airportRequest.error}>
+					<span class="m-auto text-gray-700 dark:text-white-dark">Failed to load weather data.</span>
+				</Match>
+				<Match when={airportStore.airport !== undefined}>
+					<div class="mx-auto flex flex-col py-16 text-center dark:text-white-dark">
+						<h2>
+							<Switch>
+								<Match when={airportStore.airport!.icaoCode && airportStore.airport!.iataCode}>
+									{airportStore.airport!.icaoCode} / {airportStore.airport!.iataCode}
+								</Match>
+								<Match when={airportStore.airport!.icaoCode}>{airportStore.airport!.icaoCode}</Match>
+								<Match when={airportStore.airport!.gpsCode}>{airportStore.airport!.gpsCode}</Match>
+								<Match when={true}>{airportStore.airport!.identifier}</Match>
+							</Switch>
+						</h2>
+						<span class="mt-1 text-lg">{airportStore.airport!.name}</span>
 
-					<div class="flex max-w-md flex-wrap justify-center gap-2 pt-4">
-						<Tag>
-							<IoLocationSharp class="my-auto" />
-							<Show when={airportStore.airport!.municipality}>
-								{airportStore.airport!.municipality},
-							</Show>{' '}
-							{airportStore.airport!.country!.name}
-						</Tag>
-						<Show when={airportStore.airport!.timezone}>
+						<div class="flex max-w-md flex-wrap justify-center gap-2 pt-4">
 							<Tag>
-								<HiSolidClock class="my-auto" />
-								Local time{' '}
-								{now().toLocaleTimeString([], {
-									hour: 'numeric',
-									minute: '2-digit',
-									timeZone: airportStore.airport!.timezone ?? 'UTC',
-								})}
+								<IoLocationSharp class="my-auto" />
+								<Show when={airportStore.airport!.municipality}>
+									{airportStore.airport!.municipality},
+								</Show>{' '}
+								{airportStore.airport!.country!.name}
 							</Tag>
-						</Show>
-						<Tag>
-							<AirportClassification type={airportStore.airport!.type} />
-						</Tag>
-						<Show when={airportStore.airport!.elevation}>
+							<Show when={airportStore.airport!.timezone}>
+								<Tag>
+									<HiSolidClock class="my-auto" />
+									Local time{' '}
+									{now().toLocaleTimeString([], {
+										hour: 'numeric',
+										minute: '2-digit',
+										timeZone: airportStore.airport!.timezone ?? 'UTC',
+									})}
+								</Tag>
+							</Show>
 							<Tag>
-								<TbMountain class="my-auto" />
-								Elevation{' '}
-								{Math.round(
-									selectedHeightUnit().conversionFunction(airportStore.airport!.elevation!)
-								)}{' '}
-								{selectedHeightUnit().symbol}
+								<AirportClassification type={airportStore.airport!.type} />
 							</Tag>
-						</Show>
-						<Show when={airportStore.airport!.website}>
-							<LinkTag href={airportStore.airport!.website!}>
-								<CgWebsite class="my-auto" />
-								Website
-								<FiExternalLink class="my-auto" />
-							</LinkTag>
-						</Show>
+							<Show when={airportStore.airport!.elevation}>
+								<Tag>
+									<TbMountain class="my-auto" />
+									Elevation{' '}
+									{Math.round(
+										selectedHeightUnit().conversionFunction(airportStore.airport!.elevation!)
+									)}{' '}
+									{selectedHeightUnit().symbol}
+								</Tag>
+							</Show>
+							<Show when={airportStore.airport!.website}>
+								<LinkTag href={airportStore.airport!.website!}>
+									<CgWebsite class="my-auto" />
+									Website
+									<FiExternalLink class="my-auto" />
+								</LinkTag>
+							</Show>
+						</div>
 					</div>
-				</div>
-				<WeatherElements airport={airportStore.airport!} lastRefreshed={lastRefreshed()} />
-				<ForecastElements
-					airport={airportStore.airport!}
-					taf={airportStore.airport!.station?.tafs.edges[0]?.node}
-				/>
-				<AirportsInVicinity
-					airportCoordinates={{
-						latitude: airportStore.airport!.latitude,
-						longitude: airportStore.airport!.longitude,
-					}}
-					stations={airportStore.airport!.stationsVicinity}
-				/>
-			</Show>
+					<WeatherElements airport={airportStore.airport!} lastRefreshed={lastRefreshed()} />
+					<ForecastElements
+						airport={airportStore.airport!}
+						taf={airportStore.airport!.station?.tafs.edges[0]?.node}
+					/>
+					<AirportsInVicinity
+						airportCoordinates={{
+							latitude: airportStore.airport!.latitude,
+							longitude: airportStore.airport!.longitude,
+						}}
+						stations={airportStore.airport!.stationsVicinity}
+					/>
+				</Match>
+			</Switch>
 		</PageContent>
 	)
 }
