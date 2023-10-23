@@ -123,6 +123,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 		// If it doesn't have focus we want to give it focus when we detect letters and numbers
 		if (
 			document.activeElement !== input &&
+			untrackedEvent &&
 			((untrackedEvent!.key.length === 1 && untrackedEvent!.key.match(/[a-z0-9]/i)) ||
 				keys().includes('BACKSPACE'))
 		) {
