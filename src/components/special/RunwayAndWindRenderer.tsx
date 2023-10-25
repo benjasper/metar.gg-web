@@ -39,7 +39,7 @@ interface RunwayDirection {
 	heading: number
 	x: number
 	y: number
-	windAngle: number
+	windAngle?: number
 	favourableLevel: number
 }
 
@@ -58,25 +58,35 @@ const RunwayPopup = (props: {
 	runway: Runway
 	runwayDirection: RunwayDirection
 	windSpeed: number
-	windDirection: number
+	windDirection?: number
 }) => {
 	const [unitStore] = useUnitStore()
 	const selectedLengthUnit = () => unitStore.smallLength.units[unitStore.smallLength.selected]
 	const selectedSpeedUnit = () => unitStore.speed.units[unitStore.speed.selected]
 
 	// Calculate crosswind components
-	const crosswindComponent = () => Math.sin((props.runwayDirection.windAngle * Math.PI) / 180) * props.windSpeed
+	const crosswindComponent = () =>
+		props.runwayDirection.windAngle
+			? Math.sin((props.runwayDirection.windAngle * Math.PI) / 180) * props.windSpeed
+			: undefined
 
 	// Left or right crosswind by comparing wind direction and runway heading
 	const crosswindDirection = () => {
+		if (!props.windDirection) {
+			return undefined
+		}
+
 		let result = props.windDirection - props.runwayDirection.heading
 		if (result < 0) result += 360
 		if (result > 180) return 'left'
 		else return 'right'
 	}
 
-	const headwindComponent = () => Math.cos((props.runwayDirection.windAngle * Math.PI) / 180) * props.windSpeed
-	const tailwindComponent = () => -headwindComponent()
+	const headwindComponent = () =>
+		props.runwayDirection.windAngle
+			? Math.cos((props.runwayDirection.windAngle * Math.PI) / 180) * props.windSpeed
+			: undefined
+	const tailwindComponent = () => (headwindComponent() ? -headwindComponent()! : undefined)
 
 	return (
 		<div class="flex flex-col gap-1">
@@ -105,7 +115,7 @@ const RunwayPopup = (props: {
 				</span>
 			</div>
 
-			<Show when={props.windSpeed > 0 && props.windDirection > 0}>
+			<Show when={props.windSpeed > 0 && props.windDirection && props.windDirection > 0}>
 				<div class="flex gap-1">
 					<div
 						class="my-auto h-3 w-3 flex-shrink-0 rounded-full border-[3px]"
@@ -119,16 +129,20 @@ const RunwayPopup = (props: {
 						}}
 						aria-label={`Wind direction is ${favourableToText(props.runwayDirection.favourableLevel)}`}
 					/>
-					<span class="text-sm">
-						Wind angle: {favourableToText(props.runwayDirection.favourableLevel)} (
-						{Math.round(props.runwayDirection.windAngle)}°)
-					</span>
+					<Show when={props.runwayDirection.windAngle}>
+						<span class="text-sm">
+							Wind angle: {favourableToText(props.runwayDirection.favourableLevel)} (
+							{Math.round(props.runwayDirection.windAngle!)}°)
+						</span>
+					</Show>
 				</div>
 			</Show>
 
 			<Show
 				when={
-					Math.round(selectedSpeedUnit().conversionFunction(headwindComponent())) > 0 &&
+					props.windDirection &&
+					headwindComponent() &&
+					Math.round(selectedSpeedUnit().conversionFunction(headwindComponent()!)) > 0 &&
 					props.windDirection > 0
 				}>
 				<div class="flex gap-1">
@@ -139,14 +153,16 @@ const RunwayPopup = (props: {
 						}}
 					/>
 					<span class="text-sm">
-						Headwind: {Math.round(selectedSpeedUnit().conversionFunction(headwindComponent()))}{' '}
+						Headwind: {Math.round(selectedSpeedUnit().conversionFunction(headwindComponent()!))}{' '}
 						{selectedSpeedUnit().symbol}
 					</span>
 				</div>
 			</Show>
 			<Show
 				when={
-					Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent())) > 0 &&
+					props.windDirection &&
+					crosswindComponent() &&
+					Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent()!)) > 0 &&
 					props.windDirection > 0
 				}>
 				<div class="flex gap-1">
@@ -158,14 +174,16 @@ const RunwayPopup = (props: {
 						}}
 					/>
 					<span class="text-sm">
-						Crosswind: {Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent()))}{' '}
+						Crosswind: {Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent()!))}{' '}
 						{selectedSpeedUnit().symbol} from the {crosswindDirection()}{' '}
 					</span>
 				</div>
 			</Show>
 			<Show
 				when={
-					Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent())) > 0 &&
+					tailwindComponent() &&
+					props.windDirection &&
+					Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent()!)) > 0 &&
 					props.windDirection > 0
 				}>
 				<div class="flex gap-1">
@@ -176,7 +194,7 @@ const RunwayPopup = (props: {
 						}}
 					/>
 					<span class="text-sm">
-						Tailwind: {Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent()))}{' '}
+						Tailwind: {Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent()!))}{' '}
 						{selectedSpeedUnit().symbol}
 					</span>
 				</div>
@@ -188,8 +206,9 @@ const RunwayPopup = (props: {
 const RunwayAndWindRenderer = (props: {
 	airport: AirportSearchFragment
 	windSpeed: number
-	windDirection: number
+	windDirection?: number
 	variableWind: VariableWind | undefined
+	isVariable: boolean
 }) => {
 	const [runways, setRunways] = createSignal<Runway[]>([])
 
@@ -236,7 +255,9 @@ const RunwayAndWindRenderer = (props: {
 					x: direction1.x,
 					y: direction1.y,
 					favourableLevel: 0,
-					windAngle: 180 - Math.abs(Math.abs((runway.lowRunwayHeading ?? 0) - props.windDirection) - 180),
+					windAngle: props.windDirection
+						? 180 - Math.abs(Math.abs((runway.lowRunwayHeading ?? 0) - props.windDirection) - 180)
+						: undefined,
 				},
 				direction2: {
 					runway: runway.highRunwayIdentifier,
@@ -244,7 +265,9 @@ const RunwayAndWindRenderer = (props: {
 					x: direction2.x,
 					y: direction2.y,
 					favourableLevel: 0,
-					windAngle: 180 - Math.abs(Math.abs((runway.highRunwayHeading ?? 0) - props.windDirection) - 180),
+					windAngle: props.windDirection
+						? 180 - Math.abs(Math.abs((runway.highRunwayHeading ?? 0) - props.windDirection) - 180)
+						: undefined,
 				},
 				length: runway.length ?? 0,
 				width: runway.width ?? 0,
@@ -252,18 +275,22 @@ const RunwayAndWindRenderer = (props: {
 		})
 
 		// Calculate the best runway heading
-		if (props.windSpeed > 1 && props.windDirection != 0) {
+		if (props.windSpeed > 1 && props.windDirection && props.windDirection != 0) {
 			const bestRunways = preparingRunways.filter(runway => {
+				if (!runway.direction1.windAngle || !runway.direction2.windAngle) {
+					return
+				}
+
 				return runway.direction1.windAngle < 90 || runway.direction2.windAngle < 90
 			})
 
 			bestRunways.forEach(runway => {
 				// Set the favourable level to 1 if the wind angle is less than 90 and 2 if the wind angle is less than 45 degrees
-				if (runway.direction1.windAngle < 90)
-					runway.direction1.favourableLevel = runway.direction1.windAngle < 45 ? 2 : 1
+				if (runway.direction1.windAngle! < 90)
+					runway.direction1.favourableLevel = runway.direction1.windAngle! < 45 ? 2 : 1
 
-				if (runway.direction2.windAngle < 90)
-					runway.direction2.favourableLevel = runway.direction2.windAngle < 45 ? 2 : 1
+				if (runway.direction2.windAngle! < 90)
+					runway.direction2.favourableLevel = runway.direction2.windAngle! < 45 ? 2 : 1
 			})
 		}
 
@@ -299,7 +326,7 @@ const RunwayAndWindRenderer = (props: {
 	const windArrows = (): { angle: number; x: number; y: number; isVariable: boolean }[] => {
 		const arrows: { angle: number; x: number; y: number; isVariable: boolean }[] = []
 
-		if (props.windSpeed > 0 && props.windDirection != 0) {
+		if (props.windSpeed > 0 && props.windDirection && props.windDirection != 0) {
 			arrows.push({
 				angle: props.windDirection,
 				x: realCenterX() + radius() * Math.cos(((props.windDirection - 90) * Math.PI) / 180),
@@ -327,6 +354,8 @@ const RunwayAndWindRenderer = (props: {
 		return arrows
 	}
 
+	createEffect(() => console.log(props.isVariable, props.windDirection))
+
 	return (
 		<Show when={runways().length > 0}>
 			<div class="relative mx-auto w-full rounded-full md:mx-0">
@@ -345,7 +374,7 @@ const RunwayAndWindRenderer = (props: {
 					/>
 
 					{/* Wind arrow */}
-					<Show when={props.windSpeed > 0 && props.windDirection != 0}>
+					<Show when={props.windDirection && props.windDirection != 0}>
 						<For each={windArrows()}>
 							{arrow => (
 								<svg

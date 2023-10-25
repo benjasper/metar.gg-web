@@ -20,6 +20,7 @@ interface ParsedWeatherElementsProps {
 
 const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 	const latestMetar = createMemo(() => props.airport?.station?.metars?.edges[0]?.node)
+	const previousMetar = createMemo(() => props.airport?.station?.metars?.edges[1]?.node)
 
 	const now = useTimeStore()
 
@@ -107,10 +108,20 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 					<div class="flex flex-shrink-0 flex-col">
 						<WindElement
 							airport={props.airport}
-							windDirection={latestMetar()!.windDirection}
-							windSpeed={latestMetar()!.windSpeed}
-							windGust={latestMetar()!.windGust}
-							variableWindDirection={latestMetar()?.rawText ?? ''}
+							windData={{
+								windDirection: latestMetar()!.windDirection,
+								windSpeed: latestMetar()!.windSpeed,
+								windGust: latestMetar()!.windGust,
+								variableWindDirection: latestMetar()?.rawText ?? '',
+								isVariable: latestMetar()!.windDirectionVariable,
+							}}
+							previousWindDate={{
+								windDirection: previousMetar()?.windDirection,
+								windSpeed: previousMetar()?.windSpeed,
+								windGust: previousMetar()?.windGust,
+								variableWindDirection: previousMetar()?.rawText ?? '',
+								isVariable: previousMetar()?.windDirectionVariable ?? false,
+							}}
 							size="large"
 						/>
 					</div>
@@ -118,33 +129,50 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 						<VisibilityElement
 							visibility={latestMetar()!.visibility}
 							visibilityMoreThan={latestMetar()!.visibilityIsMoreThan}
+							previousVisibility={previousMetar()!.visibility}
+							previousVisibilityMoreThan={previousMetar()!.visibilityIsMoreThan}
 						/>
 
 						<Show when={latestMetar()!.skyConditions!.length > 0}>
 							<SkyConditionsElement
 								skyConditions={latestMetar()!.skyConditions!}
+								previousSkyConditions={previousMetar()?.skyConditions ?? undefined}
 								airport={props.airport}
 							/>
 						</Show>
 
 						<Show when={latestMetar()!.temperature !== undefined}>
-							<TemperatureElement temperature={latestMetar()!.temperature!} name="Temperature" />
+							<TemperatureElement
+								temperature={latestMetar()!.temperature!}
+								previousTemperature={previousMetar()?.temperature ?? undefined}
+								name="Temperature"
+							/>
 						</Show>
 
 						<Show when={latestMetar()!.dewpoint !== undefined}>
-							<TemperatureElement temperature={latestMetar()!.dewpoint!} name="Dewpoint" />
+							<TemperatureElement
+								temperature={latestMetar()!.dewpoint!}
+								previousTemperature={previousMetar()?.dewpoint ?? undefined}
+								name="Dewpoint"
+							/>
 						</Show>
 
 						<Show when={latestMetar()!.altimeter !== undefined}>
-							<AltimeterElement altimeter={latestMetar()!.altimeter!} />
+							<AltimeterElement
+								altimeter={latestMetar()!.altimeter!}
+								previousAltimeter={previousMetar()?.altimeter ?? undefined}
+							/>
 						</Show>
 
 						<Show when={latestMetar()!.presentWeather && (latestMetar()!.presentWeather ?? '').length > 0}>
-							<PrecipitationElement weather={latestMetar()!.presentWeather ?? ''} />
+							<PrecipitationElement
+								weather={latestMetar()!.presentWeather ?? ''}
+								previousWeather={previousMetar()!.presentWeather ?? undefined}
+							/>
 						</Show>
 
 						<Show when={latestMetar()!.flightCategory}>
-							<FlightCategoryElement latestMetar={latestMetar()!} />
+							<FlightCategoryElement latestMetar={latestMetar()!} previousMetar={previousMetar()} />
 						</Show>
 					</div>
 				</Show>
