@@ -354,8 +354,6 @@ const RunwayAndWindRenderer = (props: {
 		return arrows
 	}
 
-	createEffect(() => console.log(props.isVariable, props.windDirection))
-
 	return (
 		<Show when={runways().length > 0}>
 			<div class="relative mx-auto w-full rounded-full md:mx-0">

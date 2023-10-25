@@ -54,7 +54,7 @@ function getWindText(
 	windText += ` @ ${windSpeed} ${selected().symbol}`
 
 	if (variableWindDirection) {
-		windText += ` and variable @ from ${variableWindDirection.from}° to ${variableWindDirection.to}°`
+		windText += ` and variable from ${variableWindDirection.from}° to ${variableWindDirection.to}°`
 	}
 
 	if (windGust) {

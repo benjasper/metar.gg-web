@@ -100,7 +100,6 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 	createEffect<string | undefined>(previous => {
 		if (previous && props.updatePingNewValue && props.updatePingNewValue !== previous) {
 			ping()
-			console.log('Ping!')
 		}
 
 		return props.updatePingNewValue
@@ -108,7 +107,6 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 
 	return (
 		<div
-			onClick={() => ping()}
 			class={`relative flex h-auto w-auto flex-grow flex-col justify-center gap-2 rounded-2xl bg-gray-50 px-6 py-6 text-black shadow-sm transition-colors dark:bg-black-200 dark:text-white-light md:mx-0 md:px-12 ${
 				props.class ?? ''
 			}`}>
