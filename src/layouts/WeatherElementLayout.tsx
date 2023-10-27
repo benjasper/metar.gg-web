@@ -103,7 +103,7 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 		}
 
 		return props.updatePingNewValue
-	}, undefined)
+	})
 
 	return (
 		<div
