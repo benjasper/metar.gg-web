@@ -265,9 +265,12 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 										<Show when={forecast.windSpeed && forecast.windDirection}>
 											<WindElement
 												airport={props.airport}
-												windDirection={forecast.windDirection!}
-												windSpeed={forecast.windSpeed!}
-												windGust={forecast.windGust ?? 0}
+												windData={{
+													windDirection: forecast.windDirection!,
+													windSpeed: forecast.windSpeed!,
+													windGust: forecast.windGust ?? 0,
+													isVariable: forecast.windDirectionVariable,
+												}}
 												size="small"
 											/>
 										</Show>

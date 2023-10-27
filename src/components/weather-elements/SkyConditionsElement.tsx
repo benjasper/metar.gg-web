@@ -9,9 +9,9 @@ import {
 	RiWeatherSunCloudyLine,
 	RiWeatherSunFill,
 } from 'solid-icons/ri'
-import { Component, createMemo, For, Match, Show, Switch } from 'solid-js'
-import { useUnitStore } from '../../context/UnitStore'
-import WeatherElementLayout, { ParsedWeatherElementLayoutProps } from '../../layouts/WeatherElementLayout'
+import { Accessor, Component, For, Match, Show, Switch, createMemo } from 'solid-js'
+import { Unit, useUnitStore } from '../../context/UnitStore'
+import WeatherElementLayout, { ParsedWeatherElementLayoutProps, UpdatePing } from '../../layouts/WeatherElementLayout'
 import { AirportSearchFragment, SkyConditionFragment, SkyConditionSkyCover } from '../../queries/generated/graphql'
 
 const SkyConditionIcon = (props: { skyCover: SkyConditionSkyCover; class: string; isDayTime: boolean }) => {
@@ -83,8 +83,23 @@ const SkyConditionText = (props: { skyCover: SkyConditionSkyCover }) => {
 	)
 }
 
+function skyConditionsToText(
+	selected: Accessor<Unit>,
+	convert: (value: number) => number,
+	conditions?: SkyConditionFragment[]
+) {
+	return conditions
+		?.map(
+			condition =>
+				`${condition.skyCover} ` +
+				(condition.cloudBase ? Math.round(convert(condition.cloudBase)) + `${selected().symbol}` : '')
+		)
+		.join(', ')
+}
+
 interface SkyConditionsElementProps {
 	skyConditions: SkyConditionFragment[]
+	previousSkyConditions?: SkyConditionFragment[]
 	airport: AirportSearchFragment
 }
 
@@ -98,6 +113,10 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 
 	const sortedSkyConditions = createMemo(() =>
 		props.skyConditions.map(x => x).sort((a, b) => (b.cloudBase ?? 0) - (a.cloudBase ?? 0))
+	)
+
+	const previousSortedSkyConditions = createMemo(
+		() => props.previousSkyConditions?.map(x => x).sort((a, b) => (b.cloudBase ?? 0) - (a.cloudBase ?? 0))
 	)
 
 	const localHour = createMemo(() =>
@@ -124,7 +143,13 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 	}
 
 	return (
-		<WeatherElementLayout name="Sky conditions" icon={<IoCloudy />} unitType={unitConfiguration()}>
+		<WeatherElementLayout
+			name="Sky conditions"
+			icon={<IoCloudy />}
+			unitType={unitConfiguration()}
+			updatePing={UpdatePing.Neutral}
+			updatePingOldValue={skyConditionsToText(selected, convert, previousSortedSkyConditions())}
+			updatePingNewValue={skyConditionsToText(selected, convert, sortedSkyConditions())}>
 			<div class="flex flex-col gap-2 text-center text-xl dark:text-white-dark">
 				<Show when={props.skyConditions.length > 1}>
 					<For each={sortedSkyConditions()}>

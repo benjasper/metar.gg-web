@@ -15,6 +15,6 @@
 		"linebreak-style": ["error", "unix"],
 		"quotes": ["error", "single"],
 		"semi": ["error", "never"],
-		"prettier/prettier": "error"
+		"prettier/prettier": "warn"
 	}
 }

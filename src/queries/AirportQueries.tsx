@@ -104,7 +104,7 @@ const WEATHER_FRAGMENT = gql`
 
 	fragment AirportWeather on Airport {
 		station {
-			metars(first: 1) {
+			metars(first: 2) {
 				edges {
 					node {
 						...Metar

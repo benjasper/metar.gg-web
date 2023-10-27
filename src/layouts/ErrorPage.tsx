@@ -1,5 +1,5 @@
 import { A } from '@solidjs/router'
-import { Component, Show } from 'solid-js'
+import { Component, Show, createEffect } from 'solid-js'
 import Button from '../components/Button'
 import Header from '../components/Header'
 import PageContent from './PageContent'
@@ -11,6 +11,10 @@ type ErrorPageProps = {
 }
 
 const ErrorPage: Component<ErrorPageProps> = props => {
+	createEffect(() => {
+		console.error(props.error)
+	})
+
 	return (
 		<PageContent title="Error" description="An error occured" contentFullHeight={true}>
 			<Header />

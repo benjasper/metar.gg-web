@@ -12,7 +12,7 @@ import {
 } from 'solid-icons/ri'
 import { TbGrain } from 'solid-icons/tb'
 import { Component, For, Match, Show, Switch } from 'solid-js'
-import WeatherElementLayout from '../../layouts/WeatherElementLayout'
+import WeatherElementLayout, { UpdatePing } from '../../layouts/WeatherElementLayout'
 
 enum IntensityOrProximity {
 	Light = '-',
@@ -209,15 +209,35 @@ const PrecipitationConditionElement: Component<{ condition: string }> = props =>
 
 interface PrecipitationElementProps {
 	weather: string
+	previousWeather?: string
 }
 
 const PrecipitationElement: Component<PrecipitationElementProps> = props => {
-	const conditions = () => props.weather.split(' ')
+	const conditions = (weather: string) => weather.split(' ')
+
+	const updatePingType = () => {
+		if (props.previousWeather === '' && props.weather !== '') {
+			return UpdatePing.Worse
+		}
+
+		if (props.previousWeather !== '' && props.weather === '') {
+			return UpdatePing.Better
+		}
+
+		return UpdatePing.Neutral
+	}
 
 	return (
-		<WeatherElementLayout name="Precipitation" icon={<TbGrain />}>
+		<WeatherElementLayout
+			name="Precipitation"
+			icon={<TbGrain />}
+			updatePing={updatePingType()}
+			updatePingOldValue={props.previousWeather ? conditions(props.previousWeather).join(', ') : undefined}
+			updatePingNewValue={conditions(props.weather).join(', ')}>
 			<div class="flex flex-col gap-1 dark:text-white-dark">
-				<For each={conditions()}>{condition => <PrecipitationConditionElement condition={condition} />}</For>
+				<For each={conditions(props.weather)}>
+					{condition => <PrecipitationConditionElement condition={condition} />}
+				</For>
 			</div>
 			<span class="mx-auto dark:text-white-dark">{props.weather}</span>
 		</WeatherElementLayout>
