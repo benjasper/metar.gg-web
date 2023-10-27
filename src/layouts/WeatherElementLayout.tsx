@@ -94,7 +94,7 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 		setTriggerPing(true)
 		setTimeout(() => {
 			setTriggerPing(false)
-		}, 2000)
+		}, 3000)
 	}
 
 	createEffect<string | undefined>(previous => {

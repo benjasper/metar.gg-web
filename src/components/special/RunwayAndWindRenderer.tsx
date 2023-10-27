@@ -66,13 +66,13 @@ const RunwayPopup = (props: {
 
 	// Calculate crosswind components
 	const crosswindComponent = () =>
-		props.runwayDirection.windAngle
+		props.runwayDirection.windAngle !== undefined
 			? Math.sin((props.runwayDirection.windAngle * Math.PI) / 180) * props.windSpeed
 			: undefined
 
 	// Left or right crosswind by comparing wind direction and runway heading
 	const crosswindDirection = () => {
-		if (!props.windDirection) {
+		if (props.windDirection === undefined) {
 			return undefined
 		}
 
@@ -83,7 +83,7 @@ const RunwayPopup = (props: {
 	}
 
 	const headwindComponent = () =>
-		props.runwayDirection.windAngle
+		props.runwayDirection.windAngle !== undefined
 			? Math.cos((props.runwayDirection.windAngle * Math.PI) / 180) * props.windSpeed
 			: undefined
 	const tailwindComponent = () => (headwindComponent() ? -headwindComponent()! : undefined)
@@ -115,7 +115,7 @@ const RunwayPopup = (props: {
 				</span>
 			</div>
 
-			<Show when={props.windSpeed > 0 && props.windDirection && props.windDirection > 0}>
+			<Show when={props.windSpeed > 0 && props.windDirection != undefined}>
 				<div class="flex gap-1">
 					<div
 						class="my-auto h-3 w-3 flex-shrink-0 rounded-full border-[3px]"
@@ -129,7 +129,7 @@ const RunwayPopup = (props: {
 						}}
 						aria-label={`Wind direction is ${favourableToText(props.runwayDirection.favourableLevel)}`}
 					/>
-					<Show when={props.runwayDirection.windAngle}>
+					<Show when={props.runwayDirection.windAngle !== undefined}>
 						<span class="text-sm">
 							Wind angle: {favourableToText(props.runwayDirection.favourableLevel)} (
 							{Math.round(props.runwayDirection.windAngle!)}°)
@@ -140,10 +140,9 @@ const RunwayPopup = (props: {
 
 			<Show
 				when={
-					props.windDirection &&
-					headwindComponent() &&
-					Math.round(selectedSpeedUnit().conversionFunction(headwindComponent()!)) > 0 &&
-					props.windDirection > 0
+					props.windDirection !== undefined &&
+					headwindComponent() != undefined &&
+					Math.round(selectedSpeedUnit().conversionFunction(headwindComponent()!)) > 0
 				}>
 				<div class="flex gap-1">
 					<BsArrowUp
@@ -160,10 +159,9 @@ const RunwayPopup = (props: {
 			</Show>
 			<Show
 				when={
-					props.windDirection &&
-					crosswindComponent() &&
-					Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent()!)) > 0 &&
-					props.windDirection > 0
+					props.windDirection != undefined &&
+					crosswindComponent() != undefined &&
+					Math.round(selectedSpeedUnit().conversionFunction(crosswindComponent()!)) > 0
 				}>
 				<div class="flex gap-1">
 					<BsArrowUp
@@ -181,10 +179,9 @@ const RunwayPopup = (props: {
 			</Show>
 			<Show
 				when={
-					tailwindComponent() &&
-					props.windDirection &&
-					Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent()!)) > 0 &&
-					props.windDirection > 0
+					tailwindComponent() != undefined &&
+					props.windDirection != undefined &&
+					Math.round(selectedSpeedUnit().conversionFunction(tailwindComponent()!)) > 0
 				}>
 				<div class="flex gap-1">
 					<BsArrowUp
@@ -277,12 +274,14 @@ const RunwayAndWindRenderer = (props: {
 		// Calculate the best runway heading
 		if (props.windSpeed > 1 && props.windDirection && props.windDirection != 0) {
 			const bestRunways = preparingRunways.filter(runway => {
-				if (!runway.direction1.windAngle || !runway.direction2.windAngle) {
+				if (runway.direction1.windAngle === undefined || runway.direction2.windAngle === undefined) {
 					return
 				}
 
 				return runway.direction1.windAngle < 90 || runway.direction2.windAngle < 90
 			})
+
+			console.log(bestRunways)
 
 			bestRunways.forEach(runway => {
 				// Set the favourable level to 1 if the wind angle is less than 90 and 2 if the wind angle is less than 45 degrees

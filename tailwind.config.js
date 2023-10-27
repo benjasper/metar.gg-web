@@ -30,7 +30,7 @@ module.exports = {
 				layout: '1fr auto',
 			},
 			animation: {
-				'ping-large': 'ping-large 1s cubic-bezier(0, 0, 0.2, 1) 2',
+				'ping-large': 'ping-large 1s cubic-bezier(0, 0, 0.2, 1) 3',
 			},
 		},
 	},
