@@ -281,8 +281,6 @@ const RunwayAndWindRenderer = (props: {
 				return runway.direction1.windAngle < 90 || runway.direction2.windAngle < 90
 			})
 
-			console.log(bestRunways)
-
 			bestRunways.forEach(runway => {
 				// Set the favourable level to 1 if the wind angle is less than 90 and 2 if the wind angle is less than 45 degrees
 				if (runway.direction1.windAngle! < 90)
