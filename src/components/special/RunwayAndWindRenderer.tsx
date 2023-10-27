@@ -272,7 +272,7 @@ const RunwayAndWindRenderer = (props: {
 		})
 
 		// Calculate the best runway heading
-		if (props.windSpeed > 1 && props.windDirection && props.windDirection != 0) {
+		if (props.windSpeed > 0 && props.windDirection && props.windDirection != 0) {
 			const bestRunways = preparingRunways.filter(runway => {
 				if (runway.direction1.windAngle === undefined || runway.direction2.windAngle === undefined) {
 					return
