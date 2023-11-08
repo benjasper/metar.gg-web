@@ -221,7 +221,7 @@ const AirportSearchDetail: Component = () => {
 				</Match>
 				<Match when={airportStore.airport !== undefined}>
 					<div class="mx-auto flex flex-col py-16 text-center dark:text-white-dark">
-						<h2>
+						<h1 class="text-3xl">
 							<Switch>
 								<Match when={airportStore.airport!.icaoCode && airportStore.airport!.iataCode}>
 									{airportStore.airport!.icaoCode} / {airportStore.airport!.iataCode}
@@ -230,7 +230,7 @@ const AirportSearchDetail: Component = () => {
 								<Match when={airportStore.airport!.gpsCode}>{airportStore.airport!.gpsCode}</Match>
 								<Match when={true}>{airportStore.airport!.identifier}</Match>
 							</Switch>
-						</h2>
+						</h1>
 						<span class="mt-1 text-lg">{airportStore.airport!.name}</span>
 
 						<div class="flex max-w-md flex-wrap justify-center gap-2 pt-4">
