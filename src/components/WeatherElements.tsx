@@ -129,8 +129,8 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 						<VisibilityElement
 							visibility={latestMetar()!.visibility}
 							visibilityMoreThan={latestMetar()!.visibilityIsMoreThan}
-							previousVisibility={previousMetar()!.visibility}
-							previousVisibilityMoreThan={previousMetar()!.visibilityIsMoreThan}
+							previousVisibility={previousMetar()?.visibility}
+							previousVisibilityMoreThan={previousMetar()?.visibilityIsMoreThan}
 						/>
 
 						<Show when={latestMetar()!.skyConditions!.length > 0}>
