@@ -40,7 +40,7 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 			<div class="flex flex-col justify-between md:flex-row">
 				<Show when={(props.airport?.station?.metars.edges.length ?? 0) > 0}>
 					<div class="flex flex-col">
-						<h3 class="text-2xl dark:text-white-dark">Current weather</h3>
+						<h2 class="text-2xl dark:text-white-dark">Current weather</h2>
 						<div class="flex flex-row flex-wrap justify-start gap-2 pt-2">
 							<Tag
 								intent={lastObservationDuration().asHours() <= 2 ? 'successful' : 'danger'}

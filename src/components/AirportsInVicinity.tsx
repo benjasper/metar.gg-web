@@ -80,7 +80,7 @@ const AirportsInVicinity: Component<AirportsInVicinityProps> = props => {
 	return (
 		<section class="flex flex-col">
 			<Show when={props.stations.length > 0}>
-				<h3 class="text-2xl dark:text-white-dark">Nearby airports</h3>
+				<h2 class="text-2xl dark:text-white-dark">Nearby airports</h2>
 				<div class="flex gap-2 pt-2">
 					<Tag>
 						{props.stations.length >= 10 ? 'At least 10' : props.stations.length}{' '}
@@ -94,7 +94,7 @@ const AirportsInVicinity: Component<AirportsInVicinityProps> = props => {
 								href={`/airport/${airport.station.airport?.identifier}`}
 								class="flex cursor-pointer flex-col gap-4 rounded-2xl bg-white p-4 shadow-sm transition-colors hover:bg-gray-50 dark:bg-black-200 dark:text-white-dark hover:dark:bg-black-100">
 								<div class="flex flex-col whitespace-nowrap">
-									<h4>
+									<h3 class="text-xl">
 										<Switch>
 											<Match
 												when={
@@ -112,7 +112,7 @@ const AirportsInVicinity: Component<AirportsInVicinityProps> = props => {
 											</Match>
 											<Match when={true}>{airport.station.airport?.identifier}</Match>
 										</Switch>
-									</h4>
+									</h3>
 									<span class="text-sm">{airport.station.airport?.name}</span>
 									<div class="mt-2 flex gap-2">
 										<Tag intent="neutral">
