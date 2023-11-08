@@ -13,7 +13,6 @@ type ErrorPageProps = {
 const ErrorPage: Component<ErrorPageProps> = props => {
 	createEffect(() => {
 		console.error(props.error)
-		throw props.error
 	})
 
 	return (
