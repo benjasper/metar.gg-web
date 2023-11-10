@@ -1,14 +1,16 @@
 import { debounce } from '@solid-primitives/scheduled'
 import { createScriptLoader } from '@solid-primitives/script-loader'
+import { Link } from '@solidjs/meta'
 import { useNavigate, useParams } from '@solidjs/router'
 import { CgWebsite } from 'solid-icons/cg'
 import { FiExternalLink } from 'solid-icons/fi'
 import { HiSolidClock } from 'solid-icons/hi'
 import { ImSpinner5 } from 'solid-icons/im'
 import { IoLocationSharp } from 'solid-icons/io'
-import { TbMountain } from 'solid-icons/tb'
+import { TbMountain, TbSunrise, TbSunset } from 'solid-icons/tb'
 import { Component, Match, Show, Switch, createEffect, createMemo, createSignal, onCleanup } from 'solid-js'
 import { createStore, reconcile } from 'solid-js/store'
+import * as SunCalc from 'suncalc'
 import AirportClassification from '../components/AirportClassification'
 import AirportsInVicinity from '../components/AirportsInVicinity'
 import DarkModeToggle from '../components/DarkModeToggle'
@@ -28,7 +30,6 @@ import {
 	GetSingleAirportQuery,
 	GetSingleAirportQueryVariables,
 } from '../queries/generated/graphql'
-import { Link, Meta } from '@solidjs/meta'
 
 const AirportSearchDetail: Component = () => {
 	const params = useParams()
@@ -43,6 +44,30 @@ const AirportSearchDetail: Component = () => {
 	const [airportStore, setAirportStore] = createStore<{ airport: AirportSearchFragment | undefined }>({
 		airport: undefined,
 	})
+
+	const sunEvents = createMemo(() => {
+		if (!airportStore.airport || !airportStore.airport.latitude || !airportStore.airport.longitude) {
+			return undefined
+		}
+
+		const tomorrow = new Date()
+		tomorrow.setDate(tomorrow.getDate() + 1)
+
+		const suntimes = SunCalc.getTimes(now(), airportStore.airport?.latitude, airportStore.airport?.longitude)
+		const suntimesTomorrow = SunCalc.getTimes(
+			tomorrow,
+			airportStore.airport?.latitude,
+			airportStore.airport?.longitude
+		)
+
+		const nextSunrise = suntimes.sunrise.getTime() > now().getTime() ? suntimes.sunrise : suntimesTomorrow.sunrise
+		const nextSunset = suntimes.sunset.getTime() > now().getTime() ? suntimes.sunset : suntimesTomorrow.sunset
+
+		return { nextSunrise, nextSunset } as const
+	})
+
+	const isNight = () =>
+		sunEvents()!.nextSunrise.getTime() - now().getTime() < sunEvents()!.nextSunset.getTime() - now().getTime()
 
 	const [lastRefreshed, setLastRefreshed] = createSignal<Date>(new Date())
 	const [airportIdentifier, setAirportIdentifier] = createSignal<GetSingleAirportQueryVariables | false>(false)
@@ -267,6 +292,36 @@ const AirportSearchDetail: Component = () => {
 									{selectedHeightUnit().symbol}
 								</Tag>
 							</Show>
+
+							<Show when={sunEvents()}>
+								<Switch>
+									<Match when={isNight()}>
+										<Tag>
+											<TbSunrise class="my-auto" />
+											Sunrise{' '}
+											{sunEvents()!.nextSunrise.toLocaleTimeString([], {
+												hour: 'numeric',
+												minute: '2-digit',
+												timeZone: airportStore.airport!.timezone ?? 'UTC',
+											})}{' '}
+											local
+										</Tag>
+									</Match>
+									<Match when={true}>
+										<Tag>
+											<TbSunset class="my-auto" />
+											Sunset{' '}
+											{sunEvents()!.nextSunset.toLocaleTimeString([], {
+												hour: 'numeric',
+												minute: '2-digit',
+												timeZone: airportStore.airport!.timezone ?? 'UTC',
+											})}{' '}
+											local
+										</Tag>
+									</Match>
+								</Switch>
+							</Show>
+
 							<Show when={airportStore.airport!.website}>
 								<LinkTag href={airportStore.airport!.website!}>
 									<CgWebsite class="my-auto" />
@@ -276,7 +331,11 @@ const AirportSearchDetail: Component = () => {
 							</Show>
 						</div>
 					</div>
-					<WeatherElements airport={airportStore.airport!} lastRefreshed={lastRefreshed()} />
+					<WeatherElements
+						airport={airportStore.airport!}
+						lastRefreshed={lastRefreshed()}
+						isNight={isNight()}
+					/>
 					<ForecastElements
 						airport={airportStore.airport!}
 						taf={airportStore.airport!.station?.tafs.edges[0]?.node}

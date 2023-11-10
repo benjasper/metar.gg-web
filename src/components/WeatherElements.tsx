@@ -16,6 +16,7 @@ import WindElement from './weather-elements/WindElement'
 interface ParsedWeatherElementsProps {
 	airport: AirportSearchFragment
 	lastRefreshed: Date
+	isNight: boolean
 }
 
 const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
@@ -138,6 +139,7 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 								skyConditions={latestMetar()!.skyConditions!}
 								previousSkyConditions={previousMetar()?.skyConditions ?? undefined}
 								airport={props.airport}
+								isNight={props.isNight}
 							/>
 						</Show>
 

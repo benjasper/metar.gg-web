@@ -101,6 +101,7 @@ interface SkyConditionsElementProps {
 	skyConditions: SkyConditionFragment[]
 	previousSkyConditions?: SkyConditionFragment[]
 	airport: AirportSearchFragment
+	isNight: boolean
 }
 
 const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
@@ -119,15 +120,7 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 		() => props.previousSkyConditions?.map(x => x).sort((a, b) => (b.cloudBase ?? 0) - (a.cloudBase ?? 0))
 	)
 
-	const localHour = createMemo(() =>
-		parseInt(
-			new Date()
-				.toLocaleTimeString('en', { hour: '2-digit', hourCycle: 'h24', timeZone: props.airport.timezone ?? '' })
-				.substring(0, 2)
-		)
-	)
-
-	const isDayTime = () => localHour() >= 6 && localHour() <= 18
+	const isDayTime = () => !props.isNight
 
 	const unitConfiguration = (): ParsedWeatherElementLayoutProps['unitType'] => {
 		const configs: ParsedWeatherElementLayoutProps['unitType'] = []
