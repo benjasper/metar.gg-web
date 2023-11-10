@@ -260,7 +260,7 @@ const AirportSearchDetail: Component = () => {
 						</h1>
 						<span class="mt-1 text-lg">{airportStore.airport!.name}</span>
 
-						<div class="flex max-w-md flex-wrap justify-center gap-2 pt-4">
+						<div class="flex max-w-lg flex-wrap justify-center gap-2 pt-4">
 							<Tag>
 								<IoLocationSharp class="my-auto" />
 								<Show when={airportStore.airport!.municipality}>
