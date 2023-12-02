@@ -150,7 +150,7 @@ const AirportSearchDetail: Component = () => {
 
 	createEffect(() => {
 		// Check raw METAR for different units
-		if (!airportStore.airport || airportStore.airport.station!.metars.edges.length === 0) {
+		if (!airportStore.airport || (airportStore.airport.station?.metars.edges.length ?? 0) === 0) {
 			return
 		}
 
@@ -339,6 +339,7 @@ const AirportSearchDetail: Component = () => {
 					<ForecastElements
 						airport={airportStore.airport!}
 						taf={airportStore.airport!.station?.tafs.edges[0]?.node}
+						isNight={isNight()}
 					/>
 					<AirportsInVicinity
 						airportCoordinates={{

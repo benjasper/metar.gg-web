@@ -22,6 +22,7 @@ import WindShearElement from './weather-elements/WindShearElement'
 export interface ForecastElementsProps {
 	taf?: TafFragment
 	airport: AirportSearchFragment
+	isNight: boolean
 }
 
 const changeIndicatorToSortingIndex = (changeIndicator: string): number => {
@@ -254,6 +255,7 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 											<SkyConditionsElement
 												skyConditions={forecast.skyConditions!}
 												airport={props.airport}
+												isNight={props.isNight}
 											/>
 										</Show>
 										<Show when={forecast.weather && forecast.weather.length > 1}>

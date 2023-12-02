@@ -39,9 +39,9 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 	return (
 		<>
 			<div class="flex flex-col justify-between md:flex-row">
-				<Show when={(props.airport?.station?.metars.edges.length ?? 0) > 0}>
-					<div class="flex flex-col">
-						<h2 class="text-2xl dark:text-white-dark">Current weather</h2>
+				<div class="flex flex-col">
+					<h2 class="text-2xl dark:text-white-dark">Current weather</h2>
+					<Show when={(props.airport?.station?.metars.edges.length ?? 0) > 0}>
 						<div class="flex flex-row flex-wrap justify-start gap-2 pt-2">
 							<Tag
 								intent={lastObservationDuration().asHours() <= 2 ? 'successful' : 'danger'}
@@ -93,19 +93,25 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 								</Tag>
 							</Show>
 						</div>
-					</div>
-					<Tooltip
-						text={`Refreshed ${Duration.fromDates(props.lastRefreshed, now()).humanPrecise(false)}`}
-						delay={1000}>
-						<span class="mt-4 flex text-gray-700 dark:text-white-dark md:mt-auto">
-							<HiOutlineRefresh class="my-auto mr-2" />
-							Constantly checking for updates
-						</span>
-					</Tooltip>
-				</Show>
+					</Show>
+				</div>
+				<Tooltip
+					text={`Refreshed ${Duration.fromDates(props.lastRefreshed, now()).humanPrecise(false)}`}
+					delay={1000}>
+					<span class="mt-4 flex text-gray-700 dark:text-white-dark md:mt-auto">
+						<HiOutlineRefresh class="my-auto mr-2" />
+						Constantly checking for updates
+					</span>
+				</Tooltip>
 			</div>
-			<div class={'mt-4 flex h-full flex-col justify-center gap-8 md:flex-row'}>
-				<Show when={latestMetar()} fallback={<span class="m-auto text-lg">No recent weather available.</span>}>
+			<div class={'mt-4 flex flex-col justify-center gap-8 md:flex-row'}>
+				<Show
+					when={latestMetar()}
+					fallback={
+						<span class="mx-auto py-16 text-xl text-gray-700 dark:text-white-dark">
+							No recent weather available.
+						</span>
+					}>
 					<div class="flex flex-shrink-0 flex-col">
 						<WindElement
 							airport={props.airport}
@@ -179,13 +185,13 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 					</div>
 				</Show>
 			</div>
-			<div class="flex flex-col gap-4 py-16">
-				<Show when={props.airport && props.airport!.station!.metars.edges[0]}>
+			<Show when={props.airport && (props.airport?.station?.metars.edges[0] ?? false)}>
+				<div class="flex flex-col gap-4 py-16">
 					<p aria-label="METAR" class="text-center font-mono text-xl dark:text-white-dark">
 						{props.airport!.station!.metars.edges[0].node.rawText}
 					</p>
-				</Show>
-			</div>
+				</div>
+			</Show>
 		</>
 	)
 }
