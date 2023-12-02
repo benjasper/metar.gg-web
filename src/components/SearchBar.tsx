@@ -17,6 +17,7 @@ import {
 import { useGraphQL } from '../context/GraphQLClient'
 import { AIRPORT_SEARCH } from '../queries/AirportQueries'
 import { AirportSearchQuery, AirportSearchQueryVariables } from '../queries/generated/graphql'
+import { A } from '@solidjs/router'
 
 interface SearchBarProps {
 	class?: string
@@ -204,7 +205,7 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 					leaveFrom="opacity-100 rotate-0"
 					leaveTo="opacity-0">
 					<ul
-						class="absolute left-0 z-10 mt-2 w-full origin-top-right overflow-y-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black-200"
+						class="absolute left-0 z-20 mt-2 w-full origin-top-right overflow-y-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black-200"
 						role="listbox"
 						id="search-bar"
 						aria-label="Airport selection search bar"
@@ -216,28 +217,30 @@ const SearchBar: Component<SearchBarProps> = (properties: SearchBarProps) => {
 								{(airportNode, i) => (
 									<li
 										id={`search-bar-item-${i()}`}
-										class="block w-full cursor-pointer px-6 py-2 text-sm text-gray-700 dark:text-white-dark"
-										classList={{ 'bg-gray-100 dark:bg-black-100': i() === selectedAirportId() }}
 										onMouseEnter={e => setSelectedAirportId(i())}
-										onClick={e => onSubmit(airportNode.node.identifier)}
 										role="option"
 										aria-selected={i() === selectedAirportId()}
 										tabindex={i()}>
-										<Switch>
-											<Match when={airportNode.node.icaoCode && airportNode.node.iataCode}>
-												{airportNode.node.icaoCode} / {airportNode.node.iataCode} •{' '}
-												{airportNode.node.name}
-											</Match>
-											<Match when={airportNode.node.icaoCode}>
-												{airportNode.node.icaoCode} • {airportNode.node.name}
-											</Match>
-											<Match when={airportNode.node.gpsCode}>
-												{airportNode.node.gpsCode} • {airportNode.node.name}
-											</Match>
-											<Match when={true}>
-												{airportNode.node.identifier} • {airportNode.node.name}
-											</Match>
-										</Switch>
+										<A
+											class="block w-full cursor-pointer px-6 py-2 text-sm text-gray-700 dark:text-white-dark"
+											classList={{ 'bg-gray-100 dark:bg-black-100': i() === selectedAirportId() }}
+											href={`/airport/${airportNode.node.identifier}`}>
+											<Switch>
+												<Match when={airportNode.node.icaoCode && airportNode.node.iataCode}>
+													{airportNode.node.icaoCode} / {airportNode.node.iataCode} •{' '}
+													{airportNode.node.name}
+												</Match>
+												<Match when={airportNode.node.icaoCode}>
+													{airportNode.node.icaoCode} • {airportNode.node.name}
+												</Match>
+												<Match when={airportNode.node.gpsCode}>
+													{airportNode.node.gpsCode} • {airportNode.node.name}
+												</Match>
+												<Match when={true}>
+													{airportNode.node.identifier} • {airportNode.node.name}
+												</Match>
+											</Switch>
+										</A>
 									</li>
 								)}
 							</For>
