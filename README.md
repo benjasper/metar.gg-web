@@ -4,7 +4,7 @@
 
 ## What is this?
 
-metar.gg is an app that fetches latest METAR and TAF data from [NOAA](https://www.aviationweather.gov/adds) and presents it in a intuitive way.
+metar.gg is an app that fetches latest METAR and TAF data from [NOAA](https://www.aviationweather.gov) and presents it in an intuitive way.
 
 The accompanying Go GraphQL API can be found [here](https://github.com/benjasper/metar.gg-backend).
 
