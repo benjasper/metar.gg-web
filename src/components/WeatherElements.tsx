@@ -1,4 +1,4 @@
-import { HiOutlineRefresh } from 'solid-icons/hi'
+import { HiOutlineArrowPath } from 'solid-icons/hi'
 import { Component, createMemo, Show } from 'solid-js'
 import { useTimeStore } from '../context/TimeStore'
 import Duration from '../models/duration'
@@ -99,7 +99,7 @@ const WeatherElements: Component<ParsedWeatherElementsProps> = props => {
 					text={`Refreshed ${Duration.fromDates(props.lastRefreshed, now()).humanPrecise(false)}`}
 					delay={1000}>
 					<span class="mt-4 flex text-gray-700 dark:text-white-dark md:mt-auto">
-						<HiOutlineRefresh class="my-auto mr-2" />
+						<HiOutlineArrowPath class="my-auto mr-2" />
 						Constantly checking for updates
 					</span>
 				</Tooltip>

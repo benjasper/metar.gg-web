@@ -237,7 +237,7 @@ const WeatherElementLayout: ParentComponent<ParsedWeatherElementLayoutProps> = p
 																		unitStore[unitConfiguration.type!].units[
 																			unitStore[unitConfiguration.type!].selected
 																		].symbol
-																  )
+																	)
 																: unlockUnit(unitConfiguration.type!)
 														}
 														class="flex gap-2 whitespace-nowrap rounded px-4 py-2 text-left text-sm text-black transition-all hover:bg-gray-light dark:text-white-darker hover:dark:bg-black-100">

@@ -1,6 +1,5 @@
 import { Meta } from '@solidjs/meta'
 import Header from '../components/Header'
-import Logo from '../components/Logo'
 import PageContent from '../layouts/PageContent'
 
 const Legal = () => {
@@ -15,9 +14,9 @@ const Legal = () => {
 				<p class="mt-4">
 					Operator: Benjamin Jasper
 					<br />
-					Steinstr. 21b
+					Fischenzstr. 6
 					<br />
-					78467 Konstanz, Germany
+					78462 Konstanz, Germany
 				</p>
 				<h2 class="pt-8 text-3xl">Contact</h2>
 				<p>

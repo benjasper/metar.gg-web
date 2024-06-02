@@ -109,9 +109,9 @@ const AirportSearchDetail: Component = () => {
 		return airportStore.airport
 			? `Get real time METAR and TAF updates for ${airportStore.airport.name} (${
 					airportStore.airport.identifier
-			  }${airportStore.airport.iataCode ? ' / ' + airportStore.airport.iataCode : ''}) located in ${
+				}${airportStore.airport.iataCode ? ' / ' + airportStore.airport.iataCode : ''}) located in ${
 					airportStore.airport.municipality ? airportStore.airport.municipality + ',' : ''
-			  } ${airportStore.airport.country?.name ?? ''}.`
+				} ${airportStore.airport.country?.name ?? ''}.`
 			: ''
 	})
 
@@ -187,8 +187,12 @@ const AirportSearchDetail: Component = () => {
 		}
 	})
 
-	const jsonLdAirport = () =>
-		JSON.stringify({
+	const jsonLdAirport = () => {
+		if (airportStore.airport === undefined) {
+			return ''
+		}
+
+		return JSON.stringify({
 			'@context': 'https://schema.org',
 			'@type': 'Airport',
 			iataCode: airportStore.airport?.iataCode ?? '',
@@ -211,9 +215,10 @@ const AirportSearchDetail: Component = () => {
 			sameAs: airportStore.airport?.website ?? airportStore.airport?.wikipedia ?? '',
 			url: window.location.href,
 		})
+	}
 
 	const scriptLdElement = createScriptLoader({
-		src: () => jsonLdAirport(),
+		src: jsonLdAirport,
 		type: 'application/ld+json',
 	})
 

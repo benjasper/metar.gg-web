@@ -116,8 +116,8 @@ const SkyConditionsElement: Component<SkyConditionsElementProps> = props => {
 		props.skyConditions.map(x => x).sort((a, b) => (b.cloudBase ?? 0) - (a.cloudBase ?? 0))
 	)
 
-	const previousSortedSkyConditions = createMemo(
-		() => props.previousSkyConditions?.map(x => x).sort((a, b) => (b.cloudBase ?? 0) - (a.cloudBase ?? 0))
+	const previousSortedSkyConditions = createMemo(() =>
+		props.previousSkyConditions?.map(x => x).sort((a, b) => (b.cloudBase ?? 0) - (a.cloudBase ?? 0))
 	)
 
 	const isDayTime = () => !props.isNight

@@ -60,8 +60,10 @@ label {
 }
 
 @keyframes ping-large {
-    75%, 100% {
-        transform: scale(6);
-        opacity: 0;
-    }
+
+	75%,
+	100% {
+		transform: scale(6);
+		opacity: 0;
+	}
 }

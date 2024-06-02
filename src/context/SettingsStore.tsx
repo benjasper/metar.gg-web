@@ -24,9 +24,7 @@ const createSettingsStore = (): SettingsStore => {
 	}
 }
 
-const SettingsStoreContext = createContext<SettingsStoreContextInterface>(
-	undefined as unknown as SettingsStoreContextInterface
-)
+const SettingsStoreContext = createContext<SettingsStoreContextInterface>(undefined as any)
 
 const SettingsStoreProvider: ParentComponent = props => {
 	const [store, setStore] = createStore<SettingsStore>(createSettingsStore())

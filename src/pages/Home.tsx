@@ -24,7 +24,7 @@ const Home: Component = () => {
 				description="Find the latest aviation weather observations and forecasts for any airport around the world. Get your METARs and TAFs here."
 				contentFullHeight={true}>
 				<Header />
-				<div class="mt-[15vh] flex flex-col gap-8  transition-all md:mt-[20vh]">
+				<div class="mt-[15vh] flex flex-col gap-8 transition-all md:mt-[20vh]">
 					<Logo showText={false} class="mx-auto hidden md:flex" />
 					<h2 class="text-center dark:text-white-dark">What's the weather like in...</h2>
 					<div class="flex flex-col">

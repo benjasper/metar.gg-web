@@ -1,5 +1,5 @@
 import { BsClockHistory } from 'solid-icons/bs'
-import { HiOutlineSwitchHorizontal } from 'solid-icons/hi'
+import { HiOutlineArrowsRightLeft } from 'solid-icons/hi'
 import { Component, createMemo, createSignal, For, Match, Show, Switch } from 'solid-js'
 import { useTimeStore } from '../context/TimeStore'
 import Duration from '../models/duration'
@@ -232,7 +232,7 @@ const ForecastElements: Component<ForecastElementsProps> = props => {
 												)}`}>
 												<Show
 													when={forecast.changeIndicator === ForecastChangeIndicator.Tempo}
-													fallback={<HiOutlineSwitchHorizontal class="my-auto" />}>
+													fallback={<HiOutlineArrowsRightLeft class="my-auto" />}>
 													<BsClockHistory class="my-auto" />
 												</Show>
 												<span>{forecast.changeIndicator}</span>
